@@ -17,4 +17,6 @@ For running this script, you need to have the following folder setup ("Master" i
 This is due to large input (and output) files, which are too big for the 100 MB limit with a free GitHub account.
 
 Execute:
+```
 simulation_CIBERSORT$ python simulation.py -i [input.file input.file ... ] -o [output.file output.file ...]
+```
