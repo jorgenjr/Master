@@ -7,19 +7,10 @@ OUTPUT = []
 
 # Variables for GSE10650
 
-# X = 0;
-# Y = 1;
-# MEAN = 2;
-# STDV = 3;
-# NPIXELS = 4;
-# BEGIN1 = 25
-# #END1 = 1354896 + BEGIN1
-# END1 = 1354921
-# EOF1_1 = 1356394
-# EOF1_2 = 1355800
-
-BEGIN = 4
-END = 54678
+BEGIN1 = 4
+END1 = 54679
+GENE = 0
+VALUE = 1
 
 # Variables for GSE11103
 
@@ -54,10 +45,6 @@ def read_args():
 			print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
 			sys.exit()
 
-###########################################
-# DEPRECATED AFTER NEW INPUT FORMAT/FILES #
-###########################################
-
 
 def quantile_normalisation_package(BEGIN, END):
 
@@ -76,23 +63,23 @@ def quantile_normalisation_package(BEGIN, END):
 
 	for x in range(BEGIN, END):
 
-		line1 = linecache.getline('files/input/' + INPUT[0], x)
-		line2 = linecache.getline('files/input/' + INPUT[1], x)
+		line1 = linecache.getline('../../../Master_files/input/' + INPUT[0], x)
+		line2 = linecache.getline('../../../Master_files/input/' + INPUT[1], x)
 		
-		list1 = np.array(line1.split('\t'), dtype=float)
-		list2 = np.array(line2.split('\t'), dtype=float)
+		list1 = np.array(line1.split('\t'))
+		list2 = np.array(line2.split('\t'))
 
-		np_matrix[insert] = np.array([list1[MEAN], list2[MEAN]])
+		np_matrix[insert] = np.array([list1[VALUE], list2[VALUE]])
 		
 		insert += 1
 
 	# STEP 2
-
+	
 	vector = robjects.FloatVector([ element for column in np_matrix for element in column ])
 	matrix = robjects.r['matrix'](vector, ncol = len(np_matrix[0]), byrow=False)
 	R_normalized_matrix = preprocessCore.normalize_quantiles(matrix)
 	normalized_matrix = np.array(R_normalized_matrix)
-
+	
 	add_noise(BEGIN, END, normalized_matrix)
 
 
@@ -110,7 +97,7 @@ def add_noise(BEGIN, END, normalized_matrix):
 			N = np.random.normal(0,f*q)
 			noise = 2 ** N
 			normalized_matrix[i][j] += noise
-
+	
 	write_to_file(BEGIN, END, normalized_matrix)
 
 
@@ -120,10 +107,10 @@ def write_to_file(BEGIN, END, normalized_matrix):
 	Everything from the original data is copied except the MEAN value, which is from the normalized matrix.
 	"""
 
-	f1 = open('files/input/' + INPUT[0], 'r')
-	f2 = open('files/input/' + INPUT[1], 'r')
-	f1_new = open('files/output/' + OUTPUT[0], 'w')
-	f2_new = open('files/output/' + OUTPUT[1], 'w')
+	f1 = open('../../../Master_files/input/' + INPUT[0], 'r')
+	f2 = open('../../../Master_files/input/' + INPUT[1], 'r')
+	f1_new = open('../../../Master_files/output/' + OUTPUT[0], 'w')
+	f2_new = open('../../../Master_files/output/' + OUTPUT[1], 'w')
 
 	insert = 0
 
@@ -131,26 +118,26 @@ def write_to_file(BEGIN, END, normalized_matrix):
 
 		if x < BEGIN:
 
-			f1_new.write(linecache.getline('files/input/' + INPUT[0], x))
-			f2_new.write(linecache.getline('files/input/' + INPUT[1], x))
+			f1_new.write(linecache.getline('../../../Master_files/input/' + INPUT[0], x))
+			f2_new.write(linecache.getline('../../../Master_files/input/' + INPUT[1], x))
 
 		elif x < END:
 
-			line1 = linecache.getline('files/input/' + INPUT[0], x)
-			line2 = linecache.getline('files/input/' + INPUT[1], x)
+			line1 = linecache.getline('../../../Master_files/input/' + INPUT[0], x)
+			line2 = linecache.getline('../../../Master_files/input/' + INPUT[1], x)
 
-			list1 = np.array(line1.split('\t'), dtype=float)
-			list2 = np.array(line2.split('\t'), dtype=float)
+			list1 = np.array(line1.split('\t'))
+			list2 = np.array(line2.split('\t'))
 
-			list1 = [int(list1[X]), int(list1[Y]), normalized_matrix[x-BEGIN][0], list1[STDV], int(list1[NPIXELS])]
-			list2 = [int(list2[X]), int(list2[Y]), normalized_matrix[x-BEGIN][1], list2[STDV], int(list2[NPIXELS])]
+			list1 = [list1[GENE], normalized_matrix[x-BEGIN][0]]
+			list2 = [list1[GENE], normalized_matrix[x-BEGIN][1]]
 
 			f1_new.write('\t'.join(str(s) for s in list1) + '\n')
 			f2_new.write('\t'.join(str(s) for s in list2) + '\n')
 
 		else:
-			print (linecache.getline('files/input/' + INPUT[0], x))
-			print (linecache.getline('files/input/' + INPUT[1], x))
+			print (linecache.getline('../../../Master_files/input/' + INPUT[0], x))
+			print (linecache.getline('../../../Master_files/input/' + INPUT[1], x))
 		
 		insert += 1
 
