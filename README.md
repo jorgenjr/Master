@@ -1,4 +1,4 @@
-# Master
+# Master thesis
 
 ## CIBERSORT
 
@@ -8,7 +8,7 @@ Replicating [CIBERSORT](http://www.nature.com/nmeth/journal/v12/n5/abs/nmeth.333
 
 ### Run
 
-For running this script, you need to have the following folder setup:
+For running this script, you need to have the following folder setup ("Master" is the origin git folder):
 
 1. folder_name/Master/programming/simulation_CIBERSORT/simulation.py
 2. folder_name/Master_files/input/
