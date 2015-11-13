@@ -4,7 +4,7 @@
 
 ### Description
 
-Replicating CIBERSORTs simulation of tumors with added noise. Written in Python.
+Replicating [CIBERSORTs](http://www.nature.com/nmeth/journal/v12/n5/abs/nmeth.3337.html) simulation of tumors with added noise. Written in Python.
 
 ### Run
 
