@@ -9,6 +9,7 @@ OUTPUT = []
 
 BEGIN1 = 4
 END1 = 54679
+EOF1 = 54683
 GENE = 0
 VALUE = 1
 
@@ -21,6 +22,17 @@ EOF2 = 54740
 
 
 def read_args():
+
+	""" Reading the arguments sent by the user from the terminal.
+	-i flag must be followed by input file(s)
+	-o flag must be followed by output file(s)
+
+	The given files must be placed outside the "Master" folder:
+	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
+	Files: folder_name/Master_files/[input|output]/
+
+	E.g.: python simulation.py -i GSM269529.txt -o GSM269529_NEW.txt
+	"""
 
 	i = False
 	o = False
