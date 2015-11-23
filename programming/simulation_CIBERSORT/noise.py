@@ -1,7 +1,7 @@
 
 import numpy as np, random
 
-def add_noise(BEGIN, END, normalized_matrix):
+def add_noise(normalized_matrix):
 
 	""" Adding noise to a normalized matrix.
 	Formula for noise is defined by the authors of the CIBERSORT paper.

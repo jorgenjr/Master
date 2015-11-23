@@ -3,9 +3,6 @@ import numpy as np, linecache
 
 def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 
-	#np_matrix = np.zeros(shape=(END-BEGIN, 4))
-	#insert = 0
-
 	for x in range(BEGIN, END):
 
 		line = linecache.getline('../../../Master_files/input/' + INPUT, x)
@@ -35,11 +32,8 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 		for i in range(27, 30):
 			THP1 += float(line_list[i])
 
-		#np_matrix[insert] = np.array([(Jurkat / 3.0), (IM9 / 3.0), (Raji / 3.0), (THP1 / 3.0)])
 		GENE_DICTIONARY[gene_ref] = np.array([(Jurkat / 3.0), (IM9 / 3.0), (Raji / 3.0), (THP1 / 3.0)])
-		#insert += 1
 
-	#return np_matrix;
 	return GENE_DICTIONARY
 
 
@@ -64,8 +58,35 @@ def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 			tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
 
 	for key, value in tumor_dictionary.items():
-		
+
 		if key in GENE_DICTIONARY:
 			GENE_DICTIONARY[key] = np.append(GENE_DICTIONARY[key], tumor_dictionary[key])
+
+	return GENE_DICTIONARY
+
+
+def from_dictionary_to_matrix(GENE_DICTIONARY):
+
+	np_matrix_gene = np.zeros(shape=(len(GENE_DICTIONARY), 4))
+	np_matrix_tumor = np.zeros(shape=(len(GENE_DICTIONARY), 1))
+	insert = 0
+
+	for key, value in GENE_DICTIONARY.items():
+		
+		np_matrix_gene[insert] = np.array([value[0], value[1], value[2], value[3]])
+		np_matrix_tumor[insert] = np.array([value[4]])
+		insert += 1
+
+	return np_matrix_gene, np_matrix_tumor
+
+
+def from_matrix_to_dictionary(CELL_LINE, TUMOR, GENE_DICTIONARY):
+
+	index = 0
+
+	for key, value in GENE_DICTIONARY.items():
+		
+		GENE_DICTIONARY[key] = np.append(CELL_LINE[index], TUMOR[index])
+		index += 1
 
 	return GENE_DICTIONARY

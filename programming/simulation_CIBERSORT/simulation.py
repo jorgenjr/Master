@@ -66,7 +66,20 @@ read_args();
 np_gene_dictionary = mixtures.combine_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary);
 np_gene_dictionary = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary);
 
-print (np_gene_dictionary)
+cell_line_values_matrix, tumor_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary);
+
+norm_matrix_cell_line = quantile_normalisation.algo(cell_line_values_matrix);
+norm_matrix_tumor = quantile_normalisation.algo(tumor_values_matrix);
+
+noise_cell_line = noise.add_noise(norm_matrix_cell_line);
+noise_tumor = noise.add_noise(norm_matrix_tumor);
+
+np_gene_dictionary = mixtures.from_matrix_to_dictionary(noise_cell_line, noise_tumor, np_gene_dictionary);
+
+
+############
+# OLD CODE #
+############
 
 #norm_matrix = quantile_normalisation.algo(BEGIN1, END1, INPUT);
 #norm_matrix_noise = noise.add_noise(BEGIN1, END1, norm_matrix);
