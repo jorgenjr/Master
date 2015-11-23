@@ -18,5 +18,5 @@ This is due to large input (and output) files, which are too big for the 100 MB 
 
 Execute:
 ```
-simulation_CIBERSORT$ python simulation.py -i [input.file ... ] -o [output.file ...]
+simulation_CIBERSORT$ python simulation.py -i GSM269529.txt GSM269530.txt GSE11103_series_matrix.txt -o [output.file ...]
 ```
