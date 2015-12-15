@@ -1,5 +1,5 @@
 
-import readline, sys, quantile_normalisation, noise, file_handler, mixtures
+import readline, sys, quantile_normalisation, noise, file_handler, mixtures, tumor
 
 INPUT = []
 OUTPUT = []
@@ -36,26 +36,29 @@ def read_args():
 	i = False
 	o = False
 
-	for x in range(1, len(sys.argv)):
+	if len(sys.argv) == 1:
+		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
+		sys.exit()
 
+	for x in range(1, len(sys.argv)):
+		
 		if sys.argv[x] == '-i':
 			i = True
 			o = False
-
+			
 		elif sys.argv[x] == '-o':
 			i = False
 			o = True
-
+			
 		elif i == True:
 			INPUT.append(sys.argv[x])
-
+			
 		elif o == True:
 			OUTPUT.append(sys.argv[x])
-
+			
 		else:
 			print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
 			sys.exit()
-
 
 
 read_args();
@@ -71,10 +74,20 @@ cell_line_values_matrix, tumor_values_matrix = mixtures.from_dictionary_to_matri
 norm_matrix_cell_line = quantile_normalisation.algo(cell_line_values_matrix);
 norm_matrix_tumor = quantile_normalisation.algo(tumor_values_matrix);
 
-noise_cell_line = noise.add_noise(norm_matrix_cell_line);
-noise_tumor = noise.add_noise(norm_matrix_tumor);
+###########################
+# NOISE ADDED IN TUMOR.PY #
+###########################
 
-np_gene_dictionary = mixtures.from_matrix_to_dictionary(noise_cell_line, noise_tumor, np_gene_dictionary);
+#noise_cell_line = noise.add_noise(norm_matrix_cell_line);
+#noise_tumor = noise.add_noise(norm_matrix_tumor);
+
+# np_gene_dictionary = mixtures.from_matrix_to_dictionary(noise_cell_line, noise_tumor, np_gene_dictionary);
+
+# tumor.random_tumor_content(np_gene_dictionary);
+
+np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_cell_line, norm_matrix_tumor, np_gene_dictionary);
+
+tumor.random_tumor_content(np_gene_dictionary);
 
 
 ############

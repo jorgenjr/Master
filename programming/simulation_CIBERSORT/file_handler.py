@@ -100,3 +100,12 @@ def write_to_file(BEGIN, END, normalized_matrix, INPUT, OUTPUT):
 			print (linecache.getline('../../../Master_files/input/' + INPUT[1], x))
 		
 		insert += 1
+
+def test_write(NP_GENE_DICTIONARY, FILE_NUMBER):
+
+	f1 = open('../../../Master_files/output/testfile_' + str(FILE_NUMBER), 'w')
+
+	for key, value in NP_GENE_DICTIONARY.items():
+
+		string = str(key) + "\t" + str(value[0]) + "\t" + str(value[1]) + "\t" + str(value[2]) + "\t" + str(value[3]) + "\n";
+		f1.write(string)
