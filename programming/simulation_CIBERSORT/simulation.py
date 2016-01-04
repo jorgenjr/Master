@@ -63,41 +63,28 @@ def read_args():
 
 read_args();
 
-# NOT COMPATIBLE WITH NEW SETUP!
-#file_handler.read_files(INPUT);
-
 np_gene_dictionary = mixtures.combine_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary);
 np_gene_dictionary = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary);
 
-cell_line_values_matrix, tumor_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary);
+###########################################
+# QUANTILE TUMOR AND CELL LINE SEPARATELY #
+###########################################
 
-norm_matrix_cell_line = quantile_normalisation.algo(cell_line_values_matrix);
-norm_matrix_tumor = quantile_normalisation.algo(tumor_values_matrix);
+#cell_line_values_matrix, tumor_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary);
 
-###########################
-# NOISE ADDED IN TUMOR.PY #
-###########################
+# norm_matrix_cell_line = quantile_normalisation.algo(cell_line_values_matrix);
+# norm_matrix_tumor = quantile_normalisation.algo(tumor_values_matrix);
 
-#noise_cell_line = noise.add_noise(norm_matrix_cell_line);
-#noise_tumor = noise.add_noise(norm_matrix_tumor);
+# np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_cell_line, norm_matrix_tumor, np_gene_dictionary);
 
-# np_gene_dictionary = mixtures.from_matrix_to_dictionary(noise_cell_line, noise_tumor, np_gene_dictionary);
+#########################################
+# QUANTILE TUMOR AND CELL LINE TOGETHER #
+#########################################
 
-# tumor.random_tumor_content(np_gene_dictionary);
+combined_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary);
 
-np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_cell_line, norm_matrix_tumor, np_gene_dictionary);
+norm_matrix_combined = quantile_normalisation.algo(combined_values_matrix);
+
+np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_combined, np_gene_dictionary);
 
 tumor.random_tumor_content(np_gene_dictionary);
-
-
-############
-# OLD CODE #
-############
-
-#norm_matrix = quantile_normalisation.algo(BEGIN1, END1, INPUT);
-#norm_matrix_noise = noise.add_noise(BEGIN1, END1, norm_matrix);
-
-#file_handler.write_to_file(BEGIN1, END1, norm_matrix_noise, INPUT, OUTPUT);
-
-# OUT OF WORK
-#quantile_normalisation_package(BEGIN1, END1);

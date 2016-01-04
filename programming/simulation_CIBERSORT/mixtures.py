@@ -3,6 +3,15 @@ import numpy as np, linecache
 
 def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 
+	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
+	- Jurkat
+	- IM-9
+	- Raji
+	- THP-1
+
+	It then calculates the average of each cell and stores it in a dictionary
+	"""
+
 	for x in range(BEGIN, END):
 
 		line = linecache.getline('../../../Master_files/input/' + INPUT, x)
@@ -39,6 +48,11 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 
 def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 
+	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
+	It then calculates the average and appends the gene values to the gene dictionary containing
+	gene values for the cell lines (Jurkat, IM-9, Raji, THP-1).
+	"""
+
 	tumor_dictionary = {}
 
 	for x in range(BEGIN, END):
@@ -67,26 +81,30 @@ def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 
 def from_dictionary_to_matrix(GENE_DICTIONARY):
 
-	np_matrix_gene = np.zeros(shape=(len(GENE_DICTIONARY), 4))
-	np_matrix_tumor = np.zeros(shape=(len(GENE_DICTIONARY), 1))
+	""" Convert the dictionary containing genes to a matrix
+	"""
+
+	np_matrix_combined = np.zeros(shape=(len(GENE_DICTIONARY), 5))
 	insert = 0
 
 	for key, value in GENE_DICTIONARY.items():
 		
-		np_matrix_gene[insert] = np.array([value[0], value[1], value[2], value[3]])
-		np_matrix_tumor[insert] = np.array([value[4]])
+		np_matrix_combined[insert] = np.array([value[0], value[1], value[2], value[3], value[4]])
 		insert += 1
 
-	return np_matrix_gene, np_matrix_tumor
+	return np_matrix_combined
 
 
-def from_matrix_to_dictionary(CELL_LINE, TUMOR, GENE_DICTIONARY):
+def from_matrix_to_dictionary(COMBINED, GENE_DICTIONARY):
+
+	""" Convert the matrix containing genes to a dictionary
+	"""
 
 	index = 0
 
 	for key, value in GENE_DICTIONARY.items():
 		
-		GENE_DICTIONARY[key] = np.append(CELL_LINE[index], TUMOR[index])
+		GENE_DICTIONARY[key] = COMBINED[index]
 		index += 1
 
 	return GENE_DICTIONARY

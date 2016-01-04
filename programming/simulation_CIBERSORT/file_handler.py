@@ -61,49 +61,14 @@ def read_files(INPUT):
 	print(np_gene_dictionary)
 
 
-# def write_to_file(BEGIN, END, normalized_matrix, INPUT, OUTPUT):
-
-# 	""" Creating new files with the quantile normalized matrix with added noise.
-# 	Everything from the original data is copied except the MEAN value, which is from the normalized matrix.
-# 	"""
-
-# 	f1 = open('../../../Master_files/input/' + INPUT[0], 'r')
-# 	f2 = open('../../../Master_files/input/' + INPUT[1], 'r')
-# 	f1_new = open('../../../Master_files/output/' + OUTPUT[0], 'w')
-# 	f2_new = open('../../../Master_files/output/' + OUTPUT[1], 'w')
-
-# 	insert = 0
-
-# 	for x in range(0, END):
-
-# 		if x < BEGIN:
-
-# 			f1_new.write(linecache.getline('../../../Master_files/input/' + INPUT[0], x))
-# 			f2_new.write(linecache.getline('../../../Master_files/input/' + INPUT[1], x))
-
-# 		elif x < END:
-
-# 			line1 = linecache.getline('../../../Master_files/input/' + INPUT[0], x)
-# 			line2 = linecache.getline('../../../Master_files/input/' + INPUT[1], x)
-
-# 			list1 = np.array(line1.split('\t'))
-# 			list2 = np.array(line2.split('\t'))
-
-# 			list1 = [list1[GENE], normalized_matrix[x-BEGIN][0]]
-# 			list2 = [list1[GENE], normalized_matrix[x-BEGIN][1]]
-
-# 			f1_new.write('\t'.join(str(s) for s in list1) + '\n')
-# 			f2_new.write('\t'.join(str(s) for s in list2) + '\n')
-
-# 		else:
-# 			print (linecache.getline('../../../Master_files/input/' + INPUT[0], x))
-# 			print (linecache.getline('../../../Master_files/input/' + INPUT[1], x))
-		
-# 		insert += 1
-
 def write_to_file(NP_GENE_DICTIONARY, FILE_NUMBER):
 
+	""" Writes the gene dictionary to file.
+	"""
+
 	f1 = open('../../../Master_files/output/testfile_' + str(FILE_NUMBER), 'w')
+
+	f1.write("!Sample_title\tJurkat\tIM-9\tRaji\tTHP-1\n");
 
 	for key, value in NP_GENE_DICTIONARY.items():
 

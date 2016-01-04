@@ -1,5 +1,6 @@
 
 import linecache, numpy as np, rpy2.robjects as robjects
+
 from rpy2.robjects.packages import importr
 
 # Variables for GSE10650
@@ -32,53 +33,6 @@ def algo(GENE_VALUES_MATRIX):
 	normalized_matrix = np.array(R_normalized_matrix)
 	
 	return normalized_matrix
-
-############
-# OLD CODE #
-############
-
-# def step_one(BEGIN, END, INPUT):
-
-# 	np_matrix = np.zeros(shape=(END-BEGIN, 2))
-# 	insert = 0
-
-# 	for x in range(BEGIN, END):
-
-# 		line1 = linecache.getline('../../../Master_files/input/' + INPUT[0], x)
-# 		line2 = linecache.getline('../../../Master_files/input/' + INPUT[1], x)
-		
-# 		list1 = np.array(line1.split('\t'))
-# 		list2 = np.array(line2.split('\t'))
-
-# 		np_matrix[insert] = np.array([list1[VALUE], list2[VALUE]])
-		
-# 		insert += 1
-
-# 	return np_matrix
-
-
-# def step_two(np_matrix):
-
-# 	preprocessCore = importr('preprocessCore')
-# 	vector = robjects.FloatVector([ element for column in np_matrix for element in column ])
-# 	matrix = robjects.r['matrix'](vector, ncol = len(np_matrix[0]), byrow=False)
-# 	R_normalized_matrix = preprocessCore.normalize_quantiles(matrix)
-# 	normalized_matrix = np.array(R_normalized_matrix)
-
-# 	return normalized_matrix
-
-
-# def algo(BEGIN, END, INPUT):
-
-# 	""" Quantile normalization for mean value between to .CEL files.
-# 	STEP 1: Read file and add 'mean' to list.
-# 	STEP 2: Calculate vectors, create matrix based on vectors and normalize the matrix with quantile normalisation.
-# 	"""
-
-# 	np_matrix = step_one(BEGIN, END, INPUT)
-# 	normalized_matrix = step_two(np_matrix)
-	
-# 	return normalized_matrix
 
 
 ################
