@@ -20,3 +20,18 @@ Execute:
 ```
 simulation_CIBERSORT$ python simulation.py -i GSM269529.txt GSM269530.txt GSE11103_series_matrix.txt -o [output.file ...]
 ```
+
+## Convert
+
+### Description
+
+Running the simulation of tumors based on CIBERSORTs implementation results in gene ids being represented as Affy IDs, instead of HUGO IDs (CIBERSORT requires HUGO as gene ID).
+
+### Run
+
+Still in the test phase
+
+Execute:
+```
+convert_geneID$ python convert.py
+```
