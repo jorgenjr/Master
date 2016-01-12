@@ -22,7 +22,7 @@ string = '''
 	EnsembleToHGNC<-function(organism="hsapiens_gene_ensembl"){
 
 	  require(biomaRt);
-	  EnsembleIDs <- read.table("http://dpaste.com/1CDE9C7.txt")
+	  EnsembleIDs <- read.table("http://dpaste.com/26KQJ76.txt")
 	  ensemble<-useMart("ensembl");
 	  hsp<-useDataset(mart=ensemble,dataset=organism);
 	  ids<-getBM(filters= "ensembl_gene_id",
@@ -32,16 +32,34 @@ string = '''
 	}
 	'''
 
-powerpack = SignatureTranslatedAnonymousPackage(string, "powerpack")
+# powerpack = SignatureTranslatedAnonymousPackage(string, "powerpack")
+
+# print(powerpack.EnsembleToHGNC())
 
 # test = robjects.r('''
 # 	library(biomaRt)
 # 	dat<-read.table("http://dpaste.com/3JY819Y.txt")
 # 	probes<-as.vector(as.matrix(dat))
-# 	mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
-# 	g = getGene( id = probes, type = "affy_mg_u74av2", mart = mouse)
+# 	human = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+# 	g = getBM( id = probes, type = "affy_mg_u74av2", mart = human)
 # 	show(g)
 # 	''')
+
+# string = '''
+# 	EnsembleToHGNC<-function(organism="mmusculus_gene_ensembl"){
+
+# 	  require(biomaRt);
+# 	  EnsembleIDs <- read.table("http://dpaste.com/3JY819Y.txt")
+# 	  ensemble<-useMart("ensembl");
+# 	  hsp<-useDataset(mart=ensemble,dataset=organism);
+# 	  ids<-getBM(filters= "ensembl_gene_id",
+#               attributes= c("ensembl_gene_id","mgi_id", "mgi_symbol","mgi_description"),
+#               values= EnsembleIDs, mart= hsp);
+# 	  return(ids);
+# 	}
+# 	'''
+
+powerpack = SignatureTranslatedAnonymousPackage(string, "powerpack")
 
 print(powerpack.EnsembleToHGNC())
 

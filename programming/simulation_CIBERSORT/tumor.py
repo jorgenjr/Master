@@ -12,8 +12,8 @@ def random_tumor_content(NP_GENE_DICTIONARY):
 	num_noise = 1
 	iteration = 1
 
-	max_tumor = 1
-	max_noise = 1
+	max_tumor = 1 # Normally 30
+	max_noise = 1 # Normally 30
 
 	for i in range(0,max_tumor):
 
