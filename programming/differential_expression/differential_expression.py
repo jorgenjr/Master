@@ -127,12 +127,8 @@ def run_edger(data, groups, sizes, genes):
             dP$common.dispersion <- 1e-06
             dP$conc <- msP$conc
             dP$common.lib.size <- msP$M
-            print(dim(dP))
             dP$counts[is.na(dP$counts)] <- 0
             # options(max.print=100000)
-            print("hei")
-            #result = exactTest(dP)
-            #print(result)
         ''')
         
         dgelist = robjects.globalenv['dP']
