@@ -32,12 +32,12 @@ rpy2.robjects.numpy2ri.activate()
 
 def read_count_file():
 
-	f = open("../../../Master_files/output/testfile_1_1_small_two", "r")
+	f = open("../../../Master_files/output/testfile_1_1", "r")
 	header = []
 	reads = 0
 	counts = collections.defaultdict(dict)
-	#total_counts = [0.0, 0.0, 0.0, 0.0]
-	total_counts = [0.0, 0.0]
+	total_counts = [0.0, 0.0, 0.0, 0.0]
+	#total_counts = [0.0, 0.0]
 
 	for lines in f:
 		
@@ -76,10 +76,10 @@ def get_conditions_and_genes(work_counts, total_counts):
 def edger_matrices(work_counts, total_counts):
 	
 	conditions, all_genes = get_conditions_and_genes(work_counts, total_counts)
-	# assert len(total_counts) == 4
-	# groups = [1, 2, 3, 4]
-	assert len(total_counts) == 2
-	groups = [1, 2]
+	assert len(total_counts) == 4
+	groups = [1, 2, 3, 4]
+	#assert len(total_counts) == 2
+	#groups = [1, 2]
 	data = []
 	final_genes = []
 
@@ -89,7 +89,7 @@ def edger_matrices(work_counts, total_counts):
 		if sum(cur_row) > 0:
 			data.append(cur_row)
 			final_genes.append(g)
-
+	print(final_genes)			
 	return (np.array(data), np.array(groups), np.array(total_counts), conditions, final_genes)
 
 def run_edger(data, groups, sizes, genes):
