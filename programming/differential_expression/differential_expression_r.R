@@ -13,7 +13,7 @@ dge <- DGEList(counts=countdata, group=c(1,2,3,4))
 
 D <- estimateCommonDisp(dge, rowsum.filter=0)
 
-is.na(D$counts)
+D$counts[is.na(D$counts)] <- 0
 
 D <- exactTest(D, dispersion=0.05)
 
