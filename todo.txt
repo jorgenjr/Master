@@ -1,4 +1,5 @@
 - Find differential expression (calculate, using bioconductor function) for finding marker genes.
 -- Using my cell lines to find out which genes are turned on.
+-- Should I try to implement count_diffexp_general.py instead? (newer?)
 
 - Write down about the GeoBank, BiomaRt, etc. Why did I use it?

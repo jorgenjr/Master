@@ -59,18 +59,31 @@ string = '''
 # 	}
 # 	'''
 
-powerpack = SignatureTranslatedAnonymousPackage(string, "powerpack")
+# powerpack = SignatureTranslatedAnonymousPackage(string, "powerpack")
 
-print(powerpack.EnsembleToHGNC())
+# print(powerpack.EnsembleToHGNC())
 
-asd = robjects.r('''
-        f <- function(r, verbose=FALSE) {
-            if (verbose) {
-                cat("I am calling f().\n")
-            }
-            2 * pi * r
-        }
-        f(3)
-        ''')
+# asd = robjects.r('''
+#         f <- function(r, verbose=FALSE) {
+#             if (verbose) {
+#                 cat("I am calling f().\n")
+#             }
+#             2 * pi * r
+#         }
+#         f(3)
+#         ''')
 
-print (asd)
+# print (asd)
+
+f_read = open('../../../Master_files/output/testfile_1_1', 'r')
+f_write = open('../../../Master_files/output/testfile_1_1_geneid', 'w')
+i = True
+
+for line in f_read:
+
+	if (i):
+		i = False
+		continue
+
+	splitted_line = line.split('\t')
+	f_write.write(splitted_line[0] + '\n')
