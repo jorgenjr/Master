@@ -5,31 +5,6 @@ from rpy2.robjects.packages import SignatureTranslatedAnonymousPackage
 
 rpy2.robjects.numpy2ri.activate()
 
-# from rpy2.robjects.vectors import FactorVector, StrVector, IntVector
-# from rpy2.robjects.packages import importr
-# from bioc import edger
-
-# test = robjects.r('''
-# 	library("affy")
-# 	library("limma")
-	
-# 	phenoData <- read.AnnotatedDataFrame("../../../Master_files/output/testfile_1_1_small_two", sep="\t", header=TRUE);
-	
-# 	combn <- factor(paste(pData(phenoData)[,1], pData(phenoData)[,2], sep = "_"))
-# 	print("==========================================================");
-# 	design <- model.matrix(~combn)
-# 	print("??????????????????????????????????????????????????????????");
-# 	fit <- lmFit(phenoData, design)
-# 	efit <- eBayes(fit)
-# 	topTable(efit, coef=2)
-# 	''')
-
-# phenoData <- read.AnnotatedDataFrame(system.file("testfile_1_1", "\t", package="arrays"))
-
-# print(test)
-
-##########################################################
-
 def read_count_file():
 
 	f = open("../../../Master_files/output/testfile_1_1", "r")
@@ -37,7 +12,6 @@ def read_count_file():
 	reads = 0
 	counts = collections.defaultdict(dict)
 	total_counts = [0.0, 0.0, 0.0, 0.0]
-	#total_counts = [0.0, 0.0]
 
 	for lines in f:
 		
@@ -67,19 +41,14 @@ def get_conditions_and_genes(work_counts, total_counts):
 		all_genes.extend(work_counts[c].keys())
 		all_genes = list(set(all_genes))
 		all_genes.sort()
-		# print (work_counts[c] for c in conditions)
-		# sizes = [work_counts[c]["Total"] for c in conditions]
-		# all_genes.remove("Total")
 
-	return conditions, all_genes#, sizes
+	return conditions, all_genes
 
 def edger_matrices(work_counts, total_counts):
 	
 	conditions, all_genes = get_conditions_and_genes(work_counts, total_counts)
 	assert len(total_counts) == 4
 	groups = [1, 2, 3, 4]
-	#assert len(total_counts) == 2
-	#groups = [1, 2]
 	data = []
 	final_genes = []
 
@@ -187,12 +156,6 @@ def remove_NAs(dgelist):
 
 	return new_dgelist
 
-
-# base, ext = os.path.splitext(count_file)
-# outfile = "%s-diffs.csv" % (base)
-
 counts, total_counts = read_count_file()
 data, groups, sizes, conditions, genes = edger_matrices(counts, total_counts)
 probs = run_edger(data, groups, sizes, genes)
-
-# write_outfile(outfile, genes, conditions, counts, probs)

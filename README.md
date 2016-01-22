@@ -25,13 +25,29 @@ simulation_CIBERSORT$ python simulation.py -i GSM269529.txt GSM269530.txt GSE111
 
 ### Description
 
-Running the simulation of tumors based on CIBERSORTs implementation results in gene ids being represented as Affy IDs, instead of HUGO IDs (CIBERSORT requires HUGO as gene ID).
+Running the simulation of tumors based on CIBERSORTs implementation results in gene ids being represented as Affy IDs (HGU133 plus 2.0), instead of HUGO IDs (CIBERSORT requires HUGO as gene ID).
 
 ### Run
 
-Still in the test phase
+First run convert.py to take your resulting cell lines from the CIBERSORT simulation to only save the gene IDs.
 
 Execute:
 ```
 convert_geneID$ python convert.py
+```
+Open convert.R in Rstudio and run it. To change the input/output file, you need to change it in the code.
+
+## Compare
+
+### Description
+
+After converting Affy IDs to HUGO IDs, you need to compare the new HUGO IDs to the ones provided in LM22 (a signature genes file created by the authors of the CIBERSORT algorithm). Running this script will create an output file where the number of matches, unique matches, and every HUGO gene from comparing your file against LM22 will be written.
+
+### Run
+
+To change the input files for comparing, you need to change it in the code.
+
+Execute:
+```
+convert_geneID$ python compare.py
 ```

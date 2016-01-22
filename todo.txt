@@ -1,5 +1,6 @@
-- Find differential expression (calculate, using bioconductor function) for finding marker genes.
+- Differential expression (write)
 -- Using my cell lines to find out which genes are turned on.
--- Should I try to implement count_diffexp_general.py instead? (newer?)
 
 - Write down about the GeoBank, BiomaRt, etc. Why did I use it?
+- Convert Affy IDs to HUGO for the differential expression output file
+- Run CIBERSORT with both simulation data and differential expression (?)
