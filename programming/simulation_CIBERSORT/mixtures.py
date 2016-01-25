@@ -57,13 +57,13 @@ def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 
 	for x in range(BEGIN, END):
 
-		line = linecache.getline('../../../Master_files/input/' + INPUT1, x)
+		line = linecache.getline('../../../Master_files/simulation/' + INPUT1, x)
 		line_list = np.array(line.split('\t'))
 		tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
 
 	for x in range(BEGIN, END):
 
-		line = linecache.getline('../../../Master_files/input/' + INPUT2, x)
+		line = linecache.getline('../../../Master_files/simulation/' + INPUT2, x)
 		line_list = np.array(line.split('\t'))
 		
 		if line_list[0] in tumor_dictionary:

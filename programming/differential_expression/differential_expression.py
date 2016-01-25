@@ -7,7 +7,7 @@ rpy2.robjects.numpy2ri.activate()
 
 def read_count_file():
 
-	f = open("../../../Master_files/output/testfile_1_1", "r")
+	f = open("../../../Master_files/simulation/testfile_1_1", "r")
 	header = []
 	reads = 0
 	counts = collections.defaultdict(dict)

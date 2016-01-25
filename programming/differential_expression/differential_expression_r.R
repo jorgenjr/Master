@@ -4,7 +4,7 @@ library(edgeR)
 
 options(max.print=200)
 
-countdata <- read.table("../../../Master_files/output/testfile_1_1", sep="\t", header=T)
+countdata <- read.table("../../../Master_files/simulation/testfile_1_1", sep="\t", header=T)
 
 rownames(countdata) <- countdata[,1]
 countdata <- countdata[,-1]

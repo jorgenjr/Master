@@ -3,7 +3,7 @@ require(biomaRt);
 
 organism="hsapiens_gene_ensembl"
 
-EnsembleIDs <- read.table("../../../Master_files/output/testfile_1_1_geneid")
+EnsembleIDs <- read.table("../../../Master_files/convert/testfile_1_1_geneid")
 
 ensemble<-useMart("ensembl");
 

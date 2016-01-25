@@ -28,7 +28,7 @@ def read_args():
 
 	The given files must be placed outside the "Master" folder:
 	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
-	Files: folder_name/Master_files/[input|output]/
+	Files: folder_name/Master_files/simulation/
 
 	E.g.: python simulation.py -i GSM269529.txt -o GSM269529_NEW.txt
 	"""

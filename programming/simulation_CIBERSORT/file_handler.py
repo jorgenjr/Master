@@ -30,7 +30,7 @@ def read_file(START, STOP, INDEX, COLS):
 
 	for x in range(START, STOP):
 
-		line = linecache.getline('../../../Master_files/input/' + INPUT[INDEX], x)
+		line = linecache.getline('../../../Master_files/simulation/' + INPUT[INDEX], x)
 		line_list = np.array(line.split('\t'))
 		gene_ref = ""
 
@@ -66,7 +66,7 @@ def write_to_file(NP_GENE_DICTIONARY, FILE_NUMBER):
 	""" Writes the gene dictionary to file.
 	"""
 
-	f1 = open('../../../Master_files/output/testfile_' + str(FILE_NUMBER), 'w')
+	f1 = open('../../../Master_files/simulation/testfile_' + str(FILE_NUMBER), 'w')
 
 	f1.write("!Sample_title\tJurkat\tIM-9\tRaji\tTHP-1\n");
 

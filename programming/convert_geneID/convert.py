@@ -1,6 +1,6 @@
 
-f_read = open('../../../Master_files/output/testfile_1_1', 'r')
-f_write = open('../../../Master_files/output/testfile_1_1_geneid', 'w')
+f_read = open('../../../Master_files/simulation/testfile_1_1', 'r')
+f_write = open('../../../Master_files/convert/testfile_1_1_geneid', 'w')
 i = True
 
 for line in f_read:

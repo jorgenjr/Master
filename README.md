@@ -11,8 +11,9 @@ Replicating [CIBERSORT](http://www.nature.com/nmeth/journal/v12/n5/abs/nmeth.333
 For running this script, you need to have the following folder setup ("Master" is the origin git folder):
 
 1. folder_name/Master/programming/simulation_CIBERSORT/simulation.py
-2. folder_name/Master_files/input/
-3. folder_name/Master_files/output/
+2. folder_name/Master_files/simulation/
+3. folder_name/Master_files/diff_exp/
+4. folder_name/Master_files/convert/
 
 This is due to large input (and output) files, which are too big for the 100 MB limit with a free GitHub account.
 

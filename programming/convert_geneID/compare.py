@@ -1,8 +1,8 @@
 
 import time
 
-f_lm = open('../../../Master_files/input/LM22.txt', 'r')
-f_hugo = open('hugo.txt', 'r')
+f_lm = open('../../../Master_files/convert/LM22.txt', 'r')
+f_hugo = open('../../../Master_files/convert/hugo.txt', 'r')
 
 lm = []
 hugo = []

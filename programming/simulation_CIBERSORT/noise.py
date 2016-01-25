@@ -16,5 +16,4 @@ def add_noise(normalized_matrix):
 			noise = 2 ** N
 			normalized_matrix[i][j] += noise
 	
-	#write_to_file(BEGIN, END, normalized_matrix)
 	return normalized_matrix;
