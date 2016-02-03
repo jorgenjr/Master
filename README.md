@@ -44,8 +44,10 @@ Execute:
 ```
 convert_geneID$ python replace.py
 ```
-The output will be two files: simulation_hugo and simulation_hugo_unique
+The output will be two files: simulation_hugo and simulation_hugo_unique:
+
 The first one has translated Affy IDs to HUGO, removed unreadable Affy IDs and contains duplicates of genes.
+
 The second one, however, does not contain duplicates and will end up with a number of genes ~20.000.
 
 ## Compare
