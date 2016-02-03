@@ -2,7 +2,8 @@
 import time
 
 f_lm = open('../../../Master_files/convert/LM22.txt', 'r')
-f_hugo = open('../../../Master_files/convert/hugo.txt', 'r')
+f_hugo = open('../../../Master_files/diff_exp/hugo', 'r')
+f_matches = open('matches', 'w')
 
 lm = []
 hugo = []
@@ -39,13 +40,13 @@ for line in f_hugo:
 			
 
 unique_match.sort()
-f = open('matches.txt', 'w')
-f.write("Total matches: " + str(match) + '\n')
-f.write("Unique gene matches: " + str(len(unique_match)) + '\n')
+
+f_matches.write("Total matches: " + str(match) + '\n')
+f_matches.write("Unique gene matches: " + str(len(unique_match)) + '\n')
 
 for i in range(len(unique_match)):
-	f.write(unique_match[i] + "\n")
+	f_matches.write(unique_match[i] + "\n")
 
-f.close()
+f_matches.close()
 f_lm.close()
 f_hugo.close()

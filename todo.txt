@@ -1,6 +1,13 @@
 - Differential expression (write)
 -- Using my cell lines to find out which genes are turned on.
 
-- Write down about the GeoBank, BiomaRt, etc. Why did I use it?
+- Write down about the GeoBank, etc. Why did I use it?
+-- gene expression signature matrix method
 - Convert Affy IDs to HUGO for the differential expression output file
 - Run CIBERSORT with both simulation data and differential expression (?)
+
+
+Check out CIBERSORT command line
+Check if differential expression is correctly produced
+See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
+Generate my own gene expression signature matrix

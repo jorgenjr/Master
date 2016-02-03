@@ -38,6 +38,16 @@ convert_geneID$ python convert.py
 ```
 Open convert.R in Rstudio and run it. To change the input/output file, you need to change it in the code.
 
+If you need to replace Affy IDs with HUGO IDs, run replace.py. It will replace all the Affy IDs from your original cell lines with HUGO IDs. If there are several genes with same ID, they will be added together, then a average score will be calculated.
+
+Execute:
+```
+convert_geneID$ python replace.py
+```
+The output will be two files: simulation_hugo and simulation_hugo_unique
+The first one has translated Affy IDs to HUGO, removed unreadable Affy IDs and contains duplicates of genes.
+The second one, however, does not contain duplicates and will end up with a number of genes ~20.000.
+
 ## Compare
 
 ### Description
