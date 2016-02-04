@@ -30,11 +30,11 @@ Running the simulation of tumors based on CIBERSORTs implementation results in g
 
 ### Run
 
-First run convert.py to take your resulting cell lines from the CIBERSORT simulation to only save the gene IDs.
+First run from_gsm_to_geneid.py to take your resulting cell lines from the CIBERSORT simulation to only save the gene IDs.
 
 Execute:
 ```
-convert_geneID$ python convert.py
+convert_geneID$ python from_gsm_to_geneid.py
 ```
 Open convert.R in Rstudio and run it. To change the input/output file, you need to change it in the code.
 
