@@ -14,7 +14,7 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 
 	for x in range(BEGIN, END):
 
-		line = linecache.getline('../../../Master_files/input/' + INPUT, x)
+		line = linecache.getline('../../../Master_files/simulation/' + INPUT, x)
 		line_list = np.array(line.split('\t'))
 
 		Jurkat = 0.0
@@ -84,12 +84,25 @@ def from_dictionary_to_matrix(GENE_DICTIONARY):
 	""" Convert the dictionary containing genes to a matrix
 	"""
 
-	np_matrix_combined = np.zeros(shape=(len(GENE_DICTIONARY), 5))
+	value_length = 0
+
+	for key, value in GENE_DICTIONARY.items():
+		print("2: ", key, ": ", value)
+		value_length = len(value)
+		break;
+
+	np_matrix_combined = np.zeros(shape=(len(GENE_DICTIONARY), value_length))
 	insert = 0
 
 	for key, value in GENE_DICTIONARY.items():
+
+		value_list = []
+
+		for i in range(len(value)):
+			value_list.append(value[i])
 		
-		np_matrix_combined[insert] = np.array([value[0], value[1], value[2], value[3], value[4]])
+		np_matrix_combined[insert] = np.array(value_list)
+		#np_matrix_combined[insert] = np.array([value[0], value[1], value[2], value[3], value[4]])
 		insert += 1
 
 	return np_matrix_combined
@@ -100,11 +113,19 @@ def from_matrix_to_dictionary(COMBINED, GENE_DICTIONARY):
 	""" Convert the matrix containing genes to a dictionary
 	"""
 
+	for key, value in GENE_DICTIONARY.items():
+		print("8: ", key, ": ", value)
+		break;
+
 	index = 0
 
 	for key, value in GENE_DICTIONARY.items():
 		
 		GENE_DICTIONARY[key] = COMBINED[index]
 		index += 1
+
+	for key, value in GENE_DICTIONARY.items():
+		print("9: ", key, ": ", value)
+		break;
 
 	return GENE_DICTIONARY

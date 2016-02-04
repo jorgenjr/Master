@@ -48,3 +48,7 @@ def add_tumor_content(NP_GENE_DICTIONARY, TUMOR_CONTENT, NUM_FILE):
 		np_matrix_gene[key] = np.array([(noise_value[0][1] * CELL_LINE_CONTENT) + (noise_value[0][0] * fixed_tumor_content / 4), (noise_value[0][2] * CELL_LINE_CONTENT) + (noise_value[0][0] * fixed_tumor_content / 4), (noise_value[0][3] * CELL_LINE_CONTENT) + (noise_value[0][0] * fixed_tumor_content / 4), (noise_value[0][4] * CELL_LINE_CONTENT) + (noise_value[0][0] * fixed_tumor_content / 4)])
 
 	file_handler.write_to_file(np_matrix_gene, NUM_FILE);
+
+	for key, value in NP_GENE_DICTIONARY.items():
+		print("10: ", key, ": ", value)
+		break;

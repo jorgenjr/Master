@@ -5,6 +5,7 @@
 -- gene expression signature matrix method
 - Convert Affy IDs to HUGO for the differential expression output file
 - Run CIBERSORT with both simulation data and differential expression (?)
+- IMPORTANT: DOES MY ALGORITHMS ASSIGN THE CORRECT GENE VALUE TO THE CORRECT GENE ID AFTER NORMALISATION ETC.?
 
 
 Check out CIBERSORT command line

@@ -25,11 +25,18 @@ def algo(GENE_VALUES_MATRIX):
 	""" Quantile normalization for mean value between to .CEL files.
 	Calculate vectors, create matrix based on vectors and normalize the matrix with quantile normalisation.
 	"""
-
+	print("3: ", GENE_VALUES_MATRIX[0])
 	preprocessCore = importr('preprocessCore')
 	vector = robjects.FloatVector([ element for column in GENE_VALUES_MATRIX for element in column ])
+	print("4: ", vector[0])
+	print("4: ", vector[1])
 	matrix = robjects.r['matrix'](vector, ncol = len(GENE_VALUES_MATRIX[0]), byrow=False)
+	print("5: ", matrix[0])
+	print("5: ", matrix[1])
 	R_normalized_matrix = preprocessCore.normalize_quantiles(matrix)
+	print("6: ", R_normalized_matrix[0])
+	print("6: ", R_normalized_matrix[1])
 	normalized_matrix = np.array(R_normalized_matrix)
-	
+	print("7: ", normalized_matrix[0])
+	print("7: ", normalized_matrix[1])
 	return normalized_matrix
