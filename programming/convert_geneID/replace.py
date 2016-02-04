@@ -65,6 +65,8 @@ for i in range(len(unique_hugo_genes)):
 	if (unique_hugo_genes[i][2] > 1):
 		unique_hugo_genes[i][1] = [unique_hugo_genes[i][1][0] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][1] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][2] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][3] / float(unique_hugo_genes[i][2])]
 
+unique_hugo_genes.sort();
+
 for i in range(len(unique_hugo_genes)):
 	f_simulation_hugo_unique.write(unique_hugo_genes[i][0] + '\t' + str(unique_hugo_genes[i][1][0]) + '\t' + str(unique_hugo_genes[i][1][1]) + '\t' + str(unique_hugo_genes[i][1][2]) + '\t' + str(unique_hugo_genes[i][1][3]) + '\n')
 
