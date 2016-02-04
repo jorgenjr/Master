@@ -38,6 +38,7 @@ def replace_affy_with_hugo(affy_to_hugo):
 
 	f_simulation = open('../../../Master_files/simulation/testfile_1_1', 'r')
 	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo', 'w')
+	header = True
 	unique_hugo_genes = []
 
 	for line in f_simulation:
@@ -74,7 +75,8 @@ def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
 
 	if len(unique_hugo_genes) == 0:
 		unique_hugo_genes.append([geneid, [float(splitted_line[1]), float(splitted_line[2]), float(splitted_line[3]), float(splitted_line[4][:-1])], 1]);
-		continue;
+		
+		return unique_hugo_genes
 
 	found = False;
 
