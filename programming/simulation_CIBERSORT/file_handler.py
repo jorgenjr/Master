@@ -74,3 +74,18 @@ def write_to_file(NP_GENE_DICTIONARY, FILE_NUMBER):
 
 		string = str(key) + "\t" + str(value[0]) + "\t" + str(value[1]) + "\t" + str(value[2]) + "\t" + str(value[3]) + "\n";
 		f1.write(string)
+
+
+def write_combined_cell_lines(NP_GENE_DICTIONARY):
+
+	""" Write the gene dictionary with only data from cell lines combined to file.
+	"""
+
+	f1 = open('../../../Master_files/simulation/combined_matrix', 'w')
+	
+	f1.write("!Sample_title\tJurkat\tIM-9\tRaji\tTHP-1\n");
+
+	for key, value in np_gene_dictionary.items():
+		f1.write(key+"\t"+str(value[0])+"\t"+str(value[1])+"\t"+str(value[2])+"\t"+str(value[3])+"\n")
+
+	f1.close()

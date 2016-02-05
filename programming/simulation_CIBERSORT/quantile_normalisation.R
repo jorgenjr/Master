@@ -6,6 +6,6 @@ exprs <- as.matrix(read.table('/home/jorgen/Projects/Master/programming/simulati
                               as.is=TRUE))
 
 new_exprs = normalize.quantiles(exprs,copy=TRUE)
-options(max.print=20000000)
+options(max.print=100)
 print(new_exprs)
 print(exprs)

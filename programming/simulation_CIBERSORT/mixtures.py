@@ -87,7 +87,6 @@ def from_dictionary_to_matrix(GENE_DICTIONARY):
 	value_length = 0
 
 	for key, value in GENE_DICTIONARY.items():
-		print("2: ", key, ": ", value)
 		value_length = len(value)
 		break;
 
@@ -113,19 +112,11 @@ def from_matrix_to_dictionary(COMBINED, GENE_DICTIONARY):
 	""" Convert the matrix containing genes to a dictionary
 	"""
 
-	for key, value in GENE_DICTIONARY.items():
-		print("8: ", key, ": ", value)
-		break;
-
 	index = 0
 
 	for key, value in GENE_DICTIONARY.items():
 		
 		GENE_DICTIONARY[key] = COMBINED[index]
 		index += 1
-
-	for key, value in GENE_DICTIONARY.items():
-		print("9: ", key, ": ", value)
-		break;
 
 	return GENE_DICTIONARY
