@@ -46,6 +46,48 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	return GENE_DICTIONARY
 
 
+def separate_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
+
+	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
+	- Jurkat
+	- IM-9
+	- Raji
+	- THP-1
+	"""
+
+	for x in range(BEGIN, END):
+
+		line = linecache.getline('../../../Master_files/simulation/' + INPUT, x)
+		line_list = np.array(line.split('\t'))
+
+		# GENES: Column index 0
+		gene_ref = line_list[0].split('"')[1]
+
+		# JURKAT: GSM279589, GSM279590, GSM279591
+		Jurkat_1 = float(line_list[18])
+		Jurkat_2 = float(line_list[19])
+		Jurkat_3 = float(line_list[20])
+
+		# IM-9: GSM279592, GSM279593, GSM279594
+		IM9_1 = float(line_list[21])
+		IM9_2 = float(line_list[22])
+		IM9_3 = float(line_list[23])
+
+		# RAJI: GSM279595, GSM279596, GSM279597
+		Raji_1 = float(line_list[24])
+		Raji_2 = float(line_list[25])
+		Raji_3 = float(line_list[26])
+		
+		# THP-1: GSM279598, GSM279599, GSM279600
+		THP1_1 = float(line_list[27])
+		THP1_2 = float(line_list[28])
+		THP1_3 = float(line_list[29])
+
+		GENE_DICTIONARY[gene_ref] = np.array([Jurkat_1, Jurkat_2, Jurkat_3, IM9_1, IM9_2, IM9_3, Raji_1, Raji_2, Raji_3, THP1_1, THP1_2, THP1_3])
+
+	return GENE_DICTIONARY
+
+
 def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 
 	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
@@ -101,7 +143,6 @@ def from_dictionary_to_matrix(GENE_DICTIONARY):
 			value_list.append(value[i])
 		
 		np_matrix_combined[insert] = np.array(value_list)
-		#np_matrix_combined[insert] = np.array([value[0], value[1], value[2], value[3], value[4]])
 		insert += 1
 
 	return np_matrix_combined
@@ -115,7 +156,6 @@ def from_matrix_to_dictionary(COMBINED, GENE_DICTIONARY):
 	index = 0
 
 	for key, value in GENE_DICTIONARY.items():
-		
 		GENE_DICTIONARY[key] = COMBINED[index]
 		index += 1
 

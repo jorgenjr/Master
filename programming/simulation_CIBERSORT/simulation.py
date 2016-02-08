@@ -63,25 +63,27 @@ def read_args():
 
 read_args();
 
-np_gene_dictionary = mixtures.combine_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary);
+np_gene_dictionary = mixtures.combine_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary)
+
+np_gene_dictionary_copy = copy.deepcopy(np_gene_dictionary)
+
+np_gene_dictionary_not_combined = mixtures.separate_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary_copy)
 
 file_handler.write_combined_cell_lines(np_gene_dictionary)
 
-np_gene_dictionary_clean = copy.deepcopy(np_gene_dictionary)
-
-np_gene_dictionary_with_tumor = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary);
+np_gene_dictionary_with_tumor = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary)
 
 ##################################
 # GENERATE REFERENCE SAMPLE FILE #
 ##################################
 
-# combined_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_clean);
+separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_not_combined);
 
-# norm_matrix_combined = quantile_normalisation.algo(combined_values_matrix);
+norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix);
 
-# np_gene_dictionary_clean = mixtures.from_matrix_to_dictionary(norm_matrix_combined, np_gene_dictionary_clean);
+np_gene_dictionary_clean = mixtures.from_matrix_to_dictionary(norm_matrix_separate, np_gene_dictionary_not_combined)
 
-# file_handler.write_to_file(np_gene_dictionary_clean, "_clean")
+file_handler.write_separate_cell_lines(np_gene_dictionary_clean)
 
 ###########################################
 # QUANTILE TUMOR AND CELL LINE SEPARATELY #
@@ -98,10 +100,10 @@ np_gene_dictionary_with_tumor = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, 
 # QUANTILE TUMOR AND CELL LINE TOGETHER #
 #########################################
 
-combined_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_with_tumor);
+# combined_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_with_tumor);
 
-norm_matrix_combined = quantile_normalisation.algo(combined_values_matrix);
+# norm_matrix_combined = quantile_normalisation.algo(combined_values_matrix);
 
-np_gene_dictionary_with_tumor = mixtures.from_matrix_to_dictionary(norm_matrix_combined, np_gene_dictionary_with_tumor);
+# np_gene_dictionary_with_tumor = mixtures.from_matrix_to_dictionary(norm_matrix_combined, np_gene_dictionary_with_tumor);
 
-tumor.random_tumor_content(np_gene_dictionary_with_tumor);
+# tumor.random_tumor_content(np_gene_dictionary_with_tumor);

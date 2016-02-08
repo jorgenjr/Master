@@ -6,7 +6,7 @@ def read_hugo():
 	""" Reads hugo, and adds Affy ID and HUGO ID to dictionary
 	"""
 
-	f_hugo = open('../../../Master_files/diff_exp/hugo', 'r')
+	f_hugo = open('../../../Master_files/simulation/combined_matrix_hugo', 'r')
 	header = True
 	affy_to_hugo = {}
 
@@ -36,8 +36,8 @@ def replace_affy_with_hugo(affy_to_hugo):
 	4. Finds unique hugo genes (removes duplicates)
 	"""
 
-	f_simulation = open('../../../Master_files/simulation/testfile_1_1', 'r')
-	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo', 'w')
+	f_simulation = open('../../../Master_files/simulation/separate_cell_lines', 'r')
+	f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
 	header = True
 	unique_hugo_genes = []
 
@@ -52,10 +52,15 @@ def replace_affy_with_hugo(affy_to_hugo):
 		splitted_line = line.split('\t')
 
 		try:
-			geneid = affy_to_hugo[splitted_line[0]]
-			f_simulation_hugo.write(geneid + '\t' + splitted_line[1] + '\t' + splitted_line[2] + '\t' + splitted_line[3] + '\t' + splitted_line[4]);
+			line_to_write = affy_to_hugo[splitted_line[0]]
 
-			unique_hugo_genes = find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line)
+			# Skip gene ID
+			for i in range(1, len(splitted_line)):
+				line_to_write += "\t" + splitted_line[i]
+
+			f_simulation_hugo.write(line_to_write);
+
+			unique_hugo_genes = find_unique_hugo_genes(unique_hugo_genes, affy_to_hugo[splitted_line[0]], splitted_line)
 			
 		except KeyError:
 			# print("Error!")
@@ -74,23 +79,53 @@ def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
 	"""
 
 	if len(unique_hugo_genes) == 0:
-		unique_hugo_genes.append([geneid, [float(splitted_line[1]), float(splitted_line[2]), float(splitted_line[3]), float(splitted_line[4][:-1])], 1]);
+
+		list_of_genes = []
+
+		for i in range(1, len(splitted_line)):
+
+			if i == len(splitted_line) - 1:
+				list_of_genes.append(float(splitted_line[i][:-1]))
+			else:	
+				list_of_genes.append(float(splitted_line[i]))
+
+		unique_hugo_genes.append([geneid, list_of_genes, 1]);
 		
 		return unique_hugo_genes
 
 	found = False;
 
 	for i in range(len(unique_hugo_genes)):
-		
+
 		if unique_hugo_genes[i][0] == geneid:
-			unique_hugo_genes[i][1] = [unique_hugo_genes[i][1][0] + float(splitted_line[1]), unique_hugo_genes[i][1][1] + float(splitted_line[2]), unique_hugo_genes[i][1][2] + float(splitted_line[3]), unique_hugo_genes[i][1][3] + float(splitted_line[4])]
+
+			list_of_genes = []
+
+			for j in range(1, len(splitted_line)):
+			
+				if i == len(splitted_line) - 1:
+					list_of_genes.append(float(splitted_line[j][:-1]))
+				else:	
+					list_of_genes.append(float(splitted_line[j]))
+
+			unique_hugo_genes[i][1] = list_of_genes
 			unique_hugo_genes[i][2] = unique_hugo_genes[i][2] + 1;
 			found = True;
 			break;
 		
 
 	if (found == False):
-		unique_hugo_genes.append([geneid, [float(splitted_line[1]), float(splitted_line[2]), float(splitted_line[3]), float(splitted_line[4][:-1])], 1]);
+
+		list_of_genes = []
+
+		for i in range(1, len(splitted_line)):
+
+			if i == len(splitted_line) - 1:
+				list_of_genes.append(float(splitted_line[i][:-1]))
+			else:	
+				list_of_genes.append(float(splitted_line[i]))
+
+		unique_hugo_genes.append([geneid, list_of_genes, 1])
 
 	return unique_hugo_genes
 
@@ -104,8 +139,15 @@ def calc_average(unique_hugo_genes):
 	"""
 
 	for i in range(len(unique_hugo_genes)):
+
 		if (unique_hugo_genes[i][2] > 1):
-			unique_hugo_genes[i][1] = [unique_hugo_genes[i][1][0] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][1] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][2] / float(unique_hugo_genes[i][2]), unique_hugo_genes[i][1][3] / float(unique_hugo_genes[i][2])]
+			
+			list_of_genes = []
+			
+			for j in range(len(unique_hugo_genes[i][1])):
+				list_of_genes.append(unique_hugo_genes[i][1][j] / float(unique_hugo_genes[i][2]))
+
+			unique_hugo_genes[i][1] = list_of_genes
 
 	unique_hugo_genes.sort();
 
@@ -117,9 +159,17 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 	"""
 
 	for i in range(len(unique_hugo_genes)):
-		f_simulation_hugo_unique.write(unique_hugo_genes[i][0] + '\t' + str(unique_hugo_genes[i][1][0]) + '\t' + str(unique_hugo_genes[i][1][1]) + '\t' + str(unique_hugo_genes[i][1][2]) + '\t' + str(unique_hugo_genes[i][1][3]) + '\n')
 
-f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique', 'w')
+		line_to_write = unique_hugo_genes[i][0]
+
+		for j in range(len(unique_hugo_genes[i][1])):
+			line_to_write += "\t" + str(unique_hugo_genes[i][1][j])
+
+		line_to_write += "\n"
+
+		f_simulation_hugo_unique.write(line_to_write)
+
+f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
 
 affy_to_hugo = read_hugo()
 unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo)

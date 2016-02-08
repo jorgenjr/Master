@@ -85,7 +85,22 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY):
 	
 	f1.write("!Sample_title\tJurkat\tIM-9\tRaji\tTHP-1\n");
 
-	for key, value in np_gene_dictionary.items():
+	for key, value in NP_GENE_DICTIONARY.items():
 		f1.write(key+"\t"+str(value[0])+"\t"+str(value[1])+"\t"+str(value[2])+"\t"+str(value[3])+"\n")
 
 	f1.close()
+
+
+def write_separate_cell_lines(NP_GENE_DICTIONARY):
+
+	""" Writes the gene dictionary to file.
+	"""
+
+	f1 = open('../../../Master_files/simulation/separate_cell_lines', 'w')
+
+	f1.write("!Sample_title\tJurkat\tJurkat\tJurkat\tIM-9\tIM-9\tIM-9\tRaji\tRaji\tRaji\tTHP-1\tTHP-1\tTHP-1\n");
+
+	for key, value in NP_GENE_DICTIONARY.items():
+
+		string = str(key) + "\t" + str(value[0]) + "\t" + str(value[1]) + "\t" + str(value[2]) + "\t" + str(value[3]) + "\t" + str(value[4]) + "\t" + str(value[5]) + "\t" + str(value[6]) + "\t" + str(value[7]) + "\t" + str(value[8]) + "\t" + str(value[9]) + "\t" + str(value[10]) + "\t" + str(value[11]) + "\n";
+		f1.write(string)
