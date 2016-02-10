@@ -7,11 +7,8 @@ def random_tumor_content(NP_GENE_DICTIONARY):
 	1. Generate a random tumor content (0 - 100%).
 	2. Use that tumor content percentage to generate 30 datasets with different noise values.
 	"""
-
-	num_tumor = 1
-	num_noise = 1
+	
 	iteration = 1
-
 	max_tumor = 1 # Normally 30
 	max_noise = 1 # Normally 30
 
@@ -22,15 +19,12 @@ def random_tumor_content(NP_GENE_DICTIONARY):
 
 		for j in range(0,max_noise):
 			
-			add_tumor_content(NP_GENE_DICTIONARY, tumor_content, str(num_tumor) + "_" + str(num_noise));
+			add_tumor_content(NP_GENE_DICTIONARY, tumor_content, str(tumor_content) + "_" + str(iteration));
 
 			print ("Done with ", round((iteration/(max_tumor*max_noise))*100, 2), "%")
 
-			num_noise += 1;
 			iteration += 1;
 
-		num_tumor += 1;
-		num_noise = 1;
 
 def add_tumor_content(NP_GENE_DICTIONARY, TUMOR_CONTENT, NUM_FILE):
 
@@ -45,15 +39,6 @@ def add_tumor_content(NP_GENE_DICTIONARY, TUMOR_CONTENT, NUM_FILE):
 		
 		noise_value = noise.add_noise([copy.deepcopy(value)])
 
-		# np_matrix_gene[key] = np.array([
-		# 	(noise_value[0][1] * CELL_LINE_CONTENT) + 
-		# 	(noise_value[0][0] * fixed_tumor_content / 4), 
-		# 	(noise_value[0][2] * CELL_LINE_CONTENT) + 
-		# 	(noise_value[0][0] * fixed_tumor_content / 4), 
-		# 	(noise_value[0][3] * CELL_LINE_CONTENT) + 
-		# 	(noise_value[0][0] * fixed_tumor_content / 4), 
-		# 	(noise_value[0][4] * CELL_LINE_CONTENT) + 
-		# 	(noise_value[0][0] * fixed_tumor_content / 4)])
 		np_matrix_gene[key] = np.array([
 			(noise_value[1] * CELL_LINE_CONTENT) + 
 			(noise_value[0] * fixed_tumor_content / 4), 
@@ -63,6 +48,5 @@ def add_tumor_content(NP_GENE_DICTIONARY, TUMOR_CONTENT, NUM_FILE):
 			(noise_value[0] * fixed_tumor_content / 4), 
 			(noise_value[4] * CELL_LINE_CONTENT) + 
 			(noise_value[0] * fixed_tumor_content / 4)])
-
 
 	file_handler.write_to_file(np_matrix_gene, NUM_FILE);

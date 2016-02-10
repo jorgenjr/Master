@@ -6,7 +6,7 @@ def write_only_geneid():
 	"""
 
 	f_read = open('../../../Master_files/diff_exp/diff_exp', 'r')
-	f_write = open('../../../Master_files/convert/diff_exp_clean', 'w')
+	f_write = open('../../../Master_files/diff_exp/diff_exp_clean', 'w')
 	header = True
 
 	for line in f_read:

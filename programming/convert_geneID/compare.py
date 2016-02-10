@@ -6,7 +6,7 @@ def get_gene_from_lm22():
 	""" Reads LM22.txt and retrieves the gene ID from it.
 	"""
 
-	f_lm = open('../../../Master_files/convert/LM22.txt', 'r')
+	f_lm = open('../../../Master_files/external/LM22.txt', 'r')
 	skip = True
 	lm = []
 
@@ -23,14 +23,40 @@ def get_gene_from_lm22():
 
 	return lm
 
-def compare_against_lm22(lm):
+
+def get_gene_from_diff_exp():
+
+	""" Reads diff_exp_hugo and retrieves the gene ID from it.
+	"""
+
+	f_diff_exp_hugo = open('../../../Master_files/diff_exp/diff_exp_hugo', 'r')
+	skip = True
+	diff_exp_hugo = []
+
+	for line in f_diff_exp_hugo:
+		
+		if (skip == True):
+			skip = False
+			continue;
+
+		splitted_line = line.split('\t')
+		hugo_symbol = splitted_line[0].split('"')
+		diff_exp_hugo.append(hugo_symbol[1])
+		
+	f_diff_exp_hugo.close()
+
+	return diff_exp_hugo
+
+
+def compare_against_lm22(hugo_genes):
 
 	""" Reads hugo, retrieves gene ID from it, and compares it to genes from LM22.
 	If a match, then the variable 'match' is incremented.
 	If a match, but not found earlier, then added to 'unique_match' list.
 	"""
 
-	f_hugo = open('../../../Master_files/diff_exp/hugo', 'r')
+	#f_hugo = open('../../../Master_files/simulation/affy_to_hugo', 'r')
+	f_hugo = open('../../../Master_files/output/signature.txt', 'r')
 	skip = True
 	match = 0
 	unique_match = []
@@ -42,13 +68,19 @@ def compare_against_lm22(lm):
 			continue;
 
 		splitted_line = line.split('\t')
-		hugo_symbol = splitted_line[2].split('"')
 		
-		if (hugo_symbol[1] in lm):
+		# FOR AFFY_TO_HUGO:
+		#hugo_symbol_list = splitted_line[2].split('"')
+		#hugo_symbol = hugo_symbol_list[1]
+		
+		# FOR SIGNATURE:
+		hugo_symbol = splitted_line[0]
+
+		if (hugo_symbol in hugo_genes):
 			match += 1
 
-			if (hugo_symbol[1] not in unique_match):
-				unique_match.append(hugo_symbol[1])
+			if (hugo_symbol not in unique_match):
+				unique_match.append(hugo_symbol)
 			
 
 	unique_match.sort()
@@ -71,6 +103,7 @@ def write_matches_to_file(match, unique_match):
 
 	f_matches.close()
 
-lm = get_gene_from_lm22()
-match, unique_match = compare_against_lm22(lm)
+# lm = get_gene_from_lm22()
+diff_exp = get_gene_from_diff_exp()
+match, unique_match = compare_against_lm22(diff_exp)
 write_matches_to_file(match, unique_match)

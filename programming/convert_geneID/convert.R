@@ -16,4 +16,4 @@ ids <- getBM(filters = "affy_hg_u133_plus_2",
 options(max.print=20)
 
 # write.table(ids, file="/home/jorgen/Projects/Master_files/diff_exp/hugo", sep='\t')
-write.table(ids, file="/home/jorgen/Projects/Master_files/simulation/combined_matrix_hugo", sep='\t')
+write.table(ids, file="/home/jorgen/Projects/Master_files/simulation/affy_to_hugo", sep='\t')

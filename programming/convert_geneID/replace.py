@@ -6,7 +6,7 @@ def read_hugo():
 	""" Reads hugo, and adds Affy ID and HUGO ID to dictionary
 	"""
 
-	f_hugo = open('../../../Master_files/simulation/combined_matrix_hugo', 'r')
+	f_hugo = open('../../../Master_files/simulation/affy_to_hugo', 'r')
 	header = True
 	affy_to_hugo = {}
 
@@ -36,8 +36,9 @@ def replace_affy_with_hugo(affy_to_hugo):
 	4. Finds unique hugo genes (removes duplicates)
 	"""
 
-	f_simulation = open('../../../Master_files/simulation/separate_cell_lines', 'r')
-	f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
+	f_simulation = open('../../../Master_files/simulation/simulation_17_1', 'r')
+	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo', 'w')
+	# f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
 	header = True
 	unique_hugo_genes = []
 
@@ -169,7 +170,8 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 
 		f_simulation_hugo_unique.write(line_to_write)
 
-f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
+f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique', 'w')
+# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
 
 affy_to_hugo = read_hugo()
 unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo)

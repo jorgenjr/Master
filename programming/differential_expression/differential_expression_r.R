@@ -4,7 +4,8 @@ library(edgeR)
 
 options(max.print=200)
 
-countdata <- read.table("/home/jorgen/Projects/Master_files/simulation/testfile_1_1", sep="\t", header=T)
+#countdata <- read.table("/home/jorgen/Projects/Master_files/simulation/testfile_1_1", sep="\t", header=T)
+countdata <- read.table("/home/jorgen/Projects/Master_files/convert/simulation_hugo_unique", sep="\t", header=T)
 
 rownames(countdata) <- countdata[,1]
 countdata <- countdata[,-1]
@@ -19,4 +20,4 @@ D <- exactTest(D, dispersion=0.05)
 
 tags <- topTags(D, n=nrow(countdata))
 
-write.table(tags, file="diff_exp", sep="\t")
+write.table(tags, file="/home/jorgen/Projects/Master_files/diff_exp/diff_exp_hugo", sep="\t")
