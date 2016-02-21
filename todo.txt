@@ -6,6 +6,7 @@
 - Convert Affy IDs to HUGO for the differential expression output file
 - Run CIBERSORT with both simulation data and differential expression (?)
 - IMPORTANT: DOES MY ALGORITHMS ASSIGN THE CORRECT GENE VALUE TO THE CORRECT GENE ID AFTER NORMALISATION ETC.?
+- IMPORTANT: DO I CALCULATE THE TUMOR CONTENT CORRECTLY? I LOOKS LIKE I MAY END UP WITH MORE CONTENT THAN I SHOULD.
 
 
 Check out CIBERSORT command line

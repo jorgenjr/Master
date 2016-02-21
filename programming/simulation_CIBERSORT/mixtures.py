@@ -46,6 +46,41 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	return GENE_DICTIONARY
 
 
+def combine_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
+
+	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
+	- Mix A
+	- Mix B
+	- Mix C
+	- Mix D
+
+	It then calculates the average of each cell and stores it in a dictionary
+	"""
+
+	M1 = 0; M2 = 0; M3 = 0
+
+	if (MIX == 'A'):
+		M1 = 30; M2 = 31; M3 = 32
+	elif (MIX == 'B'):
+		M1 = 33; M2 = 34; M3 = 35
+	elif (MIX == 'C'):
+		M1 = 36; M2 = 37; M3 = 38
+	elif (MIX == 'D'):
+		M1 = 39; M2 = 40; M3 = 41
+
+	for x in range(BEGIN, END):
+
+		line = linecache.getline('../../../Master_files/external/' + INPUT, x)
+		line_list = np.array(line.split('\t'))
+
+		# GENES: Column index 0
+		gene_ref = line_list[0].split('"')[1]
+
+		GENE_DICTIONARY[gene_ref] = np.array([line_list[M1], line_list[M2], line_list[M3]])
+
+	return GENE_DICTIONARY
+
+
 def separate_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:

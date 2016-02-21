@@ -34,7 +34,11 @@ def add_tumor_content(NP_GENE_DICTIONARY, TUMOR_CONTENT, NUM_FILE):
 	CELL_LINE_CONTENT = (((100 - TUMOR_CONTENT) * 5) / 4) / 100;
 	fixed_tumor_content = (TUMOR_CONTENT * 5) / 100;
 	np_matrix_gene = {}
-	
+	# print (100-TUMOR_CONTENT)
+	# print ((100-TUMOR_CONTENT) * 5)
+	# print (((100-TUMOR_CONTENT) * 5) / 4)
+	# print ((((100-TUMOR_CONTENT) * 5) / 4) / 100)
+	# print (CELL_LINE_CONTENT, " ", fixed_tumor_content)
 	for key, value in NP_GENE_DICTIONARY.items():
 		
 		noise_value = noise.add_noise([copy.deepcopy(value)])
