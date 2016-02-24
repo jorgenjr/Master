@@ -76,3 +76,18 @@ def write_separate_mixtures(NP_GENE_DICTIONARY, MIX):
 
 		string = str(key) + "\t" + str(value[0]) + "\t" + str(value[1]) + "\t" + str(value[2]) + "\n";
 		f1.write(string)
+
+
+def write_combined_mixtures(NP_GENE_DICTIONARY, MIX):
+
+	""" Writes the gene dictionary to file.
+	"""
+
+	f1 = open('../../../Master_files/simulation/combined_mixtures_' + MIX, 'w')
+
+	f1.write("!Sample_title\tMix " + MIX + "\n");
+
+	for key, value in NP_GENE_DICTIONARY.items():
+
+		string = str(key) + "\t" + str(value[0]) + "\n";
+		f1.write(string)

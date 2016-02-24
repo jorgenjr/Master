@@ -68,7 +68,7 @@ read_args();
 
 # Mixture A, B, C, and D
 mix = "D"
-np_gene_dictionary = mixtures.combine_mixtures(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary, mix)
+np_gene_dictionary = mixtures.combined_mixtures(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary, mix)
 
 # np_gene_dictionary_copy = copy.deepcopy(np_gene_dictionary)
 
@@ -77,18 +77,6 @@ np_gene_dictionary = mixtures.combine_mixtures(BEGIN2, END2, FILECOLS2, INPUT[2]
 # file_handler.write_combined_cell_lines(np_gene_dictionary)
 
 # np_gene_dictionary_with_tumor = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary)
-
-##################################
-# GENERATE REFERENCE SAMPLE FILE #
-##################################
-
-# separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_not_combined);
-
-# norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix);
-
-# np_gene_dictionary_clean = mixtures.from_matrix_to_dictionary(norm_matrix_separate, np_gene_dictionary_not_combined)
-
-# file_handler.write_separate_cell_lines(np_gene_dictionary_clean)
 
 ####################################
 # QUANTILE WITHOUT TUMOR AND NOISE #
@@ -100,7 +88,10 @@ norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix)
 
 np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_separate, np_gene_dictionary)
 
-file_handler.write_separate_mixtures(np_gene_dictionary, mix)
+# SEPARATE
+# file_handler.write_separate_mixtures(np_gene_dictionary, mix)
+# COMBINED
+file_handler.write_combined_mixtures(np_gene_dictionary, mix)
 
 #########################################
 # QUANTILE TUMOR AND CELL LINE TOGETHER #

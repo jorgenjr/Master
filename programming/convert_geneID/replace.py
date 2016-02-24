@@ -1,5 +1,5 @@
 
-import copy, time
+import copy, time, timeit, numpy as np
 
 def read_hugo():
 
@@ -27,7 +27,7 @@ def read_hugo():
 
 	return affy_to_hugo
 
-def replace_affy_with_hugo(affy_to_hugo):
+def replace_affy_with_hugo(affy_to_hugo, mix):
 
 	""" Replaces Affy IDs with HUGO IDs in the original simulation file.
 	1. Reads the original simulation file containing Affy IDs.
@@ -36,8 +36,8 @@ def replace_affy_with_hugo(affy_to_hugo):
 	4. Finds unique hugo genes (removes duplicates)
 	"""
 
-	f_simulation = open('../../../Master_files/simulation/separate_mixtures_D', 'r')
-	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo_D', 'w')
+	f_simulation = open('../../../Master_files/simulation/combined_mixtures_' + mix, 'r')
+	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo_combined_' + mix, 'w')
 	# f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
 	header = True
 	unique_hugo_genes = []
@@ -69,7 +69,7 @@ def replace_affy_with_hugo(affy_to_hugo):
 
 	f_simulation.close()
 	f_simulation_hugo.close()
-
+	
 	return unique_hugo_genes
 
 def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
@@ -87,7 +87,7 @@ def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
 
 			if i == len(splitted_line) - 1:
 				list_of_genes.append(float(splitted_line[i][:-1]))
-			else:	
+			else:
 				list_of_genes.append(float(splitted_line[i]))
 
 		unique_hugo_genes.append([geneid, list_of_genes, 1]);
@@ -114,7 +114,6 @@ def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
 			found = True;
 			break;
 		
-
 	if (found == False):
 
 		list_of_genes = []
@@ -138,7 +137,7 @@ def calc_average(unique_hugo_genes):
 	gene value by the number of occurrence.
 	Sorts by gene ID.
 	"""
-
+	
 	for i in range(len(unique_hugo_genes)):
 
 		if (unique_hugo_genes[i][2] > 1):
@@ -147,7 +146,7 @@ def calc_average(unique_hugo_genes):
 			
 			for j in range(len(unique_hugo_genes[i][1])):
 				list_of_genes.append(unique_hugo_genes[i][1][j] / float(unique_hugo_genes[i][2]))
-
+			
 			unique_hugo_genes[i][1] = list_of_genes
 
 	unique_hugo_genes.sort();
@@ -170,12 +169,23 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 
 		f_simulation_hugo_unique.write(line_to_write)
 
-f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_D', 'w')
-# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
 
-affy_to_hugo = read_hugo()
-unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo)
-unique_hugo_genes_average = calc_average(unique_hugo_genes)
-write_unique_hugo_genes(unique_hugo_genes_average)
+start = timeit.default_timer()
 
-f_simulation_hugo_unique.close()
+mixes = ["A", "B", "C", "D"]
+
+for i in range(len(mixes)):
+
+	f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_combined_' + mixes[i], 'w')
+	# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
+
+	affy_to_hugo = read_hugo()
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, mixes[i])
+	unique_hugo_genes_average = calc_average(unique_hugo_genes)
+	write_unique_hugo_genes(unique_hugo_genes_average)
+
+	f_simulation_hugo_unique.close()
+
+stop = timeit.default_timer()
+
+print(stop - start) 
