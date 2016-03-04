@@ -2,7 +2,6 @@
 import readline, sys, quantile_normalisation, noise, file_handler, mixtures, tumor, copy
 
 INPUT = []
-OUTPUT = []
 np_gene_dictionary = {}
 
 # Variables for GSE10650
@@ -44,17 +43,9 @@ def read_args():
 		
 		if sys.argv[x] == '-i':
 			i = True
-			o = False
-			
-		elif sys.argv[x] == '-o':
-			i = False
-			o = True
 			
 		elif i == True:
 			INPUT.append(sys.argv[x])
-			
-		elif o == True:
-			OUTPUT.append(sys.argv[x])
 			
 		else:
 			print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')

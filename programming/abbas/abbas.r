@@ -1,39 +1,32 @@
 
-library(CellMix)
-library(GEOquery)
+#library(CellMix)
+#library(GEOquery)
 
+options(max.print=20)
 
-options(max.print=300)
+CELL_LINES <- read.table("/home/jorgen/Projects/Master_files/simulation/combined_cell_lines", sep="\t", header=T)
+MIXA <- read.table("/home/jorgen/Projects/Master_files/simulation/combined_mixtures_A", sep="\t", header=T)
+MIXB <- read.table("/home/jorgen/Projects/Master_files/simulation/combined_mixtures_B", sep="\t", header=T)
+MIXC <- read.table("/home/jorgen/Projects/Master_files/simulation/combined_mixtures_C", sep="\t", header=T)
+MIXD <- read.table("/home/jorgen/Projects/Master_files/simulation/combined_mixtures_D", sep="\t", header=T)
 
-Jurkat <- read.table("/home/jorgen/Projects/Master_files/analyze_result/Jurkat", sep="\t", header=T)
-MIXA <- read.table("/home/jorgen/Projects/Master_files/analyze_result/mix_A", sep="\t", header=T)
+XA = lsfit(CELL_LINES[2:5], MIXA[2:2], intercept = FALSE)
+XB = lsfit(CELL_LINES[2:5], MIXB[2:2], intercept = FALSE)
+XC = lsfit(CELL_LINES[2:5], MIXC[2:2], intercept = FALSE)
+XD = lsfit(CELL_LINES[2:5], MIXD[2:2], intercept = FALSE)
 
-Jurkatm <- as.matrix(read.table("/home/jorgen/Projects/Master_files/analyze_result/Jurkat", sep="\t"))
-MIXAm <- as.matrix(read.table("/home/jorgen/Projects/Master_files/analyze_result/mix_A", sep="\t"))
+write.table(XA$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixA", sep="\t")
+write.table(XB$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixB", sep="\t")
+write.table(XC$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixC", sep="\t")
+write.table(XD$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixD", sep="\t")
 
-#XJA = lsfit(Jurkat[2:4], MIXA[2:4])
+XA = lsfit(CELL_LINES[2:5], MIXA[2:2], intercept = TRUE)
+XB = lsfit(CELL_LINES[2:5], MIXB[2:2], intercept = TRUE)
+XC = lsfit(CELL_LINES[2:5], MIXC[2:2], intercept = TRUE)
+XD = lsfit(CELL_LINES[2:5], MIXD[2:2], intercept = TRUE)
 
-#print(XJA)
-
-#gse <- ExpressionMix("GSE19830")
-
-#gse11103 <- getGEO("GSE11103")
-
-#print(gse)
-#print("1***************")
-#print(gse11103)
-#print("2***************")
-
-#mix <- mixedSamples(gse11103)
-#print(mix)
-#print("3***************")
-#sig <- basis(mix)
-#print(sig)
-
-res <- ged(MIXA[2:4], Jurkat[2:4], "lsfit", verbose = TRUE)
-
-
-
-
-
+write.table(XA$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixA_intercept", sep="\t")
+write.table(XB$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixB_intercept", sep="\t")
+write.table(XC$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixC_intercept", sep="\t")
+write.table(XD$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_mixD_intercept", sep="\t")
 

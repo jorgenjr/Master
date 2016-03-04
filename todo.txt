@@ -1,15 +1,43 @@
 - Differential expression (write)
 -- Using my cell lines to find out which genes are turned on.
 
-- Write down about the GeoBank, etc. Why did I use it?
--- gene expression signature matrix method
 - Convert Affy IDs to HUGO for the differential expression output file
-- Run CIBERSORT with both simulation data and differential expression (?)
-- IMPORTANT: DOES MY ALGORITHMS ASSIGN THE CORRECT GENE VALUE TO THE CORRECT GENE ID AFTER NORMALISATION ETC.?
-- IMPORTANT: DO I CALCULATE THE TUMOR CONTENT CORRECTLY? I LOOKS LIKE I MAY END UP WITH MORE CONTENT THAN I SHOULD.
+- IMPORTANT: DO I CALCULATE THE TUMOR CONTENT CORRECTLY? IT LOOKS LIKE I MAY END UP WITH MORE CONTENT THAN I SHOULD.
 
 
-Check out CIBERSORT command line
 Check if differential expression is correctly produced
 See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
 Generate my own gene expression signature matrix
+
+
+PROGRAMMING
+- Summarize all probe set values before Quantile Normalize -> Abbas
+- What is the best way to simulate a mixture?
+- Noise before Quantile Normalisation?
+-- To control noise content control f
+- Calculate Pearson Correlation for Abbas -> use for heatmap
+- What do CIBERSORT correlate? The result, or tumor content?
+
+TEXT
+- Flow diagram of the whole black box. Detect similar cell subsets
+- Write about the heatmap vs. their tumor file
+
+STEP 1: *** DONE
+- Did I quantile Normalize data before creating Signature Matrix?
+-- Add tumor content to signature as well
+
+STEP 2: *** DONE
+- Increase tumor from 0% -> 99% for mixtures
+-- Create BIG (no, many small) matrix
+
+STEP 3:
+- Summarize all probe set values before Quantile Normalize -> Abbas
+
+STEP 4:
+- Create a script which automates the process:
+-- Simulation
+-- Conversation
+-- Run CIBERSORT
+-- Run Abbas
+-- ???
+-- PROFIT

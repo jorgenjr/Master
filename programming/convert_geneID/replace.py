@@ -1,5 +1,43 @@
 
-import copy, time, timeit, numpy as np
+import copy, time, timeit, numpy as np, readline, sys
+
+FLAGS = []
+
+def read_args():
+
+	""" Reading the arguments sent by the user from the terminal.
+	-i flag must be followed by input file(s)
+	-o flag must be followed by output file(s)
+
+	The given files must be placed outside the "Master" folder:
+	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
+	Files: folder_name/Master_files/simulation/
+
+	E.g.: python simulation.py -i GSM269529.txt -o GSM269529_NEW.txt
+	"""
+
+	if len(sys.argv) == 1:
+		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
+		sys.exit()
+
+	for x in range(1, len(sys.argv)):
+		
+		if sys.argv[x] == '-c':
+			FLAGS.append("C")
+
+		elif sys.argv[x] == '-m':
+			FLAGS.append("M")
+
+		elif sys.argv[x] == '-r':
+			FLAGS.append("R")
+
+		elif sys.argv[x] == '-t':
+			FLAGS.append("T")
+
+		else:
+			print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
+			sys.exit()
+
 
 def read_hugo():
 
@@ -27,7 +65,7 @@ def read_hugo():
 
 	return affy_to_hugo
 
-def replace_affy_with_hugo(affy_to_hugo, mix):
+def replace_affy_with_hugo(affy_to_hugo, filename):
 
 	""" Replaces Affy IDs with HUGO IDs in the original simulation file.
 	1. Reads the original simulation file containing Affy IDs.
@@ -36,8 +74,8 @@ def replace_affy_with_hugo(affy_to_hugo, mix):
 	4. Finds unique hugo genes (removes duplicates)
 	"""
 
-	f_simulation = open('../../../Master_files/simulation/combined_mixtures_' + mix, 'r')
-	f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo_combined_' + mix, 'w')
+	f_simulation = open('../../../Master_files/simulation/' + filename, 'r')
+	# f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo_combined_' + mix, 'w')
 	# f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
 	header = True
 	unique_hugo_genes = []
@@ -45,7 +83,7 @@ def replace_affy_with_hugo(affy_to_hugo, mix):
 	for line in f_simulation:
 
 		if (header == True):
-			f_simulation_hugo.write(line)
+			# f_simulation_hugo.write(line)
 			f_simulation_hugo_unique.write(line)
 			header = False
 			continue
@@ -59,7 +97,7 @@ def replace_affy_with_hugo(affy_to_hugo, mix):
 			for i in range(1, len(splitted_line)):
 				line_to_write += "\t" + splitted_line[i]
 
-			f_simulation_hugo.write(line_to_write);
+			# f_simulation_hugo.write(line_to_write);
 
 			unique_hugo_genes = find_unique_hugo_genes(unique_hugo_genes, affy_to_hugo[splitted_line[0]], splitted_line)
 			
@@ -68,7 +106,7 @@ def replace_affy_with_hugo(affy_to_hugo, mix):
 			pass
 
 	f_simulation.close()
-	f_simulation_hugo.close()
+	# f_simulation_hugo.close()
 	
 	return unique_hugo_genes
 
@@ -170,22 +208,62 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 		f_simulation_hugo_unique.write(line_to_write)
 
 
+read_args();
+
 start = timeit.default_timer()
 
-mixes = ["A", "B", "C", "D"]
+if FLAGS[0] == "C":
 
-for i in range(len(mixes)):
-
-	f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_combined_' + mixes[i], 'w')
-	# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
+	f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_combined_cell_lines', 'w')
 
 	affy_to_hugo = read_hugo()
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, mixes[i])
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_cell_lines")
 	unique_hugo_genes_average = calc_average(unique_hugo_genes)
 	write_unique_hugo_genes(unique_hugo_genes_average)
 
 	f_simulation_hugo_unique.close()
 
+if FLAGS[0] == "M":
+
+	mixes = ["A", "B", "C", "D"]
+
+	for i in range(len(mixes)):
+
+		f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_combined_' + mixes[i], 'w')
+		# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
+
+		affy_to_hugo = read_hugo()
+		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_mixtures_" + mixes[i])
+		unique_hugo_genes_average = calc_average(unique_hugo_genes)
+		write_unique_hugo_genes(unique_hugo_genes_average)
+
+		f_simulation_hugo_unique.close()
+
+if FLAGS[0] == "R":
+
+	f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique_tumor', 'w')
+
+	affy_to_hugo = read_hugo()
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_cell_lines_tumor")
+	unique_hugo_genes_average = calc_average(unique_hugo_genes)
+	write_unique_hugo_genes(unique_hugo_genes_average)
+
+	f_simulation_hugo_unique.close()
+
+if FLAGS[0] == "T":
+
+	#for i in range(0, 105, 5):
+	for i in range(0, 5, 5):
+
+		f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_tumor_' + str(i), 'w')
+
+		affy_to_hugo = read_hugo()
+		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "mixtures_with_tumor_" + str(i))
+		unique_hugo_genes_average = calc_average(unique_hugo_genes)
+		write_unique_hugo_genes(unique_hugo_genes_average)
+
+		f_simulation_hugo_unique.close()
+
 stop = timeit.default_timer()
 
-print(stop - start) 
+print("Time used: " + str(stop - start)) 

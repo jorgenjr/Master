@@ -5,7 +5,7 @@ def from_gsm_to_geneid():
 	"""
 
 	f_read = open('../../../Master_files/simulation/testfile_1_1', 'r')
-	f_write = open('../../../Master_files/convert/testfile_1_1_geneid', 'w')
+	f_write = open('../../../Master_files/convert/affy', 'w')
 	header = True
 	gene_ids = []
 

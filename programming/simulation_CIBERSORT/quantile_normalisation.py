@@ -3,22 +3,6 @@ import linecache, numpy as np, rpy2.robjects as robjects, time
 
 from rpy2.robjects.packages import importr
 
-# Variables for GSE10650
-
-BEGIN1 = 4
-END1 = 54679
-EOF1 = 54683
-FILECOLS1 = 2
-GENE = 0
-VALUE = 1
-
-# Variables for GSE11103
-
-BEGIN2 = 64
-END2 = 54739
-EOF2 = 54740
-FILECOLS2 = 42
-
 
 def algo(GENE_VALUES_MATRIX):
 

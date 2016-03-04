@@ -1,7 +1,7 @@
 
 import numpy as np, linecache
 
-def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
+def combine_cell_line(INPUT, GENE_DICTIONARY):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
 	- Jurkat
@@ -12,9 +12,15 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	It then calculates the average of each cell and stores it in a dictionary
 	"""
 
-	for x in range(BEGIN, END):
+	header = True
+	f = open('../../../Master_files/external/' + INPUT, 'r')
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT, x)
+	for line in f:
+
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 
 		Jurkat = 0.0
@@ -46,7 +52,7 @@ def combine_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	return GENE_DICTIONARY
 
 
-def separate_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
+def separate_mixtures(INPUT, GENE_DICTIONARY, MIX):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
 	- Mix A
@@ -68,9 +74,15 @@ def separate_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
 	elif (MIX == 'D'):
 		M1 = 39; M2 = 40; M3 = 41
 
-	for x in range(BEGIN, END):
+	header = True
+	f = open('../../../Master_files/external/' + INPUT, 'r')
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT, x)
+	for line in f:
+
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 
 		# GENES: Column index 0
@@ -81,7 +93,42 @@ def separate_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
 	return GENE_DICTIONARY
 
 
-def combined_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
+def all_separate_mixtures(INPUT, GENE_DICTIONARY):
+
+	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
+	- Mix A
+	- Mix B
+	- Mix C
+	- Mix D
+
+	It then calculates the average of each cell and stores it in a dictionary
+	"""
+
+	MA1 = 30; MA2 = 31; MA3 = 32
+	MB1 = 33; MB2 = 34; MB3 = 35
+	MC1 = 36; MC2 = 37; MC3 = 38
+	MD1 = 39; MD2 = 40; MD3 = 41
+
+	header = True
+	f = open('../../../Master_files/external/' + INPUT, 'r')
+
+	for line in f:
+
+		if header == True:
+			header = False
+			continue
+		
+		line_list = np.array(line.split('\t'))
+
+		# GENES: Column index 0
+		gene_ref = line_list[0].split('"')[1]
+
+		GENE_DICTIONARY[gene_ref] = np.array([line_list[MA1], line_list[MA2], line_list[MA3], line_list[MB1], line_list[MB2], line_list[MB3], line_list[MC1], line_list[MC2], line_list[MC3], line_list[MD1], line_list[MD2], line_list[MD3]])
+
+	return GENE_DICTIONARY
+
+
+def combined_mixtures(INPUT, GENE_DICTIONARY, MIX):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
 	- Mix A
@@ -103,9 +150,15 @@ def combined_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
 	elif (MIX == 'D'):
 		M1 = 39; M2 = 40; M3 = 41
 
-	for x in range(BEGIN, END):
+	header = True
+	f = open('../../../Master_files/external/' + INPUT, 'r')
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT, x)
+	for line in f:
+
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 
 		# GENES: Column index 0
@@ -117,7 +170,7 @@ def combined_mixtures(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY, MIX):
 	return GENE_DICTIONARY
 
 
-def separate_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
+def separate_cell_line(INPUT, GENE_DICTIONARY):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
 	- Jurkat
@@ -126,9 +179,15 @@ def separate_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	- THP-1
 	"""
 
-	for x in range(BEGIN, END):
+	header = True
+	f = open('../../../Master_files/external/' + INPUT, 'r')
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT, x)
+	for line in r:
+
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 
 		# GENES: Column index 0
@@ -159,7 +218,7 @@ def separate_cell_line(BEGIN, END, FILECOLS, INPUT, GENE_DICTIONARY):
 	return GENE_DICTIONARY
 
 
-def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
+def combine_tumor(INPUT1, INPUT2, GENE_DICTIONARY):
 
 	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
 	It then calculates the average and appends the gene values to the gene dictionary containing
@@ -167,16 +226,27 @@ def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 	"""
 
 	tumor_dictionary = {}
+	header = True
+	f1 = open('../../../Master_files/external/' + INPUT1, 'r')
+	f2 = open('../../../Master_files/external/' + INPUT2, 'r')
 
-	for x in range(BEGIN, END):
+	for line in f1:
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT1, x)
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 		tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
 
-	for x in range(BEGIN, END):
+	header = True
 
-		line = linecache.getline('../../../Master_files/external/' + INPUT2, x)
+	for line in f2:
+
+		if header == True:
+			header = False
+			continue
+
 		line_list = np.array(line.split('\t'))
 		
 		if line_list[0] in tumor_dictionary:
@@ -184,7 +254,51 @@ def combine_tumor(BEGIN, END, FILECOLS, INPUT1, INPUT2, GENE_DICTIONARY):
 		else:
 			tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
 
-	for key, value in tumor_dictionary.items():
+	for key, value in sorted(tumor_dictionary.items()):
+
+		if key in GENE_DICTIONARY:
+			GENE_DICTIONARY[key] = np.append(GENE_DICTIONARY[key], tumor_dictionary[key])
+
+	return GENE_DICTIONARY
+
+
+def separate_tumor(INPUT1, INPUT2, GENE_DICTIONARY):
+
+	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
+	It then calculates the average and appends the gene values to the gene dictionary containing
+	gene values for the cell lines (Jurkat, IM-9, Raji, THP-1).
+	"""
+
+	tumor_dictionary = {}
+	header = True
+	f1 = open('../../../Master_files/external/' + INPUT1)
+	f2 = open('../../../Master_files/external/' + INPUT2)
+
+	for line in f1:
+
+		if header == True:
+			header = False
+			continue
+		
+		line_list = np.array(line.split('\t'))
+		tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
+
+	header = True
+
+	for line in f2:
+
+		if header == True:
+			header = False
+			continue
+		
+		line_list = np.array(line.split('\t'))
+		
+		if line_list[0] in tumor_dictionary:
+			tumor_dictionary[line_list[0]] = np.array([tumor_dictionary[line_list[0]], float(line_list[1])])
+		else:
+			tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
+
+	for key, value in sorted(tumor_dictionary.items()):
 
 		if key in GENE_DICTIONARY:
 			GENE_DICTIONARY[key] = np.append(GENE_DICTIONARY[key], tumor_dictionary[key])
@@ -200,14 +314,15 @@ def from_dictionary_to_matrix(GENE_DICTIONARY):
 	value_length = 0
 
 	for key, value in GENE_DICTIONARY.items():
+
 		value_length = len(value)
 		break;
 
 	np_matrix_combined = np.zeros(shape=(len(GENE_DICTIONARY), value_length))
 	insert = 0
 
-	for key, value in GENE_DICTIONARY.items():
-
+	for key, value in sorted(GENE_DICTIONARY.items()):
+		
 		value_list = []
 
 		for i in range(len(value)):
@@ -226,7 +341,8 @@ def from_matrix_to_dictionary(COMBINED, GENE_DICTIONARY):
 
 	index = 0
 
-	for key, value in GENE_DICTIONARY.items():
+	for key, value in sorted(GENE_DICTIONARY.items()):
+		
 		GENE_DICTIONARY[key] = COMBINED[index]
 		index += 1
 
