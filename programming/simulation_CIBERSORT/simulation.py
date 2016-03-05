@@ -28,7 +28,7 @@ def read_args():
 	m = False; t = False; c = False;
 
 	for x in range(1, len(sys.argv)):
-		print(sys.argv[x])
+		#print(sys.argv[x])
 		# INPUT
 		if sys.argv[x] == '-i':
 			print(sys.argv[x])
@@ -134,6 +134,8 @@ if len(MIXTURES) > 0:
 			MIXD.append([separate_values_matrix[i][9], separate_values_matrix[i][10], separate_values_matrix[i][11]])
 			tumor_list.append([separate_values_matrix[i][12], separate_values_matrix[i][13]])
 
+		file_handler.write_probe_values([MIXA, MIXB, MIXC, MIXD], ["MIX A", "MIX B", "MIX C", "MIX D"], "probe_values_mixtures")
+
 		MIXA_normalized = quantile_normalisation.algo(MIXA)
 		MIXB_normalized = quantile_normalisation.algo(MIXB)
 		MIXC_normalized = quantile_normalisation.algo(MIXC)
@@ -180,6 +182,7 @@ if len(MIXTURES) > 0:
 			# file_handler.write_separate_mixtures(np_gene_dictionary, mix)
 			# COMBINED
 			file_handler.write_combined_mixtures(np_gene_dictionary, "combined_mixtures_", mixes[i])
+
 
 # np_gene_dictionary_copy = copy.deepcopy(np_gene_dictionary)
 

@@ -129,3 +129,46 @@ def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT):
 		f1.write(gene_array[i][0]+"\t"+str(gene_array[i][1])+"\t"+str(gene_array[i][2])+"\t"+str(gene_array[i][3])+"\t"+str(gene_array[i][4])+"\t"+str(gene_array[i][5])+"\n")
 
 	f1.close()
+
+
+def write_probe_values(PROBES, HEADER, FILENAME):
+
+	if len(PROBES) != len(HEADER) and len(HEADER) > 0:
+
+		print()
+		sys.exit('\n[ERROR] The lists HEADER and PROBES had not the same length!\n')
+
+	f = open('../../../Master_files/simulation/' + FILENAME, 'w')
+
+	write_header = HEADER[0];
+
+	for i in range(1, len(HEADER)):
+		write_header += "\t" + HEADER[i];
+
+	f.write(write_header + "\n")
+
+	sum_probes = []
+
+	for i in range(len(PROBES)):
+
+		temp_probes = 0.0
+
+		for j in range(len(PROBES[i])):
+
+			avg_probe = 0.0
+
+			for k in range(len(PROBES[i][j])):
+				avg_probe += PROBES[i][j][k]
+
+			temp_probes += (avg_probe / float(len(PROBES[i][j])))
+			
+		sum_probes.append(temp_probes)
+
+	write_values = str(sum_probes[0])
+
+	for i in range(1, len(sum_probes)):
+		write_values += "\t" + str(sum_probes[i])
+
+	f.write(write_values + "\n")
+
+	f.close()

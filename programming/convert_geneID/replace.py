@@ -1,5 +1,5 @@
 
-import copy, time, timeit, numpy as np, readline, sys
+import copy, numpy as np, readline, sys
 
 FLAGS = []
 
@@ -210,8 +210,6 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 
 read_args();
 
-start = timeit.default_timer()
-
 if FLAGS[0] == "C":
 
 	f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_combined_cell_lines', 'w')
@@ -263,7 +261,3 @@ if FLAGS[0] == "T":
 		write_unique_hugo_genes(unique_hugo_genes_average)
 
 		f_simulation_hugo_unique.close()
-
-stop = timeit.default_timer()
-
-print("Time used: " + str(stop - start)) 
