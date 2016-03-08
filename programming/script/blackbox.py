@@ -9,6 +9,7 @@ PATH = "/home/jorgen/Projects/";
 FLAGS = []
 MIXTURES = []
 TUMORS = []
+CELL_LINES = []
 
 
 def read_args():
@@ -21,22 +22,19 @@ def read_args():
 	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
 	Files: folder_name/Master_files/simulation/
 
-	E.g.: python simulation.py -i GSM269529.txt -o GSM269529_NEW.txt
+	E.g.: python blackbox.py -m GSE11103.txt -t GSM269529.txt GSM269530.txt
 	"""
 
 	if len(sys.argv) == 1:
-		print('\n[ERROR] Wrong sys.argv format! Too few arguments. Example run:\n\npython simulation.py -m [mixture.file mixture.file ...] -t [tumor.file tumor.file]\n')
+		print('\n[ERROR] Wrong sys.argv format! Too few arguments. Example run:\n\npython blackbox.py -m [mixture.file mixture.file ...] -t [tumor.file tumor.file]\n')
 		sys.exit()
 
 	m = False; t = False;
 
 	for x in range(1, len(sys.argv)):
-		#print(sys.argv[x])
-		# INPUT
-		if sys.argv[x] == '-i':
-			print(sys.argv[x])
+		
 		# CELL LINE
-		elif sys.argv[x] == '-c':
+		if sys.argv[x] == '-c':
 			FLAGS.append("C")
 			continue
 		# MIXTURE
@@ -62,18 +60,41 @@ def read_args():
 			TUMORS.append(sys.argv[x])
 			continue
 
-		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
+		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython blackbox.py -m [mixture.file mixture.file ...] -t [tumor.file tumor.file]\n')
 		sys.exit()
 
 
+def arguments():
+
+	cmd = ""
+
+	if len(MIXTURES) > 0:
+		cmd += "-m"
+		for i in range(len(MIXTURES)):
+			cmd += " " + MIXTURES[i]
+		cmd += " "
+
+	if len(TUMORS) > 0:
+		cmd += "-t"
+		for i in range(len(TUMORS)):
+			cmd += " " + TUMORS[i]
+		cmd += " "
+
+	if len(CELL_LINES) > 0:
+		cmd += "-c"
+		for i in range(len(CELL_LINES)):
+			cmd += " " + CELL_LINES[i]
+		cmd += " "
+
+	return cmd
+
+
 def execute():
-	# print (FLAGS)
-	# print (MIXTURES)
-	# print (TUMORS)
+
 	start_total = timeit.default_timer()
 
 	print("Executing simulation script ... ")
-	cmd = "python " + PATH + "Master/programming/simulation_CIBERSORT/simulation.py -t GSM269529.txt GSM269530.txt -m GSE11103.txt"
+	cmd = "python " + PATH + "Master/programming/simulation_CIBERSORT/simulation.py " + arguments()
 	start = timeit.default_timer()
 	os.system(cmd)
 	stop = timeit.default_timer()
@@ -95,7 +116,14 @@ def execute():
 	print("Time spent: %.2f seconds" % (stop - start))
 
 	print("CIBERSORT completed! Exexuting Abbas ... ")
-	cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r"
+	cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r " + PATH + "Master_files/simulation/combined_cell_lines " + PATH + "Master_files/simulation/mixtures_with_tumor_0"
+	start = timeit.default_timer()
+	os.system(cmd)
+	stop = timeit.default_timer()
+	print("Time spent: %.2f seconds" % (stop - start))
+
+	print("Abbas completed! Plotting results ... ")
+	cmd = "python " + PATH + "Master/programming/analyze_result/plot.py"
 	start = timeit.default_timer()
 	os.system(cmd)
 	stop = timeit.default_timer()

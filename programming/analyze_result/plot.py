@@ -1,34 +1,84 @@
 
-import matplotlib.pyplot as plt, numpy as np
+import matplotlib.pyplot as plt, numpy as np, linecache
 
-da = open('../../../Master_files/abbas/deconvoluted_mixA', 'r')
-db = open('../../../Master_files/abbas/deconvoluted_mixB', 'r')
-dc = open('../../../Master_files/abbas/deconvoluted_mixC', 'r')
-dd = open('../../../Master_files/abbas/deconvoluted_mixD', 'r')
-dai = open('../../../Master_files/abbas/deconvoluted_mixA_intercept', 'r')
-dbi = open('../../../Master_files/abbas/deconvoluted_mixB_intercept', 'r')
-dci = open('../../../Master_files/abbas/deconvoluted_mixC_intercept', 'r')
-ddi = open('../../../Master_files/abbas/deconvoluted_mixD_intercept', 'r')
-sa = open('../../../Master_files/output/combined_mixA.txt', 'r')
-sb = open('../../../Master_files/output/combined_mixB.txt', 'r')
-sc = open('../../../Master_files/output/combined_mixC.txt', 'r')
-sd = open('../../../Master_files/output/combined_mixD.txt', 'r')
-
+# da = open('../../../Master_files/abbas/deconvoluted_mixA', 'r')
+# db = open('../../../Master_files/abbas/deconvoluted_mixB', 'r')
+# dc = open('../../../Master_files/abbas/deconvoluted_mixC', 'r')
+# dd = open('../../../Master_files/abbas/deconvoluted_mixD', 'r')
+# dai = open('../../../Master_files/abbas/deconvoluted_mixA_intercept', 'r')
+# dbi = open('../../../Master_files/abbas/deconvoluted_mixB_intercept', 'r')
+# dci = open('../../../Master_files/abbas/deconvoluted_mixC_intercept', 'r')
+# ddi = open('../../../Master_files/abbas/deconvoluted_mixD_intercept', 'r')
+# sa = open('../../../Master_files/output/combined_mixA.txt', 'r')
+# sb = open('../../../Master_files/output/combined_mixB.txt', 'r')
+# sc = open('../../../Master_files/output/combined_mixC.txt', 'r')
+# sd = open('../../../Master_files/output/combined_mixD.txt', 'r')
 
 N = 4
 
 ind = np.arange(N)  # the x locations for the groups
 width = 0.25       # the width of the bars
+plt.rcParams.update({'font.size': 9})
 
-fig, ax = plt.subplots()
-
-def autolabel(rects):
+def autolabel(rects, ax):
     # attach some text labels
     for rect in rects:
         height = rect.get_height()
         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
                 '%.4f' % float(height),
                 ha='center', va='bottom')
+
+
+def plot_result():
+
+	first_line = linecache.getline('../../../Master_files/abbas/deconvoluted_test', 1)
+	splitted_line = first_line.split("\t")
+
+	for j in range(len(splitted_line)):
+
+		ABBAS = open('../../../Master_files/abbas/deconvoluted_test', 'r')
+		CIBERSORT = open('../../../Master_files/output/CIBERSORT_result_tumor_0', 'r')
+
+		mix_abbas = []
+		mix_cibersort = []
+
+		for i, line in enumerate(ABBAS):
+			if i > 0:
+				mix_abbas.append(float(line.split('\t')[j+1]))
+
+		skip = True
+
+		for i, line in enumerate(CIBERSORT):
+			
+			splitted_line = line.split("\t")
+			
+			if splitted_line[0] == "0":
+				skip = False
+
+			if skip == False:
+				mix_cibersort.append(float(splitted_line[j+1]))
+
+		fig, ax = plt.subplots()
+
+		rects1 = ax.bar(ind, (mix_abbas[0], mix_abbas[1], mix_abbas[2], mix_abbas[3]), width, color='r')
+		rects2 = ax.bar(ind + (width), (mix_cibersort[0], mix_cibersort[1], mix_cibersort[2], mix_cibersort[3]), width, color='g')
+
+		ax.set_ylabel('Scores')
+		ax.set_ylim([0.0, 1.0])
+		ax.set_title('Scores by cell lines')
+		ax.set_xticks(ind + width)
+		ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
+
+		ax.legend((rects1[0], rects2[0]), ('Abbas', 'CIBERSORT'))
+
+		autolabel(rects1, ax)
+		autolabel(rects2, ax)
+
+		fig.savefig("mix" + str(j) + ".png")
+		plt.close(fig)
+
+
+plot_result()
 
 #############
 # MIXTURE A #
@@ -70,11 +120,15 @@ def autolabel(rects):
 # autolabel(rects2)
 # autolabel(rects3)
 
-# plt.show()
+# fig.savefig("mixa.png")
+# plt.close(fig)
+#plt.show()
 
 #############
 # MIXTURE B #
 #############
+
+# fig, ax = plt.subplots()
 
 # mixB_d = []
 # mixB_di = []
@@ -112,11 +166,15 @@ def autolabel(rects):
 # autolabel(rects5)
 # autolabel(rects6)
 
-# plt.show()
+# fig.savefig("mixb.png")
+# plt.close(fig)
+#plt.show()
 
 #############
 # MIXTURE C #
 #############
+
+# fig, ax = plt.subplots()
 
 # mixC_d = []
 # mixC_di = []
@@ -154,46 +212,52 @@ def autolabel(rects):
 # autolabel(rects8)
 # autolabel(rects9)
 
-# plt.show()
+# fig.savefig("mixc.png")
+# plt.close(fig)
+#plt.show()
 
 #############
 # MIXTURE D #
 #############
 
-mixD_d = []
-mixD_di = []
-mixD_s = []
+# fig, ax = plt.subplots()
 
-for i, line in enumerate(dd):
-	if i > 0:
-		mixD_d.append(float(line.split('\t')[1]))
+# mixD_d = []
+# mixD_di = []
+# mixD_s = []
 
-for i, line in enumerate(ddi):
-	if i > 1:
-		mixD_di.append(float(line.split('\t')[1]))
+# for i, line in enumerate(dd):
+# 	if i > 0:
+# 		mixD_d.append(float(line.split('\t')[1]))
 
-for i, line in enumerate(sd):
-	if i > 0:
-		splitted_line = line.split('\t')
-		mixD_s.append(float(splitted_line[1]))
-		mixD_s.append(float(splitted_line[2]))
-		mixD_s.append(float(splitted_line[3]))
-		mixD_s.append(float(splitted_line[4]))
+# for i, line in enumerate(ddi):
+# 	if i > 1:
+# 		mixD_di.append(float(line.split('\t')[1]))
 
-rects10 = ax.bar(ind, (mixD_d[0], mixD_d[1], mixD_d[2], mixD_d[3]), width, color='r')
-rects11 = ax.bar(ind + width, (mixD_di[0], mixD_di[1], mixD_di[2], mixD_di[3]), width, color='y')
-rects12 = ax.bar(ind + (2*width), (mixD_s[0], mixD_s[1], mixD_s[2], mixD_s[3]), width, color='g')
+# for i, line in enumerate(sd):
+# 	if i > 0:
+# 		splitted_line = line.split('\t')
+# 		mixD_s.append(float(splitted_line[1]))
+# 		mixD_s.append(float(splitted_line[2]))
+# 		mixD_s.append(float(splitted_line[3]))
+# 		mixD_s.append(float(splitted_line[4]))
 
-ax.set_ylabel('Scores')
-ax.set_ylim([-1.0, 1.0])
-ax.set_title('Scores by cell lines')
-ax.set_xticks(ind + width)
-ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
+# rects10 = ax.bar(ind, (mixD_d[0], mixD_d[1], mixD_d[2], mixD_d[3]), width, color='r')
+# rects11 = ax.bar(ind + width, (mixD_di[0], mixD_di[1], mixD_di[2], mixD_di[3]), width, color='y')
+# rects12 = ax.bar(ind + (2*width), (mixD_s[0], mixD_s[1], mixD_s[2], mixD_s[3]), width, color='g')
 
-ax.legend((rects10[0], rects11[0], rects12[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
+# ax.set_ylabel('Scores')
+# ax.set_ylim([0.0, 1.0])
+# ax.set_title('Scores by cell lines')
+# ax.set_xticks(ind + width)
+# ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
 
-autolabel(rects10)
-autolabel(rects11)
-autolabel(rects12)
+# ax.legend((rects10[0], rects11[0], rects12[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
 
-plt.show()
+# autolabel(rects10)
+# autolabel(rects11)
+# autolabel(rects12)
+
+# fig.savefig("mixd.png")
+# plt.close(fig)
+#plt.show()

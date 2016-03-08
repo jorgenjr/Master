@@ -93,7 +93,7 @@ def separate_mixtures(INPUT, GENE_DICTIONARY, MIX):
 	return GENE_DICTIONARY
 
 
-def all_separate_mixtures(INPUT, GENE_DICTIONARY):
+def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
 	- Mix A
@@ -110,7 +110,7 @@ def all_separate_mixtures(INPUT, GENE_DICTIONARY):
 	MD1 = 39; MD2 = 40; MD3 = 41
 
 	header = True
-	f = open('../../../Master_files/external/' + INPUT, 'r')
+	f = open('../../../Master_files/external/' + INPUT_FILE, 'r')
 
 	for line in f:
 
@@ -122,8 +122,15 @@ def all_separate_mixtures(INPUT, GENE_DICTIONARY):
 
 		# GENES: Column index 0
 		gene_ref = line_list[0].split('"')[1]
+		values = []
 
-		GENE_DICTIONARY[gene_ref] = np.array([line_list[MA1], line_list[MA2], line_list[MA3], line_list[MB1], line_list[MB2], line_list[MB3], line_list[MC1], line_list[MC2], line_list[MC3], line_list[MD1], line_list[MD2], line_list[MD3]])
+		for i in range(INPUT[1], INPUT[2]+1):
+			values.append(float(line_list[i]))
+
+		if gene_ref in GENE_DICTIONARY:
+			GENE_DICTIONARY[gene_ref] = np.array([GENE_DICTIONARY[gene_ref], values])
+		else:
+			GENE_DICTIONARY[gene_ref] = np.array(values)
 
 	return GENE_DICTIONARY
 
@@ -262,48 +269,34 @@ def combine_tumor(INPUT1, INPUT2, GENE_DICTIONARY):
 	return GENE_DICTIONARY
 
 
-def separate_tumor(INPUT1, INPUT2, GENE_DICTIONARY):
+def separate_tumor(INPUT_FILE, TUMOR_DICTIONARY, INPUT):
 
 	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
 	It then calculates the average and appends the gene values to the gene dictionary containing
 	gene values for the cell lines (Jurkat, IM-9, Raji, THP-1).
 	"""
 
-	tumor_dictionary = {}
 	header = True
-	f1 = open('../../../Master_files/external/' + INPUT1)
-	f2 = open('../../../Master_files/external/' + INPUT2)
+	f = open('../../../Master_files/external/' + INPUT_FILE)
 
-	for line in f1:
+	for line in f:
 
 		if header == True:
 			header = False
 			continue
 		
 		line_list = np.array(line.split('\t'))
-		tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
+		values = []
 
-	header = True
-
-	for line in f2:
-
-		if header == True:
-			header = False
-			continue
+		for i in range(INPUT[1], INPUT[2]+1):
+			values.append(float(line_list[i]))
 		
-		line_list = np.array(line.split('\t'))
-		
-		if line_list[0] in tumor_dictionary:
-			tumor_dictionary[line_list[0]] = np.array([tumor_dictionary[line_list[0]], float(line_list[1])])
+		if line_list[0] in TUMOR_DICTIONARY:
+			TUMOR_DICTIONARY[line_list[0]] = np.array([TUMOR_DICTIONARY[line_list[0]], values])
 		else:
-			tumor_dictionary[line_list[0]] = np.array(float(line_list[1]))
+			TUMOR_DICTIONARY[line_list[0]] = np.array(values)
 
-	for key, value in sorted(tumor_dictionary.items()):
-
-		if key in GENE_DICTIONARY:
-			GENE_DICTIONARY[key] = np.append(GENE_DICTIONARY[key], tumor_dictionary[key])
-
-	return GENE_DICTIONARY
+	return TUMOR_DICTIONARY
 
 
 def from_dictionary_to_matrix(GENE_DICTIONARY):

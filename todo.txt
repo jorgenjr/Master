@@ -30,7 +30,7 @@ STEP 2: *** DONE
 - Increase tumor from 0% -> 99% for mixtures
 -- Create BIG (no, many small) matrix
 
-STEP 3:
+STEP 3: *** NEED TO RUN ABBAS
 - Summarize all probe set values before Quantile Normalize -> Abbas
 
 STEP 4:
@@ -41,3 +41,11 @@ STEP 4:
 -- Run Abbas
 -- ???
 -- PROFIT
+
+STEP 5:
+- Calculate Pearson Correlation for Abbas -> use for heatmap
+- What do CIBERSORT correlate? The result, or tumor content?
+
+STEP 6:
+- Noise before Quantile Normalisation?
+-- To control noise content control f
