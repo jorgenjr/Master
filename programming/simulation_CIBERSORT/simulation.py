@@ -7,6 +7,7 @@ MIXTURES_INPUT = []
 TUMORS = []
 TUMORS_INPUT = []
 CELL_LINES = []
+CELL_LINES_INPUT = []
 
 
 def read_args():
@@ -35,7 +36,7 @@ def read_args():
 		# CELL LINE
 		if sys.argv[x] == '-c':
 			FLAGS.append("C")
-			m = False; t = True; c = True;
+			m = False; t = False; c = True;
 			continue
 		# MIXTURE
 		elif sys.argv[x] == '-m':
@@ -105,6 +106,21 @@ def read_stdin():
 
 	print("")
 
+	if len(CELL_LINES) > 0:
+
+		print("*** CELL LINES ***")
+
+		for i in range(len(CELL_LINES)):
+
+			no_cell_lines = int(input("How many cell lines in " + CELL_LINES[i] + "? "))
+			start = int(input("From which column does the first cell line begin (0 is first column)? "))
+			stop = int(input("To which column does the last cell line end? "))
+			replicates = int(input("Number of replicates per cell line (type 1 if only one cell line)? "))
+			
+			CELL_LINES_INPUT.append([no_cell_lines, start, stop, replicates])
+
+	print("")
+
 
 def execute():
 
@@ -152,7 +168,107 @@ def execute():
 
 			np_gene_dictionary = mixtures.from_matrix_to_dictionary(separate_values_matrix_normalised, np_gene_dictionary_tumor)
 
-			file_handler.write_separate_cell_lines_tumor(np_gene_dictionary, "combined_cell_lines_tumor")
+			file_handler.write_separate_cell_lines_tumor(np_gene_dictionary, "separate_cell_lines_tumor")
+
+		elif len(TUMORS) > 0:
+
+			""" Gathers all the cell lines and tumor cell lines from the input files and adds them
+				to a dictionary with the probe id as 'key', and a list of all the different values
+				as 'value'.
+			"""
+
+			np_tumor_dictionary = {}
+			np_gene_dictionary_tumor = {}
+
+			for i in range(len(CELL_LINES)):
+				np_gene_dictionary = mixtures.all_separate_mixtures(CELL_LINES[i], np_gene_dictionary, CELL_LINES_INPUT[i])
+
+			for i in range(len(TUMORS)):
+				np_tumor_dictionary = mixtures.separate_tumor(TUMORS[i], np_tumor_dictionary, TUMORS_INPUT[i])
+
+			for key, value in sorted(np_tumor_dictionary.items()):
+
+				if key in np_gene_dictionary:
+					np_gene_dictionary_tumor[key] = np.append(np_gene_dictionary[key], np_tumor_dictionary[key])
+
+			""" After mapping all the input data to their correct probe ID, the dictionary is
+				converted to a matrix, and then splitted up to smaller matrices. Each of the small
+				matrices indicate a cell line or a tumor cell line.
+			"""
+
+			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_tumor)
+			cell_lines_list = []
+			tumor_list = []
+
+			# TODO: ENDRE???
+			for j in range(CELL_LINES_INPUT[0][0]):
+				cell_lines_list.append([])
+
+			# for j in range(TUMORS_INPUT[0][0]):
+			# 	tumor_list.append([])
+			
+			for i in range(len(separate_values_matrix)):
+
+				for j in range(0, CELL_LINES_INPUT[0][2] - CELL_LINES_INPUT[0][1], CELL_LINES_INPUT[0][3]):
+
+					temp_list = []
+
+					for k in range(j, j+CELL_LINES_INPUT[0][3]):
+						temp_list.append(separate_values_matrix[i][k])
+
+					cell_lines_list[int(j/CELL_LINES_INPUT[0][3])].append(temp_list)
+
+				temp_list = []
+
+				for j in range(CELL_LINES_INPUT[0][2] - CELL_LINES_INPUT[0][1] + 1, len(separate_values_matrix[i])):
+					temp_list.append(separate_values_matrix[i][j])
+				
+				tumor_list.append(temp_list)
+
+			""" Quantile normalise each matrix separately (to avoid all the mixtures (plus tumor cell 
+				line) to contain the exact same values).
+			"""
+			
+			for i in range(len(cell_lines_list)):
+				cell_lines_list[i] = quantile_normalisation.algo(cell_lines_list[i])
+			
+			#for i in range(len(tumor_list)):
+			#	tumor_list = quantile_normalisation.algo(tumor_list)
+			tumor_list = quantile_normalisation.algo(tumor_list)
+
+			""" Each cell line containing normalised data is then calculated by average values.
+				This would typically be like: (value1 + value2 + value 3) / 3.0
+			"""
+
+			combined_values_matrix_normalised = []
+
+			for i in range(len(cell_lines_list[0])):
+
+				average_list = []
+
+				for j in range(len(cell_lines_list)):
+
+					temp_value = 0.0
+					
+					for k in range(len(cell_lines_list[j][i])):
+						temp_value += cell_lines_list[j][i][k]
+
+					average_list.append(temp_value / float(len(cell_lines_list[j][i])))
+
+				temp_value = 0.0
+
+				for j in range(len(tumor_list[i])):
+					temp_value += tumor_list[i][j]
+
+				average_list.append(temp_value / float(len(tumor_list[i])))
+
+				combined_values_matrix_normalised.append(average_list)
+
+			#print(combined_values_matrix_normalised[0])
+
+			np_gene_dictionary_tumor = mixtures.from_matrix_to_dictionary(combined_values_matrix_normalised, np_gene_dictionary_tumor)
+
+			file_handler.write_combined_cell_lines_tumor(np_gene_dictionary_tumor, "combined_cell_lines_tumor")
 
 		else:
 
@@ -270,8 +386,9 @@ def execute():
 				of 5 percent. Each iteration is written to file.
 			"""
 
-			#for j in range(0, 105, 5):
-			for j in range(0, 5, 5):
+			start = 0; stop = 105; step = 5;
+
+			for j in range(start, stop, step):
 
 				fixed_tumor_matrix = []
 
@@ -280,16 +397,18 @@ def execute():
 					temp_list = []
 
 					for k in range(len(combined_values_matrix_normalised[i]) - 1):
-						temp_list.append(combined_values_matrix_normalised[i][k] * (1-(j/100)))
+						temp_list.append((combined_values_matrix_normalised[i][k] * (1-(j/100))) + combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (j/100))
 
-					temp_list.append(combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (j/100))
+					#temp_list.append(combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (j/100))
 
 					fixed_tumor_matrix.append(temp_list)
 
 				np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary_tumor)
 
-				file_handler.write_combined_mixtures_tumor(np_gene_dictionary_tumor, "mixtures_with_tumor_", j)
+				file_handler.write_combined_mixtures_tumor(np_gene_dictionary, "mixtures_with_tumor_", j)
 				#file_handler.write_combined_mixtures_tumor(np_gene_dictionary_tumor, "TESTFILE_", j)
+
+				print("--- Generated simulation file with " + i + "%% tumor content. " + str((stop - start) / step) + " files remaining.")
 
 		else:
 

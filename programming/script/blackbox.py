@@ -29,18 +29,19 @@ def read_args():
 		print('\n[ERROR] Wrong sys.argv format! Too few arguments. Example run:\n\npython blackbox.py -m [mixture.file mixture.file ...] -t [tumor.file tumor.file]\n')
 		sys.exit()
 
-	m = False; t = False;
+	m = False; t = False; c = False;
 
 	for x in range(1, len(sys.argv)):
 		
 		# CELL LINE
 		if sys.argv[x] == '-c':
 			FLAGS.append("C")
+			m = False; t = False; c = True;
 			continue
 		# MIXTURE
 		elif sys.argv[x] == '-m':
 			FLAGS.append("M")
-			m = True; t = False;
+			m = True; t = False; c = False;
 			continue
 		# SIGNATURE
 		elif sys.argv[x] == '-r':
@@ -49,7 +50,7 @@ def read_args():
 		# TUMOR
 		elif sys.argv[x] == '-t':
 			FLAGS.append("T")
-			m = False; t = True;
+			m = False; t = True; c = False;
 			continue
 
 		if m == True:
@@ -58,6 +59,10 @@ def read_args():
 
 		elif t == True:
 			TUMORS.append(sys.argv[x])
+			continue
+
+		elif c == True:
+			CELL_LINES.append(sys.argv[x])
 			continue
 
 		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython blackbox.py -m [mixture.file mixture.file ...] -t [tumor.file tumor.file]\n')
@@ -96,7 +101,7 @@ def execute():
 	print("Executing simulation script ... ")
 	cmd = "python " + PATH + "Master/programming/simulation_CIBERSORT/simulation.py " + arguments()
 	start = timeit.default_timer()
-	os.system(cmd)
+	# os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start)) 
 
@@ -104,19 +109,19 @@ def execute():
 	print("Simulation completed! Converting Affy to HUGO ... ")
 	cmd = "python " + PATH + "Master/programming/convert_geneID/replace.py -t"
 	start = timeit.default_timer()
-	os.system(cmd)
+	# os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 
 	print("Conversion completed! Executing CIBERSORT ... ")
-	cmd = "java -Xmx3g -Xms3g -jar " + PATH + "CIBERSORT/CIBERSORT.jar -M " + PATH + "Master_files/convert/simulation_hugo_unique_tumor_0 -B " + PATH + "Master_files/output/signature_tumor_0.txt > " + PATH + "Master_files/output/CIBERSORT_result_tumor_0"
+	cmd = "java -Xmx3g -Xms3g -jar " + PATH + "CIBERSORT/CIBERSORT.jar -M " + PATH + "Master_files/convert/simulation_hugo_unique_tumor_50 -B " + PATH + "Master_files/output/signature_tumor_0.txt > " + PATH + "Master_files/output/CIBERSORT_result_tumor_50"
 	start = timeit.default_timer()
-	os.system(cmd)
+	# os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 
 	print("CIBERSORT completed! Exexuting Abbas ... ")
-	cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r " + PATH + "Master_files/simulation/combined_cell_lines " + PATH + "Master_files/simulation/mixtures_with_tumor_0"
+	cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r " + PATH + "Master_files/simulation/combined_cell_lines_tumor " + PATH + "Master_files/simulation/mixtures_with_tumor_50"
 	start = timeit.default_timer()
 	os.system(cmd)
 	stop = timeit.default_timer()
@@ -125,7 +130,7 @@ def execute():
 	print("Abbas completed! Plotting results ... ")
 	cmd = "python " + PATH + "Master/programming/analyze_result/plot.py"
 	start = timeit.default_timer()
-	os.system(cmd)
+	#os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 

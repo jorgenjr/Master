@@ -250,8 +250,9 @@ if FLAGS[0] == "R":
 
 if FLAGS[0] == "T":
 
-	#for i in range(0, 105, 5):
-	for i in range(0, 5, 5):
+	start = 0; stop = 105; step = 5;
+
+	for i in range(start, stop, step):
 
 		f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_tumor_' + str(i), 'w')
 
@@ -261,3 +262,5 @@ if FLAGS[0] == "T":
 		write_unique_hugo_genes(unique_hugo_genes_average)
 
 		f_simulation_hugo_unique.close()
+
+		print("--- Converted file with " + i + "%% tumor content. " + str((stop - start) / step) + " files remaining.")

@@ -40,6 +40,27 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME):
 	f1.close()
 
 
+def write_combined_cell_lines_tumor(NP_GENE_DICTIONARY, FILENAME):
+
+	""" Write the gene dictionary with only data from cell lines combined to file.
+	"""
+
+	f1 = open('../../../Master_files/simulation/' + FILENAME, 'w')
+	
+	f1.write("!Sample_title\tJurkat\tIM-9\tRaji\tTHP-1\tTumor\n");
+	gene_array = []
+
+	for key, value in sorted(NP_GENE_DICTIONARY.items()):
+		gene_array.append([key, value[0], value[1], value[2], value[3], value[4]])
+
+	gene_array.sort()
+
+	for i in range(len(gene_array)):
+		f1.write(gene_array[i][0]+"\t"+str(gene_array[i][1])+"\t"+str(gene_array[i][2])+"\t"+str(gene_array[i][3])+"\t"+str(gene_array[i][4])+"\t"+str(gene_array[i][5])+"\n")
+
+	f1.close()
+
+
 def write_separate_cell_lines(NP_GENE_DICTIONARY):
 
 	""" Writes the gene dictionary to file.
@@ -117,16 +138,19 @@ def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT):
 
 	f1 = open('../../../Master_files/simulation/' + FILENAME + str(TUMOR_CONTENT), 'w')
 	
-	f1.write("!Sample_title\tMIX A ("+str(100-TUMOR_CONTENT)+"%)\tMIX B ("+str(100-TUMOR_CONTENT)+"%)\tMIX C ("+str(100-TUMOR_CONTENT)+"%)\tMIX D ("+str(100-TUMOR_CONTENT)+"%)\tTUMOR ("+str(TUMOR_CONTENT)+"%)\n");
+	#f1.write("!Sample_title\tMIX A ("+str(100-TUMOR_CONTENT)+"%)\tMIX B ("+str(100-TUMOR_CONTENT)+"%)\tMIX C ("+str(100-TUMOR_CONTENT)+"%)\tMIX D ("+str(100-TUMOR_CONTENT)+"%)\tTUMOR ("+str(TUMOR_CONTENT)+"%)\n");
+	f1.write("!Sample_title\tMIX A ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX B ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX C ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX D ("+str(TUMOR_CONTENT)+"%% TUMOR)\n");
 	gene_array = []
 
 	for key, value in sorted(NP_GENE_DICTIONARY.items()):
-		gene_array.append([key, value[0], value[1], value[2], value[3], value[4]])
+		#gene_array.append([key, value[0], value[1], value[2], value[3], value[4]])
+		gene_array.append([key, value[0], value[1], value[2], value[3]])
 
 	gene_array.sort()
 
 	for i in range(len(gene_array)):
-		f1.write(gene_array[i][0]+"\t"+str(gene_array[i][1])+"\t"+str(gene_array[i][2])+"\t"+str(gene_array[i][3])+"\t"+str(gene_array[i][4])+"\t"+str(gene_array[i][5])+"\n")
+		#f1.write(gene_array[i][0]+"\t"+str(gene_array[i][1])+"\t"+str(gene_array[i][2])+"\t"+str(gene_array[i][3])+"\t"+str(gene_array[i][4])+"\t"+str(gene_array[i][5])+"\n")
+		f1.write(gene_array[i][0]+"\t"+str(gene_array[i][1])+"\t"+str(gene_array[i][2])+"\t"+str(gene_array[i][3])+"\t"+str(gene_array[i][4])+"\n")
 
 	f1.close()
 
