@@ -249,18 +249,21 @@ if FLAGS[0] == "R":
 	f_simulation_hugo_unique.close()
 
 if FLAGS[0] == "T":
+	
+	affy_to_hugo = read_hugo()
 
-	start = 0; stop = 105; step = 5;
+	start = 0; stop = 101; step = 5;
 
-	for i in range(start, stop, step):
+	for tumor_content in range(start, stop, step):
 
-		f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_tumor_' + str(i), 'w')
+		for noise_content in range(0, 100, 30):
 
-		affy_to_hugo = read_hugo()
-		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "mixtures_with_tumor_" + str(i))
-		unique_hugo_genes_average = calc_average(unique_hugo_genes)
-		write_unique_hugo_genes(unique_hugo_genes_average)
+			f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_tumor_' + str(tumor_content) + "_" + str(noise_content), 'w')
 
-		f_simulation_hugo_unique.close()
+			unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "mixtures_with_tumor_" + str(tumor_content) + "_" + str(noise_content))
+			unique_hugo_genes_average = calc_average(unique_hugo_genes)
+			write_unique_hugo_genes(unique_hugo_genes_average)
 
-		print("--- Converted file with " + i + "%% tumor content. " + str((stop - start) / step) + " files remaining.")
+			f_simulation_hugo_unique.close()
+
+		print("--- Converted file with " + str(tumor_content) + "% tumor content. " + str(int((stop - tumor_content) / step)) + " files remaining.")

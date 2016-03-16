@@ -5,6 +5,14 @@ import readline, os, sys, timeit
 import subprocess
 
 PATH = "/home/jorgen/Projects/";
+START_TUMOR = 0
+STOP_TUMOR = 6 #101
+STEP_TUMOR = 5
+START_NOISE = 0
+STOP_NOISE = 10 #100
+STEP_NOISE = 30
+REFERENCE_FILE = PATH + "Master_files/convert/reference_hugo_unique_tumor"
+PHENOTYPE_CLASSES_FILE = PATH + "Master_files/simulation/phenotype_classes_tumor"
 
 FLAGS = []
 MIXTURES = []
@@ -101,7 +109,7 @@ def execute():
 	print("Executing simulation script ... ")
 	cmd = "python " + PATH + "Master/programming/simulation_CIBERSORT/simulation.py " + arguments()
 	start = timeit.default_timer()
-	# os.system(cmd)
+	#os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start)) 
 
@@ -109,21 +117,31 @@ def execute():
 	print("Simulation completed! Converting Affy to HUGO ... ")
 	cmd = "python " + PATH + "Master/programming/convert_geneID/replace.py -t"
 	start = timeit.default_timer()
-	# os.system(cmd)
+	#os.system(cmd)
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 
 	print("Conversion completed! Executing CIBERSORT ... ")
-	cmd = "java -Xmx3g -Xms3g -jar " + PATH + "CIBERSORT/CIBERSORT.jar -M " + PATH + "Master_files/convert/simulation_hugo_unique_tumor_50 -B " + PATH + "Master_files/output/signature_tumor_0.txt > " + PATH + "Master_files/output/CIBERSORT_result_tumor_50"
+	files_done = 0
 	start = timeit.default_timer()
-	# os.system(cmd)
+	for tumor_content in range(START_TUMOR, STOP_TUMOR, STEP_TUMOR):
+		for noise_content in range(START_NOISE, STOP_NOISE, STEP_NOISE):
+			cmd = "java -Xmx3g -Xms3g -jar " + PATH + "CIBERSORT/CIBERSORT.jar -M " + PATH + "Master_files/convert/simulation_hugo_unique_tumor_" + str(tumor_content) + "_" + str(noise_content) + " -P " + REFERENCE_FILE + " -c " + PHENOTYPE_CLASSES_FILE + " > " + PATH + "Master_files/output/CIBERSORT_result_tumor_" + str(tumor_content) + "_" + str(noise_content)
+			# os.system(cmd)
+			files_done += 1
+			print("--- CIBERSORT is done with " + str(files_done) + " files.")
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 
 	print("CIBERSORT completed! Exexuting Abbas ... ")
-	cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r " + PATH + "Master_files/simulation/combined_cell_lines_tumor " + PATH + "Master_files/simulation/mixtures_with_tumor_50"
+	files_done = 0
 	start = timeit.default_timer()
-	os.system(cmd)
+	for tumor_content in range(START_TUMOR, STOP_TUMOR, STEP_TUMOR):
+		for noise_content in range(START_NOISE, STOP_NOISE, STEP_NOISE):
+			cmd = "Rscript " + PATH + "Master/programming/abbas/abbas.r " + PATH + "Master_files/simulation/combined_cell_lines_tumor " + PATH + "Master_files/simulation/mixtures_with_tumor_" + str(tumor_content) + "_" + str(noise_content) + " " + PATH + "Master_files/abbas/Abbas_result_tumor_" + str(tumor_content) + "_" + str(noise_content)
+			os.system(cmd)
+			files_done += 1
+			print("--- Abbas is done with " + str(files_done) + " files.")
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start))
 

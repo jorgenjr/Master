@@ -8,4 +8,10 @@ TESTMIX <- read.table(args[7], sep="\t", header=T)
 
 TESTS = lsfit(CELL_LINES[2:ncol(CELL_LINES)], TESTMIX[2:ncol(TESTMIX)], intercept = FALSE)
 
-write.table(TESTS$coefficients, file="/home/jorgen/Projects/Master_files/abbas/deconvoluted_test", sep="\t")
+correlation = cor(TESTS$coefficients, method="pearson")
+
+print(TESTS)
+print("****************")
+print(correlation)
+
+write.table(TESTS$coefficients, file=args[8], sep="\t")

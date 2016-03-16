@@ -386,29 +386,39 @@ def execute():
 				of 5 percent. Each iteration is written to file.
 			"""
 
-			start = 0; stop = 105; step = 5;
+			start = 0; stop = 101; step = 5;
 
-			for j in range(start, stop, step):
+			for tumor_content in range(start, stop, step):
 
-				fixed_tumor_matrix = []
+				for noise_amount in range(0, 100, 30):
 
-				for i in range(len(combined_values_matrix_normalised)):
+					fixed_tumor_matrix = []
 
-					temp_list = []
+					for i in range(len(combined_values_matrix_normalised)):
 
-					for k in range(len(combined_values_matrix_normalised[i]) - 1):
-						temp_list.append((combined_values_matrix_normalised[i][k] * (1-(j/100))) + combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (j/100))
+						temp_list = []
 
-					#temp_list.append(combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (j/100))
+						for k in range(len(combined_values_matrix_normalised[i]) - 1):
+							temp_list.append((combined_values_matrix_normalised[i][k] * (1-(tumor_content/100))) + combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (tumor_content/100))
 
-					fixed_tumor_matrix.append(temp_list)
+						#temp_list.append(combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (tumor_content/100))
 
-				np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary_tumor)
+						if noise_amount > 0:
+							# print("BEFORE: ")
+							# print(temp_list)
+							temp_list = noise.add_noise_controlled(temp_list, noise_amount)
+							# print("AFTER: ")
+							# print(temp_list)
+							# print("")
 
-				file_handler.write_combined_mixtures_tumor(np_gene_dictionary, "mixtures_with_tumor_", j)
-				#file_handler.write_combined_mixtures_tumor(np_gene_dictionary_tumor, "TESTFILE_", j)
+						fixed_tumor_matrix.append(temp_list)
 
-				print("--- Generated simulation file with " + i + "%% tumor content. " + str((stop - start) / step) + " files remaining.")
+					np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary_tumor)
+
+					file_handler.write_combined_mixtures_tumor(np_gene_dictionary, "mixtures_with_tumor_", tumor_content, noise_amount)
+					#file_handler.write_combined_mixtures_tumor(np_gene_dictionary_tumor, "TESTFILE_", j)
+
+				print("--- Generated simulation file with " + str(tumor_content) + "% tumor content. " + str(int((stop - tumor_content) / step)) + " files remaining.")
 
 		else:
 

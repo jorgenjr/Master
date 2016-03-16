@@ -1,10 +1,36 @@
 # Master thesis
 
-## CIBERSORT
+## Black box
 
 ### Description
 
-Replicating [CIBERSORT](http://www.nature.com/nmeth/journal/v12/n5/abs/nmeth.3337.html) simulation of tumors with added noise. Written in Python.
+The black box is a script which automates the whole process of running simulation script, CIBERSORT and Abbas.
+
+### Run
+
+You have the opportunity to run with three different flags: -m (mixtures), -c (cell lines) and -t (tumors). For running CIBERSORT and Abbas for checking whether they can recognize tumor content in mixtures, simply use the -m and -t flag. If you want to create a reference file for CIBERSORT (which uses the reference file to create a signature matrix), use -c and -t flags.
+
+In the source code there are several variables that need to be given values before running:
+PATH: Path to the project, e.g.: "/home/jorgen/Projects/";
+START_TUMOR: At what percentage of tumor content you want to start at, e.g.: 0
+STOP_TUMOR: At what percentage of tumor content you want to be maximum (if 100, have it just above, e.g. 101. Depends on on the value of STEP_TUMOR), e.g.: 101
+STEP_TUMOR: The amount of percentage which is increased for each dataset, e.g.: 5
+START_NOISE: At what percentage of noise content you want to start at, e.g.: 0
+STOP_NOISE: At what percentage of noise content you want to be maximum (if 90, have it just above, e.g. 91. Depends on on the value of STEP_TUMOR), e.g.: 91
+STEP_NOISE: The amount of percentage which is increased for each dataset, e.g.: 30
+REFERENCE_FILE: Path to where your reference file is located. A reference file is a file that contains cell lines which are to be used for creating the signature matrix in CIBERSORT, e.g.: PATH + "Master_files/convert/reference_hugo_unique_tumor"
+PHENOTYPE_CLASSES_FILE: Path to where you phenotype classes file is located. A phenotype classes file is a file that contains which cell lines are to be compared to each other. It is needed for creating the signature matrix in CIBERSORT combined with the reference file. E.g. location: PATH + "Master_files/simulation/phenotype_classes_tumor"
+
+E.g. execute:
+```
+script$ python blackbox.py -m GSE11103.txt -t GSM269529.txt GSM269530.txt
+```
+
+## CIBERSORT (simulation)
+
+### Description
+
+If you want to run the simulation script separately (not from blackbox.py). Replicating [CIBERSORT](http://www.nature.com/nmeth/journal/v12/n5/abs/nmeth.3337.html) simulation of tumors with added noise. Written in Python.
 
 ### Run
 
@@ -14,12 +40,19 @@ For running this script, you need to have the following folder setup ("Master" i
 2. folder_name/Master_files/simulation/
 3. folder_name/Master_files/diff_exp/
 4. folder_name/Master_files/convert/
+5. folder_name/Master_files/external/
 
 This is due to large input (and output) files, which are too big for the 100 MB limit with a free GitHub account.
 
-Execute:
+Available flags are -t (tumors), -m (mixtures), -c (cell lines) and -r (reference)
+
+Execute (almost the same as blackbox.py):
 ```
-simulation_CIBERSORT$ python simulation.py -i GSM269529.txt GSM269530.txt GSE11103_series_matrix.txt -o [output.file ...]
+simulation_CIBERSORT$ python simulation.py -t GSM269529.txt GSM269530.txt -m GSE11103.txt
+```
+or
+```
+simulation_CIBERSORT$ python simulation.py -t GSM269529.txt GSM269530.txt -c GSE11103.txt -r
 ```
 
 ## Convert

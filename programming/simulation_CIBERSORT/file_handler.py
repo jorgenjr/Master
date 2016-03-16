@@ -131,15 +131,15 @@ def write_separate_cell_lines_tumor(NP_GENE_DICTIONARY, FILENAME):
 	f1.close()
 
 
-def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT):
+def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT, NOISE):
 
 	""" Write the gene dictionary with only data from cell lines combined to file.
 	"""
 
-	f1 = open('../../../Master_files/simulation/' + FILENAME + str(TUMOR_CONTENT), 'w')
+	f1 = open('../../../Master_files/simulation/' + FILENAME + str(TUMOR_CONTENT) + "_" + str(NOISE), 'w')
 	
 	#f1.write("!Sample_title\tMIX A ("+str(100-TUMOR_CONTENT)+"%)\tMIX B ("+str(100-TUMOR_CONTENT)+"%)\tMIX C ("+str(100-TUMOR_CONTENT)+"%)\tMIX D ("+str(100-TUMOR_CONTENT)+"%)\tTUMOR ("+str(TUMOR_CONTENT)+"%)\n");
-	f1.write("!Sample_title\tMIX A ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX B ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX C ("+str(TUMOR_CONTENT)+"%% TUMOR)\tMIX D ("+str(TUMOR_CONTENT)+"%% TUMOR)\n");
+	f1.write("!Sample_title\tMIX A ("+str(TUMOR_CONTENT)+"% TUMOR)\tMIX B ("+str(TUMOR_CONTENT)+"% TUMOR)\tMIX C ("+str(TUMOR_CONTENT)+"% TUMOR)\tMIX D ("+str(TUMOR_CONTENT)+"% TUMOR)\n");
 	gene_array = []
 
 	for key, value in sorted(NP_GENE_DICTIONARY.items()):

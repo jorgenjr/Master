@@ -1,26 +1,18 @@
-- Differential expression (write)
--- Using my cell lines to find out which genes are turned on.
-
-- Convert Affy IDs to HUGO for the differential expression output file
-- IMPORTANT: DO I CALCULATE THE TUMOR CONTENT CORRECTLY? IT LOOKS LIKE I MAY END UP WITH MORE CONTENT THAN I SHOULD.
-
-
-Check if differential expression is correctly produced
-See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
-Generate my own gene expression signature matrix
-
 
 PROGRAMMING
 - Summarize all probe set values before Quantile Normalize -> Abbas
 - What is the best way to simulate a mixture?
-- Noise before Quantile Normalisation?
--- To control noise content control f
 - Calculate Pearson Correlation for Abbas -> use for heatmap
 - What do CIBERSORT correlate? The result, or tumor content?
+- Check if differential expression is correctly produced
+- See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
 
 TEXT
 - Flow diagram of the whole black box. Detect similar cell subsets
 - Write about the heatmap vs. their tumor file
+- Differential expression (write)
+-- Using my cell lines to find out which genes are turned on.
+
 
 STEP 1: *** DONE
 - Did I quantile Normalize data before creating Signature Matrix?
@@ -33,7 +25,7 @@ STEP 2: *** DONE
 STEP 3: *** NEED TO RUN ABBAS
 - Summarize all probe set values before Quantile Normalize -> Abbas
 
-STEP 4:
+STEP 4: *** DONE (NEEDS MORE TESTING)
 - Create a script which automates the process:
 -- Simulation
 -- Conversation
@@ -42,10 +34,17 @@ STEP 4:
 -- ???
 -- PROFIT
 
-STEP 5:
+STEP 5: 
 - Calculate Pearson Correlation for Abbas -> use for heatmap
 - What do CIBERSORT correlate? The result, or tumor content?
 
-STEP 6:
+STEP 6: *** DONE (CHECK WITH TREVOR IF CORRECT)
 - Noise before Quantile Normalisation?
 -- To control noise content control f
+
+STEP 7: MAYBE
+- Check if differential expression is correctly produced
+- Generate a diffexp again
+-- Convert affy to HUGO
+- See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
+-- Or is this CELL LINES?

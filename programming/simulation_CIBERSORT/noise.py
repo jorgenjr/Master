@@ -18,3 +18,18 @@ def add_noise(normalized_matrix):
 		append_noise_to_values.append(normalized_matrix[0][j] + noise)
 	
 	return np.array(append_noise_to_values);
+
+
+def add_noise_controlled(normalized_matrix, interval):
+
+	append_noise_to_values = []
+
+	for j in range(len(normalized_matrix)):
+
+		f = interval / 100.0
+		q = 11.6
+		N = np.random.normal(0, f*q)
+		noise = 2 ** N
+		append_noise_to_values.append(normalized_matrix[j] + noise)
+
+	return np.array(append_noise_to_values);
