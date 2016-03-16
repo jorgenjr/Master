@@ -11,15 +11,15 @@ The black box is a script which automates the whole process of running simulatio
 You have the opportunity to run with three different flags: -m (mixtures), -c (cell lines) and -t (tumors). For running CIBERSORT and Abbas for checking whether they can recognize tumor content in mixtures, simply use the -m and -t flag. If you want to create a reference file for CIBERSORT (which uses the reference file to create a signature matrix), use -c and -t flags.
 
 In the source code there are several variables that need to be given values before running:
-PATH: Path to the project, e.g.: "/home/jorgen/Projects/";
-START_TUMOR: At what percentage of tumor content you want to start at, e.g.: 0
-STOP_TUMOR: At what percentage of tumor content you want to be maximum (if 100, have it just above, e.g. 101. Depends on on the value of STEP_TUMOR), e.g.: 101
-STEP_TUMOR: The amount of percentage which is increased for each dataset, e.g.: 5
-START_NOISE: At what percentage of noise content you want to start at, e.g.: 0
-STOP_NOISE: At what percentage of noise content you want to be maximum (if 90, have it just above, e.g. 91. Depends on on the value of STEP_TUMOR), e.g.: 91
-STEP_NOISE: The amount of percentage which is increased for each dataset, e.g.: 30
-REFERENCE_FILE: Path to where your reference file is located. A reference file is a file that contains cell lines which are to be used for creating the signature matrix in CIBERSORT, e.g.: PATH + "Master_files/convert/reference_hugo_unique_tumor"
-PHENOTYPE_CLASSES_FILE: Path to where you phenotype classes file is located. A phenotype classes file is a file that contains which cell lines are to be compared to each other. It is needed for creating the signature matrix in CIBERSORT combined with the reference file. E.g. location: PATH + "Master_files/simulation/phenotype_classes_tumor"
+1. PATH: Path to the project, e.g.: "/home/jorgen/Projects/";
+2. START_TUMOR: At what percentage of tumor content you want to start at, e.g.: 0
+3. STOP_TUMOR: At what percentage of tumor content you want to be maximum (if 100, have it just above, e.g. 101. Depends on on the value of STEP_TUMOR), e.g.: 101
+4. STEP_TUMOR: The amount of percentage which is increased for each dataset, e.g.: 5
+5. START_NOISE: At what percentage of noise content you want to start at, e.g.: 0
+6. STOP_NOISE: At what percentage of noise content you want to be maximum (if 90, have it just above, e.g. 91. Depends on on the value of STEP_TUMOR), e.g.: 91
+7. STEP_NOISE: The amount of percentage which is increased for each dataset, e.g.: 30
+8. REFERENCE_FILE: Path to where your reference file is located. A reference file is a file that contains cell lines which are to be used for creating the signature matrix in CIBERSORT, e.g.: PATH + "Master_files/convert/reference_hugo_unique_tumor"
+9. PHENOTYPE_CLASSES_FILE: Path to where you phenotype classes file is located. A phenotype classes file is a file that contains which cell lines are to be compared to each other. It is needed for creating the signature matrix in CIBERSORT combined with the reference file. E.g. location: PATH + "Master_files/simulation/phenotype_classes_tumor"
 
 E.g. execute:
 ```
@@ -96,4 +96,22 @@ To change the input files for comparing, you need to change it in the code.
 Execute:
 ```
 convert_geneID$ python compare.py
+```
+The result is written to "matches"
+
+## CIBERSORT (algorithm)
+
+### Description
+
+Request to download CIBERSORT executable .jar file from cibersort.stanford.edu and read their documentation on how to run the algorithm.
+
+## Abbas
+
+### Description
+
+### Run
+
+Example of execute with random files (from command line):
+```
+Rscript path/to/abbas/abbas.r path/to/cell_lines/combined_cell_lines_tumor path/to/mixture/mixtures_with_tumor_15_30 path/to/desired/output/folder/Abbas_result_tumor_15_30
 ```
