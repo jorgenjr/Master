@@ -14,71 +14,71 @@ import matplotlib.pyplot as plt, numpy as np, linecache
 # sc = open('../../../Master_files/output/combined_mixC.txt', 'r')
 # sd = open('../../../Master_files/output/combined_mixD.txt', 'r')
 
-N = 4
+# N = 4
 
-ind = np.arange(N)  # the x locations for the groups
-width = 0.25       # the width of the bars
-plt.rcParams.update({'font.size': 9})
+# ind = np.arange(N)  # the x locations for the groups
+# width = 0.25       # the width of the bars
+# plt.rcParams.update({'font.size': 9})
 
-def autolabel(rects, ax):
-    # attach some text labels
-    for rect in rects:
-        height = rect.get_height()
-        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-                '%.4f' % float(height),
-                ha='center', va='bottom')
+# def autolabel(rects, ax):
+#     # attach some text labels
+#     for rect in rects:
+#         height = rect.get_height()
+#         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+#                 '%.4f' % float(height),
+#                 ha='center', va='bottom')
 
 
-def plot_result():
+# def plot_result():
 
-	first_line = linecache.getline('../../../Master_files/abbas/deconvoluted_test', 1)
-	splitted_line = first_line.split("\t")
+# 	first_line = linecache.getline('../../../Master_files/abbas/deconvoluted_test', 1)
+# 	splitted_line = first_line.split("\t")
 
-	for j in range(len(splitted_line)):
+# 	for j in range(len(splitted_line)):
 
-		ABBAS = open('../../../Master_files/abbas/deconvoluted_test', 'r')
-		CIBERSORT = open('../../../Master_files/output/CIBERSORT_result_tumor_0', 'r')
+# 		ABBAS = open('../../../Master_files/abbas/deconvoluted_test', 'r')
+# 		CIBERSORT = open('../../../Master_files/output/CIBERSORT_result_tumor_0', 'r')
 
-		mix_abbas = []
-		mix_cibersort = []
+# 		mix_abbas = []
+# 		mix_cibersort = []
 
-		for i, line in enumerate(ABBAS):
-			if i > 0:
-				mix_abbas.append(float(line.split('\t')[j+1]))
+# 		for i, line in enumerate(ABBAS):
+# 			if i > 0:
+# 				mix_abbas.append(float(line.split('\t')[j+1]))
 
-		skip = True
+# 		skip = True
 
-		for i, line in enumerate(CIBERSORT):
+# 		for i, line in enumerate(CIBERSORT):
 			
-			splitted_line = line.split("\t")
+# 			splitted_line = line.split("\t")
 			
-			if splitted_line[0] == "0":
-				skip = False
+# 			if splitted_line[0] == "0":
+# 				skip = False
 
-			if skip == False:
-				mix_cibersort.append(float(splitted_line[j+1]))
+# 			if skip == False:
+# 				mix_cibersort.append(float(splitted_line[j+1]))
 
-		fig, ax = plt.subplots()
+# 		fig, ax = plt.subplots()
 
-		rects1 = ax.bar(ind, (mix_abbas[0], mix_abbas[1], mix_abbas[2], mix_abbas[3]), width, color='r')
-		rects2 = ax.bar(ind + (width), (mix_cibersort[0], mix_cibersort[1], mix_cibersort[2], mix_cibersort[3]), width, color='g')
+# 		rects1 = ax.bar(ind, (mix_abbas[0], mix_abbas[1], mix_abbas[2], mix_abbas[3]), width, color='r')
+# 		rects2 = ax.bar(ind + (width), (mix_cibersort[0], mix_cibersort[1], mix_cibersort[2], mix_cibersort[3]), width, color='g')
 
-		ax.set_ylabel('Scores')
-		ax.set_ylim([0.0, 1.0])
-		ax.set_title('Scores by cell lines')
-		ax.set_xticks(ind + width)
-		ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
+# 		ax.set_ylabel('Scores')
+# 		ax.set_ylim([0.0, 1.0])
+# 		ax.set_title('Scores by cell lines')
+# 		ax.set_xticks(ind + width)
+# 		ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
 
-		ax.legend((rects1[0], rects2[0]), ('Abbas', 'CIBERSORT'))
+# 		ax.legend((rects1[0], rects2[0]), ('Abbas', 'CIBERSORT'))
 
-		autolabel(rects1, ax)
-		autolabel(rects2, ax)
+# 		autolabel(rects1, ax)
+# 		autolabel(rects2, ax)
 
-		fig.savefig("mix" + str(j) + ".png")
-		plt.close(fig)
+# 		fig.savefig("mix" + str(j) + ".png")
+# 		plt.close(fig)
 
 
-plot_result()
+# plot_result()
 
 #############
 # MIXTURE A #
@@ -261,3 +261,93 @@ plot_result()
 # fig.savefig("mixd.png")
 # plt.close(fig)
 #plt.show()
+
+
+
+def cibersort():
+	
+	i = 0
+	result = []
+
+	while i <= 100:
+
+		liste = []
+		j = 0
+
+		while j <= 90:
+
+			correlation = 0.0
+
+			for k in range(11, 15):
+
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_result_tumor_' + str(i) + '_' + str(j), k)
+				correlation += float(line.split('\t')[7])
+
+			liste.append(correlation / 4.0)
+			j += 30
+
+		result.append(liste)
+		i += 5
+
+	result = reversed(result)
+	result = [list(x) for x in zip(*result)]
+
+	return result
+
+
+def abbas():
+	
+	i = 0
+	result = []
+
+	while i <= 100:
+
+		liste = []
+		j = 0
+
+		while j <= 90:
+
+			correlationA = 0.0
+			correlationB = 0.0
+			correlationC = 0.0
+			correlationD = 0.0
+
+			for k in range(8, 13):
+
+				line = linecache.getline('../../../Master_files/abbas/Abbas_result_tumor_' + str(i) + '_' + str(j), k)
+				correlationA += float(line.split('\t')[1])
+				correlationB += float(line.split('\t')[2])
+				correlationC += float(line.split('\t')[3])
+				correlationD += float(line.split('\t')[4])
+
+			correlationA = correlationA / 5.0
+			correlationB = correlationB / 5.0
+			correlationC = correlationC / 5.0
+			correlationD = correlationD / 5.0
+			liste.append((correlationA + correlationB + correlationC + correlationD) / 4.0)
+			j += 30
+
+		result.append(liste)
+		i += 5
+
+	result = [list(x) for x in zip(*result)]
+
+	return result
+
+result = cibersort()
+# result = abbas()
+
+reversed_result = []
+for i in reversed(result):
+	reversed_result.append(i)
+
+from matplotlib import pyplot as pltt
+
+#hist, xedges, yedges = np.histogram2d(x,y)
+#X,Y = np.meshgrid(xedges,yedges)
+#pltt.imshow(hist)
+pltt.imshow(reversed_result, extent=[0, 100, 0, 100])
+#pltt.gca().invert_yaxis()
+pltt.grid(True)
+pltt.colorbar(ticks=[0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+pltt.show()

@@ -6,10 +6,10 @@ import subprocess
 
 PATH = "/home/jorgen/Projects/";
 START_TUMOR = 0
-STOP_TUMOR = 6 #101
+STOP_TUMOR = 101
 STEP_TUMOR = 5
 START_NOISE = 0
-STOP_NOISE = 10 #100
+STOP_NOISE = 100
 STEP_NOISE = 30
 REFERENCE_FILE = PATH + "Master_files/convert/reference_hugo_unique_tumor"
 PHENOTYPE_CLASSES_FILE = PATH + "Master_files/simulation/phenotype_classes_tumor"

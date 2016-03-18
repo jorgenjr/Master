@@ -2,16 +2,21 @@
 PROGRAMMING
 - Summarize all probe set values before Quantile Normalize -> Abbas
 - What is the best way to simulate a mixture?
-- Calculate Pearson Correlation for Abbas -> use for heatmap
 - What do CIBERSORT correlate? The result, or tumor content?
 - Check if differential expression is correctly produced
 - See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
+- Produce plots
+- Check normal distribution etc.
 
 TEXT
 - Flow diagram of the whole black box. Detect similar cell subsets
 - Write about the heatmap vs. their tumor file
 - Differential expression (write)
 -- Using my cell lines to find out which genes are turned on.
+- Write about Jurkat, THP-1, Raji, IM-9, and the mixtures used.
+- Begin writing "Result" with the current output data
+- Write about the noise function
+- Write about Pearson Correlation, RMSE, etc.
 
 
 STEP 1: *** DONE
@@ -34,11 +39,11 @@ STEP 4: *** DONE (NEEDS MORE TESTING)
 -- ???
 -- PROFIT
 
-STEP 5: 
+STEP 5: *** DONE (What do CIBERSORT correlate?)
 - Calculate Pearson Correlation for Abbas -> use for heatmap
 - What do CIBERSORT correlate? The result, or tumor content?
 
-STEP 6: *** DONE (CHECK WITH TREVOR IF CORRECT)
+STEP 6: *** DONE
 - Noise before Quantile Normalisation?
 -- To control noise content control f
 
@@ -48,3 +53,17 @@ STEP 7: MAYBE
 -- Convert affy to HUGO
 - See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
 -- Or is this CELL LINES?
+
+STEP 8:
+- QA replace.py
+- Clean up in "old" files
+
+STEP 9:
+- Write about Jurkat, THP-1, Raji, IM-9, and the mixtures used.
+- Begin writing "Result" with the current output data
+- Write about the noise function
+- Write about Pearson Correlation, RMSE, etc. and how it is calculated in CIBERSORT and in Abbas
+- Produce plots
+
+STEP 10:
+- Check normal distribution etc.

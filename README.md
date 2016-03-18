@@ -105,9 +105,11 @@ The result is written to "matches"
 
 Request to download CIBERSORT executable .jar file from cibersort.stanford.edu and read their documentation on how to run the algorithm.
 
-## Abbas
+## Abbas (algorithm)
 
 ### Description
+
+An algorithm which uses 'least square fit' to deconvolute cells from mixtures.
 
 ### Run
 
@@ -115,3 +117,4 @@ Example of execute with random files (from command line):
 ```
 Rscript path/to/abbas/abbas.r path/to/cell_lines/combined_cell_lines_tumor path/to/mixture/mixtures_with_tumor_15_30 path/to/desired/output/folder/Abbas_result_tumor_15_30
 ```
+It is required that you run it with three arguments. The first must be cell lines, the second mixture(s) and the last is where you want the output to be written.
