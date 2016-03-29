@@ -10,7 +10,7 @@ def add_noise(normalized_matrix):
 	append_noise_to_values = []
 	
 	for j in range(len(normalized_matrix[0])):
-		# Change f to "control" noise
+	
 		f = random.uniform(0.0, 0.99999)
 		q = 11.6
 		N = np.random.normal(0,f*q)

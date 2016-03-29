@@ -268,28 +268,22 @@ def cibersort():
 	
 	i = 0
 	result = []
-
-	while i <= 100:
-
+	while i <= 95:
 		liste = []
 		j = 0
-
-		while j <= 90:
-
+		while j <= 95:
 			correlation = 0.0
-
 			for k in range(11, 15):
-
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_result_tumor_' + str(i) + '_' + str(j), k)
-				correlation += float(line.split('\t')[7])
-
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_result_' + str(i) + '_' + str(j), k)
+				# TUMOR
+				# correlation += float(line.split('\t')[7])
+				# NOT TUMOR
+				correlation += float(line.split('\t')[6])
 			liste.append(correlation / 4.0)
-			j += 30
-
+			j += 5
 		result.append(liste)
 		i += 5
-
-	result = reversed(result)
+	#result = reversed(result)
 	result = [list(x) for x in zip(*result)]
 
 	return result
@@ -299,55 +293,66 @@ def abbas():
 	
 	i = 0
 	result = []
-
-	while i <= 100:
-
+	while i <= 95:
 		liste = []
 		j = 0
-
-		while j <= 90:
-
+		while j <= 95:
 			correlationA = 0.0
 			correlationB = 0.0
 			correlationC = 0.0
 			correlationD = 0.0
-
-			for k in range(8, 13):
-
-				line = linecache.getline('../../../Master_files/abbas/Abbas_result_tumor_' + str(i) + '_' + str(j), k)
+			# TUMOR
+			# for k in range(8, 13):
+			# NOT TUMOR
+			for k in range(7, 11):
+				line = linecache.getline('../../../Master_files/abbas/Abbas_result_' + str(i) + '_' + str(j), k)
 				correlationA += float(line.split('\t')[1])
 				correlationB += float(line.split('\t')[2])
 				correlationC += float(line.split('\t')[3])
 				correlationD += float(line.split('\t')[4])
-
-			correlationA = correlationA / 5.0
-			correlationB = correlationB / 5.0
-			correlationC = correlationC / 5.0
-			correlationD = correlationD / 5.0
+			# TUMOR
+			# divide = 5.0
+			# NOT TUMOR
+			divide = 4.0
+			correlationA = correlationA / divide
+			correlationB = correlationB / divide
+			correlationC = correlationC / divide
+			correlationD = correlationD / divide
 			liste.append((correlationA + correlationB + correlationC + correlationD) / 4.0)
-			j += 30
-
+			j += 5
 		result.append(liste)
 		i += 5
-
 	result = [list(x) for x in zip(*result)]
 
 	return result
 
-result = cibersort()
-# result = abbas()
+# result = cibersort()
+result = abbas()
+#print(result)
+
 
 reversed_result = []
 for i in reversed(result):
 	reversed_result.append(i)
 
 from matplotlib import pyplot as pltt
+import matplotlib as mpl
 
 #hist, xedges, yedges = np.histogram2d(x,y)
 #X,Y = np.meshgrid(xedges,yedges)
 #pltt.imshow(hist)
-pltt.imshow(reversed_result, extent=[0, 100, 0, 100])
+
+fig, ax = pltt.subplots()
+# ax.set_title('CIBERSORT')
+ax.set_title('Abbas')
+ax.set_xlabel('Tumor content (%)')
+ax.set_ylabel('Added noise (%)')
+
+im = pltt.imshow(reversed_result, extent=[0, 100, 0, 100])
 #pltt.gca().invert_yaxis()
 pltt.grid(True)
-pltt.colorbar(ticks=[0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+# pltt.colorbar()
+norm = mpl.colors.Normalize(vmin=0.0, vmax=1.0)
+im.set_norm(norm)
+pltt.colorbar(im)
 pltt.show()

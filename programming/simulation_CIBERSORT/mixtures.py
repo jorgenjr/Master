@@ -104,11 +104,6 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 	It then calculates the average of each cell and stores it in a dictionary
 	"""
 
-	MA1 = 30; MA2 = 31; MA3 = 32
-	MB1 = 33; MB2 = 34; MB3 = 35
-	MC1 = 36; MC2 = 37; MC3 = 38
-	MD1 = 39; MD2 = 40; MD3 = 41
-
 	header = True
 	f = open('../../../Master_files/external/' + INPUT_FILE, 'r')
 
@@ -121,7 +116,8 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 		line_list = np.array(line.split('\t'))
 
 		# GENES: Column index 0
-		gene_ref = line_list[0].split('"')[1]
+		gene_ref = line_list[0].replace("\"", "")#split('"')[1]
+		# print("'" + gene_ref + "'")
 		values = []
 
 		for i in range(INPUT[1], INPUT[2]+1):
@@ -131,7 +127,7 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 			GENE_DICTIONARY[gene_ref] = np.array([GENE_DICTIONARY[gene_ref], values])
 		else:
 			GENE_DICTIONARY[gene_ref] = np.array(values)
-
+	# print(len(GENE_DICTIONARY))
 	return GENE_DICTIONARY
 
 
@@ -177,7 +173,7 @@ def combined_mixtures(INPUT, GENE_DICTIONARY, MIX):
 	return GENE_DICTIONARY
 
 
-def separate_cell_line(INPUT, GENE_DICTIONARY):
+def separate_cell_line(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
 	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
 	- Jurkat
@@ -187,9 +183,9 @@ def separate_cell_line(INPUT, GENE_DICTIONARY):
 	"""
 
 	header = True
-	f = open('../../../Master_files/external/' + INPUT, 'r')
+	f = open('../../../Master_files/external/' + INPUT_FILE, 'r')
 
-	for line in r:
+	for line in f:
 
 		if header == True:
 			header = False
@@ -199,28 +195,15 @@ def separate_cell_line(INPUT, GENE_DICTIONARY):
 
 		# GENES: Column index 0
 		gene_ref = line_list[0].split('"')[1]
+		values = []
 
-		# JURKAT: GSM279589, GSM279590, GSM279591
-		Jurkat_1 = float(line_list[18])
-		Jurkat_2 = float(line_list[19])
-		Jurkat_3 = float(line_list[20])
+		for i in range(INPUT[1], INPUT[2]+1):
+			values.append(float(line_list[i]))
 
-		# IM-9: GSM279592, GSM279593, GSM279594
-		IM9_1 = float(line_list[21])
-		IM9_2 = float(line_list[22])
-		IM9_3 = float(line_list[23])
-
-		# RAJI: GSM279595, GSM279596, GSM279597
-		Raji_1 = float(line_list[24])
-		Raji_2 = float(line_list[25])
-		Raji_3 = float(line_list[26])
-		
-		# THP-1: GSM279598, GSM279599, GSM279600
-		THP1_1 = float(line_list[27])
-		THP1_2 = float(line_list[28])
-		THP1_3 = float(line_list[29])
-
-		GENE_DICTIONARY[gene_ref] = np.array([Jurkat_1, Jurkat_2, Jurkat_3, IM9_1, IM9_2, IM9_3, Raji_1, Raji_2, Raji_3, THP1_1, THP1_2, THP1_3])
+		if gene_ref in GENE_DICTIONARY:
+			GENE_DICTIONARY[gene_ref] = np.array([GENE_DICTIONARY[gene_ref], values])
+		else:
+			GENE_DICTIONARY[gene_ref] = np.array(values)
 
 	return GENE_DICTIONARY
 
@@ -310,7 +293,7 @@ def from_dictionary_to_matrix(GENE_DICTIONARY):
 
 		value_length = len(value)
 		break;
-
+	
 	np_matrix_combined = np.zeros(shape=(len(GENE_DICTIONARY), value_length))
 	insert = 0
 

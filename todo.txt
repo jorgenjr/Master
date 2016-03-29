@@ -1,4 +1,9 @@
 
+ABEL COMMANDS:
+sbatch <file.slurm>
+watch -n 2 squeue -u jorgenjr
+scancel <job id>
+
 PROGRAMMING
 - Summarize all probe set values before Quantile Normalize -> Abbas
 - What is the best way to simulate a mixture?

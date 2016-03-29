@@ -69,4 +69,37 @@ def read_files():
 	f_j.close(); f_i.close(); f_r.close(); f_t.close()	
 	f_a.close(); f_b.close(); f_c.close(); f_d.close()
 
-read_files()
+
+def separate_mixtures():
+
+	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures:
+	- Mix A
+	- Mix B
+	- Mix C
+	- Mix D
+	"""
+
+	f = open('../../../Master_files/analyze_result/mixtures', 'w')
+
+	MA_1 = 30; MA_2 = 31; MA_3 = 32
+	MB_1 = 33; MB_2 = 34; MB_3 = 35
+	MC_1 = 36; MC_2 = 37; MC_3 = 38
+	MD_1 = 39; MD_2 = 40; MD_3 = 41
+
+	f.write("!Sample_title\tMIX A\tMIX A\tMIX A\tMIX B\tMIX B\tMIX B\tMIX C\tMIX C\tMIX C\tMIX D\tMIX D\tMIX D\n")
+
+	for x in range(BEGIN, END):
+
+		line = linecache.getline('../../../Master_files/external/GSE11103_series_matrix.txt', x)
+		line_list = line.split('\t')
+
+		# GENES: Column index 0
+		gene_ref = line_list[0].split('"')[1]
+
+		f.write(gene_ref + '\t' + line_list[MA_1] + '\t' + line_list[MA_2] + '\t' + line_list[MA_3] + '\t' + line_list[MB_1] + '\t' + line_list[MB_2] + '\t' + line_list[MB_3] + '\t' + line_list[MC_1] + '\t' + line_list[MC_2] + '\t' + line_list[MC_3] + '\t' + line_list[MD_1] + '\t' + line_list[MD_2] + '\t' + line_list[MD_3])
+
+	f.close();
+
+
+#read_files()
+separate_mixtures()

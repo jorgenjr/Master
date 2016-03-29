@@ -1,42 +1,32 @@
 
-import copy, numpy as np, readline, sys
+import copy, numpy as np, readline, sys, argparse
 
 FLAGS = []
+MIXTURES = False
+TUMORS = False
+CELL_LINES = False
+REFERENCE = False
+ITERATION = False
+ITERATION_LIST = []
+OUTPUT = False
+OUTPUT_PATH = "../../../Master_files"
 
-def read_args():
+parser = argparse.ArgumentParser()
+parser.add_argument("-m", "--MIXTURES", help="Mixtures", nargs='*')
+parser.add_argument("-t", "--TUMORS", help="Tumors", nargs='*')
+parser.add_argument("-c", "--CELL_LINES", help="Cell lines", nargs='*')
+parser.add_argument("-r", "--REFERENCE", help="Reference", nargs='*')
+parser.add_argument("-o", "--OUTPUT", help="Output")
+parser.add_argument("-i", "--ITERATION_LIST", help="Iteration list", nargs='*')
 
-	""" Reading the arguments sent by the user from the terminal.
-	-i flag must be followed by input file(s)
-	-o flag must be followed by output file(s)
+args = parser.parse_args()
 
-	The given files must be placed outside the "Master" folder:
-	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
-	Files: folder_name/Master_files/simulation/
-
-	E.g.: python simulation.py -i GSM269529.txt -o GSM269529_NEW.txt
-	"""
-
-	if len(sys.argv) == 1:
-		print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
-		sys.exit()
-
-	for x in range(1, len(sys.argv)):
-		
-		if sys.argv[x] == '-c':
-			FLAGS.append("C")
-
-		elif sys.argv[x] == '-m':
-			FLAGS.append("M")
-
-		elif sys.argv[x] == '-r':
-			FLAGS.append("R")
-
-		elif sys.argv[x] == '-t':
-			FLAGS.append("T")
-
-		else:
-			print('\n[ERROR] Wrong sys.argv format! Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
-			sys.exit()
+print(args.MIXTURES)
+print(args.TUMORS)
+print(args.CELL_LINES)
+print(args.REFERENCE)
+print(args.OUTPUT)
+print(args.ITERATION_LIST)
 
 
 def read_hugo():
@@ -44,9 +34,10 @@ def read_hugo():
 	""" Reads hugo, and adds Affy ID and HUGO ID to dictionary
 	"""
 
-	f_hugo = open('../../../Master_files/simulation/affy_to_hugo', 'r')
+	f_hugo = open(OUTPUT_PATH + '/simulation/affy_to_hugo', 'r')
 	header = True
 	affy_to_hugo = {}
+	empty = 0
 
 	for line in f_hugo:
 
@@ -60,7 +51,10 @@ def read_hugo():
 		
 		if hugo[1] and not hugo[1].isspace():
 			affy_to_hugo[affy[1]] = hugo[1]
+		else:
+			empty += 1
 
+	print("Number of AFFY IDs not mapped to HUGO: " + str(empty))
 	f_hugo.close()
 
 	return affy_to_hugo
@@ -74,39 +68,35 @@ def replace_affy_with_hugo(affy_to_hugo, filename):
 	4. Finds unique hugo genes (removes duplicates)
 	"""
 
-	f_simulation = open('../../../Master_files/simulation/' + filename, 'r')
-	# f_simulation_hugo = open('../../../Master_files/convert/simulation_hugo_combined_' + mix, 'w')
-	# f_simulation_hugo = open('../../../Master_files/convert/reference_hugo', 'w')
+	f_simulation = open(OUTPUT_PATH + filename, 'r')
 	header = True
 	unique_hugo_genes = []
 
 	for line in f_simulation:
 
 		if (header == True):
-			# f_simulation_hugo.write(line)
 			f_simulation_hugo_unique.write(line)
 			header = False
 			continue
 
 		splitted_line = line.split('\t')
-
+		splitted_line[0] = splitted_line[0].replace("\"", "")
 		try:
-			line_to_write = affy_to_hugo[splitted_line[0]]
-
+			# print(splitted_line[0])
+			#line_to_write = affy_to_hugo[splitted_line[0]]
 			# Skip gene ID
-			for i in range(1, len(splitted_line)):
-				line_to_write += "\t" + splitted_line[i]
+			#for i in range(1, len(splitted_line)):
+			#	line_to_write += "\t" + splitted_line[i]
 
 			# f_simulation_hugo.write(line_to_write);
 
 			unique_hugo_genes = find_unique_hugo_genes(unique_hugo_genes, affy_to_hugo[splitted_line[0]], splitted_line)
 			
 		except KeyError:
-			# print("Error!")
+			#print("Error!")
 			pass
 
 	f_simulation.close()
-	# f_simulation_hugo.close()
 	
 	return unique_hugo_genes
 
@@ -152,7 +142,7 @@ def find_unique_hugo_genes(unique_hugo_genes, geneid, splitted_line):
 			found = True;
 			break;
 		
-	if (found == False):
+	if found == False:
 
 		list_of_genes = []
 
@@ -176,10 +166,13 @@ def calc_average(unique_hugo_genes):
 	Sorts by gene ID.
 	"""
 	
+	duplicates = 0
+
 	for i in range(len(unique_hugo_genes)):
 
 		if (unique_hugo_genes[i][2] > 1):
 			
+			duplicates += 1
 			list_of_genes = []
 			
 			for j in range(len(unique_hugo_genes[i][1])):
@@ -187,6 +180,7 @@ def calc_average(unique_hugo_genes):
 			
 			unique_hugo_genes[i][1] = list_of_genes
 
+	print("The number of duplicates (two or more probsesets mapped to one HUGO symobl): " + str(duplicates))
 	unique_hugo_genes.sort();
 
 	return unique_hugo_genes
@@ -207,63 +201,83 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 
 		f_simulation_hugo_unique.write(line_to_write)
 
+#read_args();
+affy_to_hugo = read_hugo()
 
-read_args();
+if args.CELL_LINES != None and len(args.CELL_LINES) > 0:
 
-if FLAGS[0] == "C":
+	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/simulation_hugo_combined_cell_lines', 'w')
 
-	f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_combined_cell_lines', 'w')
-
-	affy_to_hugo = read_hugo()
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_cell_lines")
+	# affy_to_hugo = read_hugo()
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "/simulation/combined_cell_lines")
 	unique_hugo_genes_average = calc_average(unique_hugo_genes)
 	write_unique_hugo_genes(unique_hugo_genes_average)
 
 	f_simulation_hugo_unique.close()
 
-if FLAGS[0] == "M":
+elif args.MIXTURES != None and len(args.MIXTURES) > 0:
 
 	mixes = ["A", "B", "C", "D"]
 
 	for i in range(len(mixes)):
 
-		f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_combined_' + mixes[i], 'w')
+		f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/simulation_hugo_unique_combined_' + mixes[i], 'w')
 		# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
 
-		affy_to_hugo = read_hugo()
-		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_mixtures_" + mixes[i])
+		# affy_to_hugo = read_hugo()
+		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "/simulation/combined_mixtures_" + mixes[i])
 		unique_hugo_genes_average = calc_average(unique_hugo_genes)
 		write_unique_hugo_genes(unique_hugo_genes_average)
 
 		f_simulation_hugo_unique.close()
 
-if FLAGS[0] == "R":
+elif args.REFERENCE != None and len(args.REFERENCE) > 0:
+	# IF TUMOR
+	# f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/reference_hugo_unique_tumor', 'w')
+	# IF NOT TUMOR
+	f_simulation_hugo_unique = open(args.OUTPUT + '/convert/reference_hugo_unique', 'w')
 
-	f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique_tumor', 'w')
-
-	affy_to_hugo = read_hugo()
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_cell_lines_tumor")
+	# affy_to_hugo = read_hugo()
+	# IF TUMOR
+	# unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "combined_cell_lines_tumor")
+	# IF NOT TUMOR
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/simulation/' + args.REFERENCE[0])
 	unique_hugo_genes_average = calc_average(unique_hugo_genes)
 	write_unique_hugo_genes(unique_hugo_genes_average)
 
 	f_simulation_hugo_unique.close()
 
-if FLAGS[0] == "T":
+elif args.TUMORS != None and len(args.TUMORS) > 0:
 	
-	affy_to_hugo = read_hugo()
+	# affy_to_hugo = read_hugo()
+	
+	#start_tumor = ITERATION_LIST[0]; stop_tumor = ITERATION_LIST[1]; step_tumor = ITERATION_LIST[2]
+	#start_noise = ITERATION_LIST[3]; stop_noise = ITERATION_LIST[4]; step_noise = ITERATION_LIST[5]
+	start_tumor = int(args.ITERATION_LIST[0]); stop_tumor = int(args.ITERATION_LIST[1]); step_tumor = int(args.ITERATION_LIST[2])
+	start_noise = int(args.ITERATION_LIST[3]); stop_noise = int(args.ITERATION_LIST[4]); step_noise = int(args.ITERATION_LIST[5])
 
-	start = 0; stop = 101; step = 5;
+	for tumor_content in range(start_tumor, stop_tumor, step_tumor):
 
-	for tumor_content in range(start, stop, step):
+		for noise_content in range(start_noise, stop_noise, step_noise):
 
-		for noise_content in range(0, 100, 30):
+			#f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/simulation_hugo_unique_tumor_' + str(tumor_content) + "_" + str(noise_content), 'w')
+			f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/test_' + str(tumor_content) + '_' + str(noise_content), 'w')
 
-			f_simulation_hugo_unique = open('../../../Master_files/convert/simulation_hugo_unique_tumor_' + str(tumor_content) + "_" + str(noise_content), 'w')
-
-			unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "mixtures_with_tumor_" + str(tumor_content) + "_" + str(noise_content))
+			#unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "mixtures_with_tumor_" + str(tumor_content) + "_" + str(noise_content))
+			unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "/simulation/mixtures")
 			unique_hugo_genes_average = calc_average(unique_hugo_genes)
 			write_unique_hugo_genes(unique_hugo_genes_average)
 
 			f_simulation_hugo_unique.close()
 
-		print("--- Converted file with " + str(tumor_content) + "% tumor content. " + str(int((stop - tumor_content) / step)) + " files remaining.")
+		print("--- Converted file with " + str(tumor_content) + "% tumor content. " + str(int((stop_tumor - tumor_content) / step_tumor)) + " files remaining.")
+
+else:
+	
+	f_simulation_hugo_unique = open(args.OUTPUT + '/external/GSM269529_HUGO.txt', 'w')
+
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/external/GSM269529.txt')
+	unique_hugo_genes_average = calc_average(unique_hugo_genes)
+	write_unique_hugo_genes(unique_hugo_genes_average)
+
+	f_simulation_hugo_unique.close()
