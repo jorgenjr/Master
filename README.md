@@ -11,6 +11,7 @@ The black box is a script which automates the whole process of running simulatio
 You have the opportunity to run with three different flags: -m (mixtures), -c (cell lines) and -t (tumors). For running CIBERSORT and Abbas for checking whether they can recognize tumor content in mixtures, simply use the -m and -t flag. If you want to create a reference file for CIBERSORT (which uses the reference file to create a signature matrix), use -c and -t flags.
 
 In the source code there are several variables that need to be given values before running:
+
 1. PATH: Path to the project, e.g.: "/home/jorgen/Projects/";
 2. START_TUMOR: At what percentage of tumor content you want to start at, e.g.: 0
 3. STOP_TUMOR: At what percentage of tumor content you want to be maximum (if 100, have it just above, e.g. 101. Depends on on the value of STEP_TUMOR), e.g.: 101
