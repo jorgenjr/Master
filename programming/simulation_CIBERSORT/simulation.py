@@ -1,5 +1,5 @@
 
-import readline, sys, numpy as np, quantile_normalisation, noise, file_handler, mixtures, tumor, copy, argparse
+import readline, sys, numpy as np, quantile_normalisation, noise, file_handler, mixtures, tumor, copy, argparse, config
 
 FLAGS = []
 MIXTURES = []
@@ -9,101 +9,17 @@ TUMORS_INPUT = []
 CELL_LINES = []
 CELL_LINES_INPUT = []
 ITERATION = []
-OUTPUT = "../../../Master_files/simulation/"
+# OUTPUT = "../../../Master_files/simulation/"
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--MIXTURES", help="Mixtures", nargs='*')
 parser.add_argument("-t", "--TUMORS", help="Tumors", nargs='*')
 parser.add_argument("-c", "--CELL_LINES", help="Cell lines", nargs='*')
 parser.add_argument("-r", "--REFERENCE", help="Reference", nargs='*')
-parser.add_argument("-o", "--OUTPUT", help="Output")
+#parser.add_argument("-o", "--OUTPUT", help="Output")
 parser.add_argument("-i", "--ITERATION", help="Iteration", nargs='*')
 
 args = parser.parse_args()
-
-print(args.MIXTURES)
-print(args.TUMORS)
-print(args.CELL_LINES)
-print(args.REFERENCE)
-print(args.OUTPUT)
-print(args.ITERATION)
-
-
-# def read_args():
-
-# 	""" Reading the arguments sent by the user from the terminal.
-# 	-c flag must be followed by cell line file(s)
-# 	-m flag must be followed by mixture file(s)
-# 	-r flag must be followed by reference file(s)
-# 	-t flag must be followed by tumor file(s)
-
-# 	The given files must be placed outside the "Master" folder:
-# 	Code: folder_name/Master/programming/simulation_CIBERSORT/simulation.py
-# 	Files: folder_name/Master_files/external/
-
-# 	E.g.: python simulation.py -t GSM269529.txt GSM269530.txt -m GSE11103.txt
-# 	"""
-
-# 	if len(sys.argv) == 1:
-# 		print('\n[ERROR] Wrong sys.argv format! Too few arguments. Run:\n\npython simulation.py -i [input.file input.file ...] -o [output.file output.file]\n')
-# 		sys.exit()
-
-# 	m = False; t = False; c = False; i = False; o = False;
-
-# 	for x in range(1, len(sys.argv)):
-		
-# 		# CELL LINE
-# 		if sys.argv[x] == '-c':
-# 			FLAGS.append("C")
-# 			m = False; t = False; c = True; i = False; o = False;
-# 			continue
-# 		# MIXTURE
-# 		elif sys.argv[x] == '-m':
-# 			FLAGS.append("M")
-# 			m = True; t = False; c = False; i = False; o = False;
-# 			continue
-# 		# SIGNATURE
-# 		elif sys.argv[x] == '-r':
-# 			FLAGS.append("R")
-# 		# TUMOR
-# 		elif sys.argv[x] == '-t':
-# 			FLAGS.append("T")
-# 			m = False; t = True; c = False; i = False; o = False;
-# 			continue
-# 		# ITERATION
-# 		elif sys.argv[x] == '-i':
-# 			FLAGS.append("I")
-# 			m = False; t = False; c = False; i = True; o = False;
-# 			continue
-
-# 		elif sys.argv[x] == '-o':
-# 			FLAGS.append("O")
-# 			m = False; t = False; c = False; i = True; o = True;
-# 			continue
-
-# 		if m == True:
-# 			MIXTURES.append(sys.argv[x])
-# 			continue
-
-# 		elif t == True:
-# 			TUMORS.append(sys.argv[x])
-# 			continue
-
-# 		elif c == True:
-# 			CELL_LINES.append(sys.argv[x])
-# 			continue
-
-# 		elif i == True:
-# 			ITERATION.append(int(sys.argv[x]))
-# 			continue
-
-# 		elif o == True:
-# 			global OUTPUT
-# 			OUTPUT = sys.argv[x]
-# 			continue
-			
-# 		print('\n[ERROR] Wrong sys.argv format! E.g. run:\n\npython simulation.py -t [tumor.file tumor.file ...] -m [mixture.file mixture.file]\n')
-# 		sys.exit()
 
 
 def read_stdin():
@@ -178,321 +94,239 @@ def execute():
 
 		if args.REFERENCE != None and len(args.REFERENCE) > 0:
 
-			# TODO: FIX THIS
-			np_gene_dictionary = mixtures.separate_cell_line(args.CELL_LINES[0], np_gene_dictionary, CELL_LINES_INPUT[0])
-			# IF TUMOR
-			#np_gene_dictionary_tumor = mixtures.separate_tumor(args.TUMORS[0], args.TUMORS[1], np_gene_dictionary)
-			# IF TUMOR
-			#separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_tumor)
-			# IF NOT TUMOR
-			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
+			tumor_present = False
 
-			Jurkat = []; IM9 = []; Raji = []; THP1 = [];# tumor_list = [];
-			
-			for i in range(len(separate_values_matrix)):
-				
-				Jurkat.append([separate_values_matrix[i][0], separate_values_matrix[i][1], separate_values_matrix[i][2]])
-				IM9.append([separate_values_matrix[i][3], separate_values_matrix[i][4], separate_values_matrix[i][5]])
-				Raji.append([separate_values_matrix[i][6], separate_values_matrix[i][7], separate_values_matrix[i][8]])
-				THP1.append([separate_values_matrix[i][9], separate_values_matrix[i][10], separate_values_matrix[i][11]])
-				#tumor_list.append([separate_values_matrix[i][12], separate_values_matrix[i][13]])
+			if args.TUMORS != None and len(args.TUMORS) > 0:
+				tumor_present = True
 
-			Jurkat_normalized = quantile_normalisation.algo(Jurkat)
-			IM9_normalized = quantile_normalisation.algo(IM9)
-			Raji_normalized = quantile_normalisation.algo(Raji)
-			THP1_normalized = quantile_normalisation.algo(THP1)
-			#tumor_normalized = quantile_normalisation.algo(tumor_list)
-			separate_values_matrix_normalised = []
-
-			for i in range(len(Jurkat_normalized)):
-				separate_values_matrix_normalised.append([Jurkat_normalized[i][0], Jurkat_normalized[i][1], Jurkat_normalized[i][2], IM9_normalized[i][0], IM9_normalized[i][1], IM9_normalized[i][2], Raji_normalized[i][0], Raji_normalized[i][1], Raji_normalized[i][2], THP1_normalized[i][0], THP1_normalized[i][1], THP1_normalized[i][2]])#, tumor_normalized[i][0], tumor_normalized[i][1]])
-
-			np_gene_dictionary = mixtures.from_matrix_to_dictionary(separate_values_matrix_normalised, np_gene_dictionary)#_tumor)
-			# IF TUMOR
-			# file_handler.write_separate_cell_lines_tumor(np_gene_dictionary, "separate_cell_lines_tumor")
-			# IF NOT TUMOR
-			file_handler.write_separate_cell_lines(np_gene_dictionary, "separate_cell_lines")
-
-		elif args.TUMORS != None and len(args.TUMORS) > 0:
-
-			""" Gathers all the cell lines and tumor cell lines from the input files and adds them
-				to a dictionary with the probe id as 'key', and a list of all the different values
-				as 'value'.
+			""" Iterate through all the input files and every relevant cell line in that file.
 			"""
-
-			np_tumor_dictionary = {}
-			np_gene_dictionary_tumor = {}
-
 			for i in range(len(args.CELL_LINES)):
 				np_gene_dictionary = mixtures.all_separate_mixtures(args.CELL_LINES[i], np_gene_dictionary, CELL_LINES_INPUT[i])
 
-			for i in range(len(args.TUMORS)):
-				np_tumor_dictionary = mixtures.separate_tumor(TUMORS[i], np_tumor_dictionary, TUMORS_INPUT[i])
+			if tumor_present == True:
+				for i in range(len(args.TUMORS)):
+					np_gene_dictionary = mixtures.all_separate_mixtures(args.TUMORS[i], np_gene_dictionary, TUMORS_INPUT[i])
 
-			for key, value in sorted(np_tumor_dictionary.items()):
+			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
 
-				if key in np_gene_dictionary:
-					np_gene_dictionary_tumor[key] = np.append(np_gene_dictionary[key], np_tumor_dictionary[key])
-
-			""" After mapping all the input data to their correct probe ID, the dictionary is
-				converted to a matrix, and then splitted up to smaller matrices. Each of the small
-				matrices indicate a cell line or a tumor cell line.
+			""" For quantile normalization, each unique cell line must be normalized separately. Need first to initialize a matrix for each cell line.
 			"""
-
-			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_tumor)
-			cell_lines_list = []
-			tumor_list = []
-
-			# TODO: ENDRE???
-			for j in range(CELL_LINES_INPUT[0][0]):
-				cell_lines_list.append([])
-
-			# for j in range(TUMORS_INPUT[0][0]):
-			# 	tumor_list.append([])
+			cell_lines_matrix = [];
 			
+			for i in range(len(CELL_LINES_INPUT)):
+				for j in range(CELL_LINES_INPUT[i][0]):
+					cell_lines_matrix.append([])
+
+			if tumor_present == True:
+				cell_lines_matrix.append([])
+
+			if tumor_present == True:
+				cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, CELL_LINES_INPUT, tumor_present, TUMORS_INPUT)
+			else:
+				cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, CELL_LINES_INPUT, tumor_present, None)
+			
+			""" Quantile normalize every cell line separately.
+			"""
+			np_cell_lines_matrix = []
+
+			for i in range(len(cell_lines_matrix)):
+				
+				np_cell_lines_matrix.append([])
+				np_cell_lines_matrix[i] = np.zeros(shape=(len(cell_lines_matrix[i]), len(cell_lines_matrix[i][0])))
+				
+				for j in range(len(cell_lines_matrix[i])):
+					np_cell_lines_matrix[i][j] = cell_lines_matrix[i][j]
+
+			for i in range(len(cell_lines_matrix)):
+				cell_lines_matrix[i] = quantile_normalisation.algo(np_cell_lines_matrix[i])
+			
+			""" Gather all the normalized gene values (from each cell line) back together to a matrix containing everyone.
+			"""
 			for i in range(len(separate_values_matrix)):
 
-				for j in range(0, CELL_LINES_INPUT[0][2] - CELL_LINES_INPUT[0][1], CELL_LINES_INPUT[0][3]):
+				all_cell_lines = []
 
-					temp_list = []
+				for cell_line in range(len(cell_lines_matrix)):
 
-					for k in range(j, j+CELL_LINES_INPUT[0][3]):
-						temp_list.append(separate_values_matrix[i][k])
+					for replicate in range(len(cell_lines_matrix[cell_line][i])):
 
-					cell_lines_list[int(j/CELL_LINES_INPUT[0][3])].append(temp_list)
+						all_cell_lines.append(cell_lines_matrix[cell_line][i][replicate])
 
-				temp_list = []
+				separate_values_matrix[i] = all_cell_lines
 
-				for j in range(CELL_LINES_INPUT[0][2] - CELL_LINES_INPUT[0][1] + 1, len(separate_values_matrix[i])):
-					temp_list.append(separate_values_matrix[i][j])
-				
-				tumor_list.append(temp_list)
-
-			""" Quantile normalise each matrix separately (to avoid all the mixtures (plus tumor cell 
-				line) to contain the exact same values).
+			""" Save the matrix to file.
 			"""
+			np_gene_dictionary = mixtures.from_matrix_to_dictionary(separate_values_matrix, np_gene_dictionary)
 			
-			for i in range(len(cell_lines_list)):
-				cell_lines_list[i] = quantile_normalisation.algo(cell_lines_list[i])
-			
-			#for i in range(len(tumor_list)):
-			#	tumor_list = quantile_normalisation.algo(tumor_list)
-			tumor_list = quantile_normalisation.algo(tumor_list)
-
-			""" Each cell line containing normalised data is then calculated by average values.
-				This would typically be like: (value1 + value2 + value 3) / 3.0
-			"""
-
-			combined_values_matrix_normalised = []
-
-			for i in range(len(cell_lines_list[0])):
-
-				average_list = []
-
-				for j in range(len(cell_lines_list)):
-
-					temp_value = 0.0
-					
-					for k in range(len(cell_lines_list[j][i])):
-						temp_value += cell_lines_list[j][i][k]
-
-					average_list.append(temp_value / float(len(cell_lines_list[j][i])))
-
-				temp_value = 0.0
-
-				for j in range(len(tumor_list[i])):
-					temp_value += tumor_list[i][j]
-
-				average_list.append(temp_value / float(len(tumor_list[i])))
-
-				combined_values_matrix_normalised.append(average_list)
-
-			#print(combined_values_matrix_normalised[0])
-
-			np_gene_dictionary_tumor = mixtures.from_matrix_to_dictionary(combined_values_matrix_normalised, np_gene_dictionary_tumor)
-
-			file_handler.write_combined_cell_lines_tumor(np_gene_dictionary_tumor, "combined_cell_lines_tumor")
+			if tumor_present == False:
+				file_handler.write_separate_cell_lines(np_gene_dictionary, config.REFERENCE, CELL_LINES_INPUT, [])
+			else:
+				file_handler.write_separate_cell_lines(np_gene_dictionary, config.REFERENCE_TUMOR, CELL_LINES_INPUT, TUMORS_INPUT)
 
 		else:
 
-			# Jurkat, IM-9, Raji, THP-1
-			# np_gene_dictionary = mixtures.combine_cell_line(INPUT[2], np_gene_dictionary)
+			tumor_present = False
 
-			# separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
-			
-			# norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix)
+			if args.TUMORS != None and len(args.TUMORS) > 0:
+				tumor_present = True
 
-			# file_handler.write_combined_cell_lines(np_gene_dictionary, "combined_cell_lines")
-
-			""" Gathers all the cell lines and tumor cell lines from the input files and adds them
-				to a dictionary with the probe id as 'key', and a list of all the different values
-				as 'value'.
+			""" Iterate through all the input files and every relevant cell line in that file.
 			"""
-
 			for i in range(len(args.CELL_LINES)):
 				np_gene_dictionary = mixtures.all_separate_mixtures(args.CELL_LINES[i], np_gene_dictionary, CELL_LINES_INPUT[i])
 
-
-			""" After mapping all the input data to their correct probe ID, the dictionary is
-				converted to a matrix, and then splitted up to smaller matrices. Each of the small
-				matrices indicate a cell line.
-			"""
+			if tumor_present == True:
+				for i in range(len(args.TUMORS)):
+					np_gene_dictionary = mixtures.all_separate_mixtures(args.TUMORS[i], np_gene_dictionary, TUMORS_INPUT[i])
 
 			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
-			cell_lines_list = []
 
-			# TODO: ENDRE???
-			for j in range(CELL_LINES_INPUT[0][0]):
-				cell_lines_list.append([])
+			""" For quantile normalization, each unique cell line must be normalized separately. Need first to initialize a matrix for each cell line.
+			"""
+			cell_lines_matrix = [];
+			
+			for i in range(len(CELL_LINES_INPUT)):
+				for j in range(CELL_LINES_INPUT[i][0]):
+					cell_lines_matrix.append([])
 
+			if tumor_present == True:
+				cell_lines_matrix.append([])
+
+			if tumor_present == True:
+				cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, CELL_LINES_INPUT, tumor_present, TUMORS_INPUT)
+			else:
+				cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, CELL_LINES_INPUT, tumor_present, None)
+			
+			""" Quantile normalize every cell line separately.
+			"""
+			np_cell_lines_matrix = []
+
+			for i in range(len(cell_lines_matrix)):
+
+				np_cell_lines_matrix.append([])
+				np_cell_lines_matrix[i] = np.zeros(shape=(len(cell_lines_matrix[i]), len(cell_lines_matrix[i][0])))
+				
+				for j in range(len(cell_lines_matrix[i])):
+					np_cell_lines_matrix[i][j] = cell_lines_matrix[i][j]
+
+			for i in range(len(cell_lines_matrix)):
+				cell_lines_matrix[i] = quantile_normalisation.algo(np_cell_lines_matrix[i])
+			
+			""" Gather all the normalized gene values (from each cell line) back together to a matrix containing everyone.
+			Calculate the average score of each cell line.
+			"""
+			all_cell_lines_combined = np.zeros(shape=(len(cell_lines_matrix[0]), len(cell_lines_matrix)))
+			
 			for i in range(len(separate_values_matrix)):
 
-				for j in range(0, CELL_LINES_INPUT[0][2] - CELL_LINES_INPUT[0][1], CELL_LINES_INPUT[0][3]):
+				for cell_line in range(len(cell_lines_matrix)):
 
-					temp_list = []
+					avg = 0.0
 
-					for k in range(j, j+CELL_LINES_INPUT[0][3]):
-						temp_list.append(separate_values_matrix[i][k])
+					for replicate in range(len(cell_lines_matrix[cell_line][i])):
 
-					cell_lines_list[int(j/CELL_LINES_INPUT[0][3])].append(temp_list)
+						avg += cell_lines_matrix[cell_line][i][replicate]
 
+					all_cell_lines_combined[i][cell_line] = avg / float(len(cell_lines_matrix[cell_line][i]))
 
-			""" Quantile normalise each matrix separately (to avoid all the mixtures to contain the exact same values).
+			""" Quantile normalize the whole matrix.
 			"""
+			all_cell_lines_combined = quantile_normalisation.algo(all_cell_lines_combined)
+
+			""" Save the matrix to file.
+			"""
+			np_gene_dictionary = mixtures.from_matrix_to_dictionary(all_cell_lines_combined, np_gene_dictionary)
 			
-			for i in range(len(cell_lines_list)):
-				cell_lines_list[i] = quantile_normalisation.algo(cell_lines_list[i])
+			if tumor_present == False:
+				file_handler.write_combined_cell_lines(np_gene_dictionary, config.COMBINED_CELLS, CELL_LINES_INPUT)
+			else:
+				file_handler.write_combined_cell_lines_tumor(np_gene_dictionary, config.COMBINED_CELLS_TUMOR, CELL_LINES_INPUT, TUMORS_INPUT)
 
-
-			""" Each cell line containing normalised data is then calculated by average values.
-				This would typically be like: (value1 + value2 + value 3) / 3.0
-			"""
-
-			combined_values_matrix_normalised = []
-
-			for i in range(len(cell_lines_list[0])):
-
-				average_list = []
-
-				for j in range(len(cell_lines_list)):
-
-					temp_value = 0.0
-					
-					for k in range(len(cell_lines_list[j][i])):
-						temp_value += cell_lines_list[j][i][k]
-
-					average_list.append(temp_value / float(len(cell_lines_list[j][i])))
-
-				combined_values_matrix_normalised.append(average_list)
-
-			np_gene_dictionary = mixtures.from_matrix_to_dictionary(combined_values_matrix_normalised, np_gene_dictionary)
-
-			file_handler.write_combined_cell_lines(np_gene_dictionary, "combined_cell_lines_HUGO")
 
 	if args.MIXTURES != None and len(args.MIXTURES) > 0:
 
+		tumor_present = False
+
 		if args.TUMORS != None and len(args.TUMORS) > 0:
+			tumor_present = True
 
-			""" Gathers all the mixtures and tumor cell lines from the input files and adds them
-				to a dictionary with the probe id as 'key', and a list of all the different values
-				as 'value'.
-			"""
+		""" Iterate through all the input files and every relevant cell line in that file.
+		"""
+		for i in range(len(args.MIXTURES)):
+			np_gene_dictionary = mixtures.all_separate_mixtures(args.MIXTURES[i], np_gene_dictionary, MIXTURES_INPUT[i])
 
-			np_tumor_dictionary = {}
-			np_gene_dictionary_tumor = {}
-
-			for i in range(len(args.MIXTURES)):
-				np_gene_dictionary = mixtures.all_separate_mixtures(args.MIXTURES[i], np_gene_dictionary, MIXTURES_INPUT[i])
-
+		if tumor_present == True:
 			for i in range(len(args.TUMORS)):
-				np_tumor_dictionary = mixtures.separate_tumor(args.TUMORS[i], np_tumor_dictionary, TUMORS_INPUT[i])
+				np_gene_dictionary = mixtures.all_separate_mixtures(args.TUMORS[i], np_gene_dictionary, TUMORS_INPUT[i])
+		
+		separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
+		
+		""" For quantile normalization, each unique cell line must be normalized separately. Need first to initialize a matrix for each cell line.
+		"""
+		cell_lines_matrix = [];
+		
+		for i in range(len(MIXTURES_INPUT)):
+			for j in range(MIXTURES_INPUT[i][0]):
+				cell_lines_matrix.append([])
 
-			for key, value in sorted(np_tumor_dictionary.items()):
+		if tumor_present == True:
+			cell_lines_matrix.append([])
 
-				if key in np_gene_dictionary:
-					np_gene_dictionary_tumor[key] = np.append(np_gene_dictionary[key], np_tumor_dictionary[key])
+		if tumor_present == True:
+			cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, MIXTURES_INPUT, tumor_present, TUMORS_INPUT)
+		else:
+			cell_lines_matrix = mixtures.separate_for_normalization(separate_values_matrix, cell_lines_matrix, MIXTURES_INPUT, tumor_present, None)
+		
+		""" Calculating the total mRNA in each mixture. Used later in Abbas algorithm.
+		"""
 
-			""" After mapping all the input data to their correct probe ID, the dictionary is
-				converted to a matrix, and then splitted up to smaller matrices. Each of the small
-				matrices indicate a mixture or a tumor cell line.
-			"""
-			#print(np_gene_dictionary_tumor)
-			separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_tumor)
-			mixtures_list = []
-			tumor_list = []
+		#file_handler.write_probe_values([MIXA, MIXB, MIXC, MIXD], ["MIX A", "MIX B", "MIX C", "MIX D"], "probe_values_mixtures")
 
-			# TODO: ENDRE???
-			for j in range(MIXTURES_INPUT[0][0]):
-				mixtures_list.append([])
+		""" Quantile normalize every cell line separately.
+		"""
+		np_cell_lines_matrix = []
 
-			# for j in range(TUMORS_INPUT[0][0]):
-			# 	tumor_list.append([])
-			#print(len(separate_values_matrix))
-			for i in range(len(separate_values_matrix)):
+		for i in range(len(cell_lines_matrix)):
 
-				for j in range(0, MIXTURES_INPUT[0][2] - MIXTURES_INPUT[0][1], MIXTURES_INPUT[0][3]):
-
-					temp_list = []
-
-					for k in range(j, j+MIXTURES_INPUT[0][3]):
-						temp_list.append(separate_values_matrix[i][k])
-
-					mixtures_list[int(j/MIXTURES_INPUT[0][3])].append(temp_list)
-
-				temp_list = []
-
-				for j in range(MIXTURES_INPUT[0][2] - MIXTURES_INPUT[0][1] + 1, len(separate_values_matrix[i])):
-					temp_list.append(separate_values_matrix[i][j])
-				
-				tumor_list.append(temp_list)
-
-			""" Calculating the total mRNA in each mixture. Used later in Abbas algorithm.
-			"""
-
-			#file_handler.write_probe_values([MIXA, MIXB, MIXC, MIXD], ["MIX A", "MIX B", "MIX C", "MIX D"], "probe_values_mixtures")
-
-			""" Quantile normalise each matrix separately (to avoid all the mixtures (plus tumor cell 
-				line) to contain the exact same values).
-			"""
+			np_cell_lines_matrix.append([])
+			np_cell_lines_matrix[i] = np.zeros(shape=(len(cell_lines_matrix[i]), len(cell_lines_matrix[i][0])))
 			
-			for i in range(len(mixtures_list)):
-				mixtures_list[i] = quantile_normalisation.algo(mixtures_list[i])
-			
-			#for i in range(len(tumor_list)):
-			#	tumor_list = quantile_normalisation.algo(tumor_list)
-			tumor_list = quantile_normalisation.algo(tumor_list)
+			for j in range(len(cell_lines_matrix[i])):
+				np_cell_lines_matrix[i][j] = cell_lines_matrix[i][j]
 
-			""" Each mixture containing normalised data is then calculated by average values.
-				This would typically be like: (value1 + value2 + value 3) / 3.0
-			"""
+		for i in range(len(cell_lines_matrix)):
+			cell_lines_matrix[i] = quantile_normalisation.algo(np_cell_lines_matrix[i])
 
-			combined_values_matrix_normalised = []
+		""" Gather all the normalized gene values (from each cell line) back together to a matrix containing everyone.
+		"""
+		all_cell_lines_combined = np.zeros(shape=(len(cell_lines_matrix[0]), len(cell_lines_matrix)))
+		
+		for i in range(len(separate_values_matrix)):
 
-			for i in range(len(mixtures_list[0])):
+			for cell_line in range(len(cell_lines_matrix)):
 
-				average_list = []
+				avg = 0.0
 
-				for j in range(len(mixtures_list)):
+				for replicate in range(len(cell_lines_matrix[cell_line][i])):
 
-					temp_value = 0.0
-					
-					for k in range(len(mixtures_list[j][i])):
-						temp_value += mixtures_list[j][i][k]
+					avg += cell_lines_matrix[cell_line][i][replicate]
 
-					average_list.append(temp_value / float(len(mixtures_list[j][i])))
+				all_cell_lines_combined[i][cell_line] = avg / float(len(cell_lines_matrix[cell_line][i]))
 
-				temp_value = 0.0
+		""" Quantile normalize the whole matrix.
+		"""
+		all_cell_lines_combined = quantile_normalisation.algo(all_cell_lines_combined)
 
-				for j in range(len(tumor_list[i])):
-					temp_value += tumor_list[i][j]
+		np_gene_dictionary = mixtures.from_matrix_to_dictionary(all_cell_lines_combined, np_gene_dictionary)
+		
+		""" The data is then iterated over 0 to 100 percent tumor content with intervals
+			of 5 percent. Each iteration is written to file.
+		"""
+		if tumor_present == False:
 
-				average_list.append(temp_value / float(len(tumor_list[i])))
-
-				combined_values_matrix_normalised.append(average_list)
-
-			""" The data is then iterated over 0 to 100 percent tumor content with intervals
-				of 5 percent. Each iteration is written to file.
-			"""
+			file_handler.write_combined_mixtures(np_gene_dictionary, config.MIXTURE, MIXTURES_INPUT)
+		else :
 
 			start_tumor = int(args.ITERATION[0]); stop_tumor = int(args.ITERATION[1]); step_tumor = int(args.ITERATION[2])
 			start_noise = int(args.ITERATION[3]); stop_noise = int(args.ITERATION[4]); step_noise = int(args.ITERATION[5])
@@ -503,92 +337,24 @@ def execute():
 
 					fixed_tumor_matrix = []
 
-					for i in range(len(combined_values_matrix_normalised)):
+					for i in range(len(all_cell_lines_combined)):
 
 						temp_list = []
 
-						for k in range(len(combined_values_matrix_normalised[i]) - 1):
-							temp_list.append((combined_values_matrix_normalised[i][k] * (1-(tumor_content/100))) + combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (tumor_content/100))
-
-						#temp_list.append(combined_values_matrix_normalised[i][len(combined_values_matrix_normalised[i])-1] * (tumor_content/100))
+						for k in range(len(all_cell_lines_combined[i]) - 1):
+							temp_list.append((all_cell_lines_combined[i][k] * (1-(tumor_content/100))) + all_cell_lines_combined[i][len(all_cell_lines_combined[i])-1] * (tumor_content/100))
 
 						if noise_amount > 0:
-							# print("BEFORE: ")
-							# print(temp_list)
 							temp_list = noise.add_noise_controlled(temp_list, noise_amount)
-							# print("AFTER: ")
-							# print(temp_list)
-							# print("")
 
 						fixed_tumor_matrix.append(temp_list)
 
-					np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary_tumor)
+					np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary)
 
-					#file_handler.write_combined_mixtures_tumor(np_gene_dictionary, OUTPUT + "mixtures_with_tumor_", tumor_content, noise_amount)
-					file_handler.write_combined_mixtures_tumor(np_gene_dictionary, OUTPUT + "HUGO_signaturegenes_", tumor_content, noise_amount)
+					file_handler.write_combined_mixtures_tumor(np_gene_dictionary, config.MIXTURES, tumor_content, noise_amount, MIXTURES_INPUT)
 
 				print("--- Generated simulation file with " + str(tumor_content) + "% tumor content. " + str(int((stop_tumor - tumor_content) / step_tumor)) + " files remaining.")
 
-		else:
 
-			# Mixture A, B, C, and D
-			mixes = ["A", "B", "C", "D"]
-
-			for i in range(len(mixes)):
-
-				# Separate
-				np_gene_dictionary = mixtures.separate_mixtures(INPUT[2], np_gene_dictionary, mixes[i])
-				# Combined
-				# np_gene_dictionary = mixtures.combined_mixtures(INPUT[2], np_gene_dictionary, mixes[i])
-
-				separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
-
-				norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix)
-
-				np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_separate, np_gene_dictionary)
-
-				# SEPARATE
-				# file_handler.write_separate_mixtures(np_gene_dictionary, mix)
-				# COMBINED
-				file_handler.write_combined_mixtures(np_gene_dictionary, "combined_mixtures_", mixes[i])
-
-
-#read_args();
 read_stdin();
 execute();
-
-
-# np_gene_dictionary_copy = copy.deepcopy(np_gene_dictionary)
-
-# np_gene_dictionary_not_combined = mixtures.separate_cell_line(BEGIN2, END2, FILECOLS2, INPUT[2], np_gene_dictionary_copy)
-
-# file_handler.write_combined_cell_lines(np_gene_dictionary)
-
-# np_gene_dictionary_with_tumor = mixtures.combine_tumor(BEGIN1, END1, FILECOLS1, INPUT[0], INPUT[1], np_gene_dictionary)
-
-####################################
-# QUANTILE WITHOUT TUMOR AND NOISE #
-####################################
-
-# separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
-
-# norm_matrix_separate = quantile_normalisation.algo(separate_values_matrix)
-
-# np_gene_dictionary = mixtures.from_matrix_to_dictionary(norm_matrix_separate, np_gene_dictionary)
-
-# # SEPARATE
-# # file_handler.write_separate_mixtures(np_gene_dictionary, mix)
-# # COMBINED
-# file_handler.write_combined_mixtures(np_gene_dictionary, mix)
-
-#########################################
-# QUANTILE TUMOR AND CELL LINE TOGETHER #
-#########################################
-
-# combined_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary_with_tumor);
-
-# norm_matrix_combined = quantile_normalisation.algo(combined_values_matrix);
-
-# np_gene_dictionary_with_tumor = mixtures.from_matrix_to_dictionary(norm_matrix_combined, np_gene_dictionary_with_tumor);
-
-# tumor.random_tumor_content(np_gene_dictionary_with_tumor);

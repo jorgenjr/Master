@@ -1,267 +1,157 @@
 
 import matplotlib.pyplot as plt, numpy as np, linecache
 
-# da = open('../../../Master_files/abbas/deconvoluted_mixA', 'r')
-# db = open('../../../Master_files/abbas/deconvoluted_mixB', 'r')
-# dc = open('../../../Master_files/abbas/deconvoluted_mixC', 'r')
-# dd = open('../../../Master_files/abbas/deconvoluted_mixD', 'r')
-# dai = open('../../../Master_files/abbas/deconvoluted_mixA_intercept', 'r')
-# dbi = open('../../../Master_files/abbas/deconvoluted_mixB_intercept', 'r')
-# dci = open('../../../Master_files/abbas/deconvoluted_mixC_intercept', 'r')
-# ddi = open('../../../Master_files/abbas/deconvoluted_mixD_intercept', 'r')
-# sa = open('../../../Master_files/output/combined_mixA.txt', 'r')
-# sb = open('../../../Master_files/output/combined_mixB.txt', 'r')
-# sc = open('../../../Master_files/output/combined_mixC.txt', 'r')
-# sd = open('../../../Master_files/output/combined_mixD.txt', 'r')
 
-# N = 4
+N = 4
 
-# ind = np.arange(N)  # the x locations for the groups
-# width = 0.25       # the width of the bars
-# plt.rcParams.update({'font.size': 9})
+ind = np.arange(N)  # the x locations for the groups
+width = 0.25       # the width of the bars
+plt.rcParams.update({'font.size': 9})
 
-# def autolabel(rects, ax):
-#     # attach some text labels
-#     for rect in rects:
-#         height = rect.get_height()
-#         ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
-#                 '%.4f' % float(height),
-#                 ha='center', va='bottom')
+def autolabel(rects, ax):
+    # attach some text labels
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                '%.3f' % float(height),
+                ha='center', va='bottom')
 
 
-# def plot_result():
+def plot_result():
 
-# 	first_line = linecache.getline('../../../Master_files/abbas/deconvoluted_test', 1)
-# 	splitted_line = first_line.split("\t")
+	first_line = linecache.getline('../../../Master_files/abbas/deconvoluted_test', 1)
+	splitted_line = first_line.split("\t")
 
-# 	for j in range(len(splitted_line)):
+	for j in range(len(splitted_line)):
 
-# 		ABBAS = open('../../../Master_files/abbas/deconvoluted_test', 'r')
-# 		CIBERSORT = open('../../../Master_files/output/CIBERSORT_result_tumor_0', 'r')
+		ABBAS = open('../../../Master_files/abbas/deconvoluted_test', 'r')
+		CIBERSORT = open('../../../Master_files/output/CIBERSORT_result_tumor_0', 'r')
 
-# 		mix_abbas = []
-# 		mix_cibersort = []
+		mix_abbas = []
+		mix_cibersort = []
 
-# 		for i, line in enumerate(ABBAS):
-# 			if i > 0:
-# 				mix_abbas.append(float(line.split('\t')[j+1]))
+		for i, line in enumerate(ABBAS):
+			if i > 0:
+				mix_abbas.append(float(line.split('\t')[j+1]))
 
-# 		skip = True
+		skip = True
 
-# 		for i, line in enumerate(CIBERSORT):
+		for i, line in enumerate(CIBERSORT):
 			
-# 			splitted_line = line.split("\t")
+			splitted_line = line.split("\t")
 			
-# 			if splitted_line[0] == "0":
-# 				skip = False
+			if splitted_line[0] == "0":
+				skip = False
 
-# 			if skip == False:
-# 				mix_cibersort.append(float(splitted_line[j+1]))
+			if skip == False:
+				mix_cibersort.append(float(splitted_line[j+1]))
 
-# 		fig, ax = plt.subplots()
+		fig, ax = plt.subplots()
 
-# 		rects1 = ax.bar(ind, (mix_abbas[0], mix_abbas[1], mix_abbas[2], mix_abbas[3]), width, color='r')
-# 		rects2 = ax.bar(ind + (width), (mix_cibersort[0], mix_cibersort[1], mix_cibersort[2], mix_cibersort[3]), width, color='g')
+		rects1 = ax.bar(ind, (mix_abbas[0], mix_abbas[1], mix_abbas[2], mix_abbas[3]), width, color='r')
+		rects2 = ax.bar(ind + (width), (mix_cibersort[0], mix_cibersort[1], mix_cibersort[2], mix_cibersort[3]), width, color='g')
 
-# 		ax.set_ylabel('Scores')
-# 		ax.set_ylim([0.0, 1.0])
-# 		ax.set_title('Scores by cell lines')
-# 		ax.set_xticks(ind + width)
-# 		ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
+		ax.set_ylabel('Scores')
+		ax.set_ylim([0.0, 1.0])
+		ax.set_title('Scores by cell lines')
+		ax.set_xticks(ind + width)
+		ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
 
-# 		ax.legend((rects1[0], rects2[0]), ('Abbas', 'CIBERSORT'))
+		ax.legend((rects1[0], rects2[0]), ('Abbas', 'CIBERSORT'))
 
-# 		autolabel(rects1, ax)
-# 		autolabel(rects2, ax)
+		autolabel(rects1, ax)
+		autolabel(rects2, ax)
 
-# 		fig.savefig("mix" + str(j) + ".png")
-# 		plt.close(fig)
+		fig.savefig("mix" + str(j) + ".png")
+		plt.close(fig)
 
 
-# plot_result()
+#plot_result()
 
-#############
-# MIXTURE A #
-#############
 
-# mixA_d = []
-# mixA_di = []
-# mixA_s = []
+def mixture(MIX):
 
-# for i, line in enumerate(da):
-# 	if i > 0:
-# 		mixA_d.append(float(line.split('\t')[1]))
+	REAL_JURKAT = 0; REAL_IM9 = 0; REAL_RAJI = 0; REAL_THP1 = 0;
+	CIBERSORT_JURKAT = 0; CIBERSORT_IM9 = 0; CIBERSORT_RAJI = 0; CIBERSORT_THP1 = 0;
+	ABBAS_JURKAT = 0; ABBAS_IM9 = 0; ABBAS_RAJI = 0; ABBAS_THP1 = 0;
+	MIX_LINE = 0;
 
-# for i, line in enumerate(dai):
-# 	if i > 1:
-# 		mixA_di.append(float(line.split('\t')[1]))
+	if MIX == 'A':
+		REAL_JURKAT = 0.25; REAL_IM9 = 0.125; REAL_RAJI = 0.25; REAL_THP1 = 0.375;
+		CIB_LINE = 11
+		ABBAS_COLUMN = 1
+	elif MIX == 'B':
+		REAL_JURKAT = 0.05; REAL_IM9 = 0.317; REAL_RAJI = 0.475; REAL_THP1 = 0.158;
+		CIB_LINE = 12
+		ABBAS_COLUMN = 2
+	elif MIX == 'C':
+		REAL_JURKAT = 0.01; REAL_IM9 = 0.495; REAL_RAJI = 0.165; REAL_THP1 = 0.33;
+		CIB_LINE = 13
+		ABBAS_COLUMN = 3
+	elif MIX == 'D':
+		REAL_JURKAT = 0.002; REAL_IM9 = 0.333; REAL_RAJI = 0.333; REAL_THP1 = 0.333;
+		CIB_LINE = 14
+		ABBAS_COLUMN = 4
 
-# for i, line in enumerate(sa):
-# 	if i > 0:
-# 		splitted_line = line.split('\t')
-# 		mixA_s.append(float(splitted_line[1]))
-# 		mixA_s.append(float(splitted_line[2]))
-# 		mixA_s.append(float(splitted_line[3]))
-# 		mixA_s.append(float(splitted_line[4]))
+	line = linecache.getline('../../../Master_files/output/CIBERSORT_notumor', CIB_LINE)
+	CIBERSORT_JURKAT = float(line.split('\t')[1])
+	CIBERSORT_IM9 = float(line.split('\t')[2])
+	CIBERSORT_RAJI = float(line.split('\t')[3])
+	CIBERSORT_THP1 = float(line.split('\t')[4])
 
-# rects1 = ax.bar(ind, (mixA_d[0], mixA_d[1], mixA_d[2], mixA_d[3]), width, color='r')
-# rects2 = ax.bar(ind + width, (mixA_di[0], mixA_di[1], mixA_di[2], mixA_di[3]), width, color='y')
-# rects3 = ax.bar(ind + (2*width), (mixA_s[0], mixA_s[1], mixA_s[2], mixA_s[3]), width, color='g')
+	line = linecache.getline('../../../Master_files/output/CIBERSORT_referencenorm_0_0', CIB_LINE)
+	ABBAS_JURKAT = float(line.split('\t')[1])
+	ABBAS_IM9 = float(line.split('\t')[2])
+	ABBAS_RAJI = float(line.split('\t')[3])
+	ABBAS_THP1 = float(line.split('\t')[4])
 
-# ax.set_ylabel('Scores')
-# ax.set_ylim([0.0, 1.0])
-# ax.set_title('Scores by cell lines')
-# ax.set_xticks(ind + width)
-# ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
+	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 3)
+	# ABBAS_JURKAT = float(line.split('\t')[ABBAS_COLUMN])
+	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 4)
+	# ABBAS_IM9 = float(line.split('\t')[ABBAS_COLUMN])
+	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 5)
+	# ABBAS_RAJI = float(line.split('\t')[ABBAS_COLUMN])
+	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 6)
+	# ABBAS_THP1 = float(line.split('\t')[ABBAS_COLUMN])
 
-# ax.legend((rects1[0], rects2[0], rects3[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
+	# if ABBAS_JURKAT < 0.0: ABBAS_JURKAT = 0.0
+	# if ABBAS_IM9 < 0.0: ABBAS_IM9 = 0.0
+	# if ABBAS_RAJI < 0.0: ABBAS_RAJI = 0.0
+	# if ABBAS_THP1 < 0.0: ABBAS_THP1 = 0.0
 
-# autolabel(rects1)
-# autolabel(rects2)
-# autolabel(rects3)
+	# temp_array = [ABBAS_JURKAT, ABBAS_IM9, ABBAS_RAJI, ABBAS_THP1]
+	# norm = [float(i)/sum(temp_array) for i in temp_array]
+	# ABBAS_JURKAT = norm[0]
+	# ABBAS_IM9 = norm[1]
+	# ABBAS_RAJI = norm[2]
+	# ABBAS_THP1 = norm[3]
 
-# fig.savefig("mixa.png")
-# plt.close(fig)
-#plt.show()
+	fig, ax = plt.subplots()
 
-#############
-# MIXTURE B #
-#############
+	rects1 = ax.bar(ind, (CIBERSORT_JURKAT, CIBERSORT_IM9, CIBERSORT_RAJI, CIBERSORT_THP1), width, color='r')
+	rects2 = ax.bar(ind + width, (ABBAS_JURKAT, ABBAS_IM9, ABBAS_RAJI, ABBAS_THP1), width, color='y')
+	rects3 = ax.bar(ind + (2*width), (REAL_JURKAT, REAL_IM9, REAL_RAJI, REAL_THP1), width, color='g')
 
-# fig, ax = plt.subplots()
+	ax.set_ylabel('Scores')
+	ax.set_ylim([0.0, 1.0])
+	ax.set_title('Scores by cell lines for mixture ' + MIX)
+	ax.set_xticks(ind + width)
+	ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
 
-# mixB_d = []
-# mixB_di = []
-# mixB_s = []
+	ax.legend((rects1[0], rects2[0], rects3[0]), ('CIBERSORT', 'CIBERSORT (new)', 'Actual amount'))
 
-# for i, line in enumerate(db):
-# 	if i > 0:
-# 		mixB_d.append(float(line.split('\t')[1]))
+	autolabel(rects1, ax)
+	autolabel(rects2, ax)
+	autolabel(rects3, ax)
 
-# for i, line in enumerate(dbi):
-# 	if i > 1:
-# 		mixB_di.append(float(line.split('\t')[1]))
+	fig.savefig("mix" + MIX + "_referencenorm.png")
+	plt.close(fig)
 
-# for i, line in enumerate(sb):
-# 	if i > 0:
-# 		splitted_line = line.split('\t')
-# 		mixB_s.append(float(splitted_line[1]))
-# 		mixB_s.append(float(splitted_line[2]))
-# 		mixB_s.append(float(splitted_line[3]))
-# 		mixB_s.append(float(splitted_line[4]))
 
-# rects4 = ax.bar(ind, (mixB_d[0], mixB_d[1], mixB_d[2], mixB_d[3]), width, color='r')
-# rects5 = ax.bar(ind + width, (mixB_di[0], mixB_di[1], mixB_di[2], mixB_di[3]), width, color='y')
-# rects6 = ax.bar(ind + (2*width), (mixB_s[0], mixB_s[1], mixB_s[2], mixB_s[3]), width, color='g')
-
-# ax.set_ylabel('Scores')
-# ax.set_ylim([0.0, 1.0])
-# ax.set_title('Scores by cell lines')
-# ax.set_xticks(ind + width)
-# ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
-
-# ax.legend((rects4[0], rects5[0], rects6[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
-
-# autolabel(rects4)
-# autolabel(rects5)
-# autolabel(rects6)
-
-# fig.savefig("mixb.png")
-# plt.close(fig)
-#plt.show()
-
-#############
-# MIXTURE C #
-#############
-
-# fig, ax = plt.subplots()
-
-# mixC_d = []
-# mixC_di = []
-# mixC_s = []
-
-# for i, line in enumerate(dc):
-# 	if i > 0:
-# 		mixC_d.append(float(line.split('\t')[1]))
-
-# for i, line in enumerate(dci):
-# 	if i > 1:
-# 		mixC_di.append(float(line.split('\t')[1]))
-
-# for i, line in enumerate(sc):
-# 	if i > 0:
-# 		splitted_line = line.split('\t')
-# 		mixC_s.append(float(splitted_line[1]))
-# 		mixC_s.append(float(splitted_line[2]))
-# 		mixC_s.append(float(splitted_line[3]))
-# 		mixC_s.append(float(splitted_line[4]))
-
-# rects7 = ax.bar(ind, (mixC_d[0], mixC_d[1], mixC_d[2], mixC_d[3]), width, color='r')
-# rects8 = ax.bar(ind + width, (mixC_di[0], mixC_di[1], mixC_di[2], mixC_di[3]), width, color='y')
-# rects9 = ax.bar(ind + (2*width), (mixC_s[0], mixC_s[1], mixC_s[2], mixC_s[3]), width, color='g')
-
-# ax.set_ylabel('Scores')
-# ax.set_ylim([0.0, 1.0])
-# ax.set_title('Scores by cell lines')
-# ax.set_xticks(ind + width)
-# ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
-
-# ax.legend((rects7[0], rects8[0], rects9[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
-
-# autolabel(rects7)
-# autolabel(rects8)
-# autolabel(rects9)
-
-# fig.savefig("mixc.png")
-# plt.close(fig)
-#plt.show()
-
-#############
-# MIXTURE D #
-#############
-
-# fig, ax = plt.subplots()
-
-# mixD_d = []
-# mixD_di = []
-# mixD_s = []
-
-# for i, line in enumerate(dd):
-# 	if i > 0:
-# 		mixD_d.append(float(line.split('\t')[1]))
-
-# for i, line in enumerate(ddi):
-# 	if i > 1:
-# 		mixD_di.append(float(line.split('\t')[1]))
-
-# for i, line in enumerate(sd):
-# 	if i > 0:
-# 		splitted_line = line.split('\t')
-# 		mixD_s.append(float(splitted_line[1]))
-# 		mixD_s.append(float(splitted_line[2]))
-# 		mixD_s.append(float(splitted_line[3]))
-# 		mixD_s.append(float(splitted_line[4]))
-
-# rects10 = ax.bar(ind, (mixD_d[0], mixD_d[1], mixD_d[2], mixD_d[3]), width, color='r')
-# rects11 = ax.bar(ind + width, (mixD_di[0], mixD_di[1], mixD_di[2], mixD_di[3]), width, color='y')
-# rects12 = ax.bar(ind + (2*width), (mixD_s[0], mixD_s[1], mixD_s[2], mixD_s[3]), width, color='g')
-
-# ax.set_ylabel('Scores')
-# ax.set_ylim([0.0, 1.0])
-# ax.set_title('Scores by cell lines')
-# ax.set_xticks(ind + width)
-# ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
-
-# ax.legend((rects10[0], rects11[0], rects12[0]), ('Abbas', 'Abbas (intercept)', 'CIBERSORT'))
-
-# autolabel(rects10)
-# autolabel(rects11)
-# autolabel(rects12)
-
-# fig.savefig("mixd.png")
-# plt.close(fig)
-#plt.show()
-
+mixture('A')
+mixture('B')
+mixture('C')
+mixture('D')
 
 
 def cibersort():
@@ -274,7 +164,7 @@ def cibersort():
 		while j <= 95:
 			correlation = 0.0
 			for k in range(11, 15):
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_result_' + str(i) + '_' + str(j), k)
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_tumor_' + str(i) + '_' + str(j), k)
 				# TUMOR
 				# correlation += float(line.split('\t')[7])
 				# NOT TUMOR
@@ -326,33 +216,283 @@ def abbas():
 
 	return result
 
-# result = cibersort()
-result = abbas()
-#print(result)
+
+def llsr():
+
+	f = open('../../../Master_files/abbas/correlation_allgenes', 'r')
+	correlation = []
+	for line in f:
+		splitted_line = line.split('\t')[:-1]
+		for i in range(len(splitted_line)):
+			splitted_line[i] = float(splitted_line[i])
+		correlation.append(splitted_line)
+	
+	result = [list(x) for x in zip(*correlation)]
+
+	return result
 
 
-reversed_result = []
-for i in reversed(result):
-	reversed_result.append(i)
+def heatmap():
 
-from matplotlib import pyplot as pltt
-import matplotlib as mpl
+	# result = cibersort()
+	# result = abbas()
+	result = llsr()
+	#print(result)
 
-#hist, xedges, yedges = np.histogram2d(x,y)
-#X,Y = np.meshgrid(xedges,yedges)
-#pltt.imshow(hist)
 
-fig, ax = pltt.subplots()
-# ax.set_title('CIBERSORT')
-ax.set_title('Abbas')
-ax.set_xlabel('Tumor content (%)')
-ax.set_ylabel('Added noise (%)')
+	reversed_result = []
+	for i in reversed(result):
+		reversed_result.append(i)
 
-im = pltt.imshow(reversed_result, extent=[0, 100, 0, 100])
-#pltt.gca().invert_yaxis()
-pltt.grid(True)
-# pltt.colorbar()
-norm = mpl.colors.Normalize(vmin=0.0, vmax=1.0)
-im.set_norm(norm)
-pltt.colorbar(im)
-pltt.show()
+	from matplotlib import pyplot as pltt
+	import matplotlib as mpl
+
+	#hist, xedges, yedges = np.histogram2d(x,y)
+	#X,Y = np.meshgrid(xedges,yedges)
+	#pltt.imshow(hist)
+
+	fig, ax = pltt.subplots()
+	# ax.set_title('CIBERSORT')
+	# ax.set_title('Abbas')
+	ax.set_title('LLSR')
+	ax.set_xlabel('Tumor content (%)')
+	ax.set_ylabel('Added noise (%)')
+
+	im = pltt.imshow(reversed_result, extent=[0, 100, 0, 100])
+	#pltt.gca().invert_yaxis()
+	pltt.grid(True)
+	# pltt.colorbar()
+	norm = mpl.colors.Normalize(vmin=0.0, vmax=1.0)
+	im.set_norm(norm)
+	pltt.colorbar(im)
+	pltt.show()
+
+
+# heatmap()
+
+
+def dot_line():
+
+	CIBERSORT = []
+	ABBAS = []
+	RAJI = []
+
+	for spike in range(0, 11, 1):
+
+		A = 11; B = 12; C = 13; D = 14;
+		CELL = 3
+
+		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_70_Raji_' + str(spike), B)
+		CIBERSORT.append(line.split('\t')[CELL])
+	#print(CIBERSORT)
+	for spike in range(0, 11, 1):
+
+		A = 1; B = 2; C = 3; D = 4;
+		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; Tumor = 7;
+
+		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Jurkat)
+		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), IM9)
+		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Raji)
+		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), THP1)
+		Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Tumor)
+
+		temp_array = [float(Jurkat.split('\t')[B]), float(IM9.split('\t')[B]), float(Raji.split('\t')[B]), float(THP1.split('\t')[B]), float(Tumor.split('\t')[B])]
+		#print(temp_array)
+		norm = [float(i)/sum(temp_array) for i in temp_array]
+		#print(norm)
+
+		#ABBAS.append(Raji.split('\t')[A])
+		ABBAS.append(norm[2])
+	#print(ABBAS)
+	for spike in range(0, 11, 1):
+
+		# Raji
+		A = 25; B = 47.5; C = 16.5; D = 33.3;
+
+		MIX_content = B * (0.3 - (spike / 100))
+		spike_content = spike * (100/30)
+		#RAJI.append((MIX_content+spike_content) / 100)
+		RAJI.append((MIX_content+spike)/100)
+		print(0.3 - (spike / 100))
+		print(MIX_content)
+		print(spike_content)
+		print(MIX_content+spike_content)
+		print((MIX_content+spike)/100)
+		print("\n")
+	#print(RAJI)
+
+	#raw = [0.07, 0.14, 0.07]
+	#norm = [float(i)/sum(raw) for i in raw]
+	#print(norm)
+
+	plt.figure(1)
+	plt.subplot(221)
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT, marker='o', linestyle='-', color='r', label='CIBERSORT')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS, marker='o', linestyle='-', color='g', label='LLSR')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], RAJI, marker='o', linestyle='-', color='k', label='Raji')
+	axes = plt.gca()
+	axes.set_xlim([0, 10])
+	axes.set_ylim([0.0, 0.3])
+	plt.legend()
+	plt.title('Mixture D with Raji spike-in')
+	plt.xlabel('Spike in (%)')
+	plt.ylabel('Cell line present in mixture')
+	plt.show()
+
+
+def dot_line_GSE26495():
+
+	CIBERSORT_h = []; CIBERSORT_l = []
+	ABBAS_h = []; ABBAS_l = []
+	HIGH = [0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.0];
+	LOW = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1];
+
+	for spike in range(0, 11, 1):
+
+		A = 11; B = 12; C = 13; D = 14;
+		H = 5; L = 6;
+
+		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_0_GSE26495_h' + str(10 - spike), A)
+		CIBERSORT_h.append(line.split('\t')[H])
+		#CIBERSORT_l.append(line.split('\t')[L])
+	print(CIBERSORT_h)
+	#print(CIBERSORT_l)
+	for spike in range(0, 11, 1):
+
+		A = 1; B = 2; C = 3; D = 4;
+		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; H = 7;# L = 8;# Tumor = 9; 
+
+		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), Jurkat)
+		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), IM9)
+		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), Raji)
+		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), THP1)
+		TH = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), H)
+		#TL = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), L)
+		#Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_h' + str(10 - spike) + '_l' + str(spike), Tumor)
+
+		Jurkat = float(Jurkat.split('\t')[A])
+		IM9 = float(IM9.split('\t')[A])
+		Raji = float(Raji.split('\t')[A])
+		THP1 = float(THP1.split('\t')[A])
+		TH = float(TH.split('\t')[A])
+		#TL = float(TL.split('\t')[D])
+		#Tumor = float(Tumor.split('\t')[A])
+
+		if Jurkat < 0.0: Jurkat = 0.0
+		if IM9 < 0.0: IM9 = 0.0
+		if Raji < 0.0: Raji = 0.0
+		if THP1 < 0.0: THP1 = 0.0
+		if TH < 0.0: TH = 0.0
+		#if TL < 0.0: TL = 0.0
+		#if Tumor < 0.0: Tumor = 0.0
+
+		temp_array = [Jurkat, IM9, Raji, THP1, TH]#, TL]#, Tumor]
+		#print(temp_array)
+		norm = [float(i)/sum(temp_array) for i in temp_array]
+		#print(norm)
+
+		#ABBAS.append(Raji.split('\t')[A])
+		ABBAS_h.append(norm[4])
+		#ABBAS_l.append(norm[5])
+	print(ABBAS_h)
+	#print(ABBAS_l)
+
+	plt.figure(1)
+	plt.subplot(221)
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_h, marker='o', linestyle='-', color='r', label='CIBERSORT high')
+	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_l, marker='o', linestyle='-', color='b', label='CIBERSORT low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_h, marker='o', linestyle='-', color='g', label='LLSR high')
+	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_l, marker='o', linestyle='-', color='c', label='LLSR low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], HIGH, marker='o', linestyle='-', color='k', label='T high')
+	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], LOW, marker='o', linestyle='-', color='y', label='T low')
+	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], linestyle='-', color='m', label="Total mixture")
+	axes = plt.gca()
+	axes.set_xlim([0, 10])
+	axes.set_ylim([0.0, 0.3])
+	plt.legend()
+	plt.title('Mixture A with T-high spike-in')
+	plt.xlabel('Spike in (%)')
+	plt.ylabel('Cell line present in mixture')
+	plt.show()
+
+
+def new_dot_line_GSE26495():
+
+	CIBERSORT_h = []; CIBERSORT_l = []
+	ABBAS_h = []; ABBAS_l = []
+	HIGH = [0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.0];
+	LOW = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1];
+	MIX = "D"
+
+	for spike in range(0, 11, 1):
+
+		A = 11; B = 12; C = 13; D = 14;
+		H = 5; L = 6;
+
+		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), A)
+		CIBERSORT_h.append(line.split('\t')[H])
+		CIBERSORT_l.append(line.split('\t')[L])
+	# print(CIBERSORT_h)
+	#print(CIBERSORT_l)
+	for spike in range(0, 11, 1):
+
+		A = 1; B = 2; C = 3; D = 4;
+		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; H = 7;# L = 8;# Tumor = 9; 
+
+		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), Jurkat)
+		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), IM9)
+		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), Raji)
+		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), THP1)
+		TH = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), H)
+		TL = linecache.getline('../../../Master_files/analyze_result/Abbas_new_norm'+MIX+'_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), L)
+		#Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_h' + str(10 - spike) + '_l' + str(spike), Tumor)
+
+		Jurkat = float(Jurkat.split('\t')[A])
+		IM9 = float(IM9.split('\t')[A])
+		Raji = float(Raji.split('\t')[A])
+		THP1 = float(THP1.split('\t')[A])
+		TH = float(TH.split('\t')[A])
+		TL = float(TL.split('\t')[A])
+		#Tumor = float(Tumor.split('\t')[A])
+
+		if Jurkat < 0.0: Jurkat = 0.0
+		if IM9 < 0.0: IM9 = 0.0
+		if Raji < 0.0: Raji = 0.0
+		if THP1 < 0.0: THP1 = 0.0
+		if TH < 0.0: TH = 0.0
+		if TL < 0.0: TL = 0.0
+		#if Tumor < 0.0: Tumor = 0.0
+
+		temp_array = [Jurkat, IM9, Raji, THP1, TH, TL]#, Tumor]
+		#print(temp_array)
+		norm = [float(i)/sum(temp_array) for i in temp_array]
+		#print(norm)
+
+		#ABBAS.append(Raji.split('\t')[A])
+		ABBAS_h.append(norm[4])
+		ABBAS_l.append(norm[5])
+	# print(ABBAS_h)
+	#print(ABBAS_l)
+
+	plt.figure(1)
+	plt.subplot(221)
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_h, marker='o', linestyle='-', color='r', label='CIBERSORT high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_l, marker='o', linestyle='-', color='b', label='CIBERSORT low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_h, marker='o', linestyle='-', color='g', label='LLSR high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_l, marker='o', linestyle='-', color='c', label='LLSR low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], HIGH, marker='o', linestyle='-', color='k', label='T high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], LOW, marker='o', linestyle='-', color='y', label='T low')
+	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], linestyle='-', color='m', label="Total mixture")
+	axes = plt.gca()
+	axes.set_xlim([0, 10])
+	axes.set_ylim([0.0, 0.3])
+	plt.legend()
+	plt.title('Mixture '+MIX+' with T-high and T-low spike-in')
+	plt.xlabel('Spike in (%)')
+	plt.ylabel('Cell line present in mixture')
+	plt.show()
+
+
+#dot_line()
+#dot_line_GSE26495()
+#new_dot_line_GSE26495()

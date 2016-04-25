@@ -4,13 +4,37 @@ sbatch <file.slurm>
 watch -n 2 squeue -u jorgenjr
 scancel <job id>
 
+
+
+FILE STRUCTURE:
+Abbas:
+- Abbas_HUGO (lsfit, simulation -> HUGO)
+- Abbas_result (lsfit, simulation (probes))
+- Abbas_result_tumor (lsfit, simulation (probes) with tumor cell line in signature matrix)
+- LLSR_HUGO (lm, ran with simulation/HUGO_tumor)
+
+analyze_result:
+
+convert:
+- simulation_hugo_unique_tumor (simulation -> HUGO)
+
+output:
+- CIBERSORT_HUGOfirst_tumor (HUGO -> simulation, ran with HUGO_tumor)
+- CIBERSORT_randomsignatureQ_tumor (running CIBERSORT with random signature genes (quantile normalized), ran with HUGO_tumor mixture)
+- CIBERSORT_randomsignature_tumor (running CIBERSORT with random signature genes, ran with HUGO_tumor mixture)
+- CIBERSORT_result (simulation -> HUGO, ran with convert/simulation_hugo_unique_tumor mixture)
+- CIBERSORT_result_tumor (simulation -> HUGO, ran with convert/simulation_hugo_unique_tumor mixture and signature matrix with tumor cell line)
+
+simulation:
+- HUGO_signaturegenes (only genes in ???/221_signature)
+- HUGO_tumor (mixture -> HUGO -> simulation?)
+- mixtures_with_tumor (simulation with probes)
+
+
+
 PROGRAMMING
 - Summarize all probe set values before Quantile Normalize -> Abbas
-- What is the best way to simulate a mixture?
-- What do CIBERSORT correlate? The result, or tumor content?
 - Check if differential expression is correctly produced
-- See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
-- Produce plots
 - Check normal distribution etc.
 
 TEXT
@@ -18,57 +42,66 @@ TEXT
 - Write about the heatmap vs. their tumor file
 - Differential expression (write)
 -- Using my cell lines to find out which genes are turned on.
-- Write about Jurkat, THP-1, Raji, IM-9, and the mixtures used.
-- Begin writing "Result" with the current output data
-- Write about the noise function
-- Write about Pearson Correlation, RMSE, etc.
 
-
-STEP 1: *** DONE
-- Did I quantile Normalize data before creating Signature Matrix?
--- Add tumor content to signature as well
-
-STEP 2: *** DONE
-- Increase tumor from 0% -> 99% for mixtures
--- Create BIG (no, many small) matrix
 
 STEP 3: *** NEED TO RUN ABBAS
 - Summarize all probe set values before Quantile Normalize -> Abbas
 
-STEP 4: *** DONE (NEEDS MORE TESTING)
-- Create a script which automates the process:
--- Simulation
--- Conversation
--- Run CIBERSORT
--- Run Abbas
--- ???
--- PROFIT
-
-STEP 5: *** DONE (What do CIBERSORT correlate?)
-- Calculate Pearson Correlation for Abbas -> use for heatmap
-- What do CIBERSORT correlate? The result, or tumor content?
-
-STEP 6: *** DONE
-- Noise before Quantile Normalisation?
--- To control noise content control f
-
 STEP 7: MAYBE
 - Check if differential expression is correctly produced
-- Generate a diffexp again
--- Convert affy to HUGO
 - See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
 -- Or is this CELL LINES?
 
-STEP 8:
-- QA replace.py
-- Clean up in "old" files
-
-STEP 9:
-- Write about Jurkat, THP-1, Raji, IM-9, and the mixtures used.
-- Begin writing "Result" with the current output data
-- Write about the noise function
-- Write about Pearson Correlation, RMSE, etc. and how it is calculated in CIBERSORT and in Abbas
-- Produce plots
-
 STEP 10:
 - Check normal distribution etc.
+
+STEP 11:
+- LLSR is Abbas/lsfit
+-- Read in Newman et al. about how they compared it.
+-- See how they compare CIBERSORT to LLSR
+
+STEP 12:
+- Mixtures with 70% tumor content
+-- Spike in 0% -> 10% cell line (IM-9 or Raji, since they're closely related)
+-- Spike inn 0% -> 10% with two cell lines (IM-9 and Raji, discuss with Trevor)
+- Calculate the differential expression for IM-9 and Raji, and e.g. Raji and Jurkat
+-- Show that IM-9 and Raji are closely related!
+- Try to randomly select 221 genes not present in the signature matrix and run LLSR and CIBERSORT
+-- Repeat 10 times and produce average Pearson correlation
+- Produce plots:
+-- lsfit, lm, CIBERSORT and actual proportions for no noise or tumor content.
+
+STEP 13:
+'Results':
+- (PLOT) Proportions of cell lines present in mixtures (LLSR, CIBERSORT and actual amount)
+-- mixA_notumor.png
+-- mixB_notumor.png
+-- mixC_notumor.png
+-- mixD_notumor.png
+- Address which cell lines that are closely related by using diff. exp.
+
+- (HEATMAP) Pearson correlation when tumor cell line is not present in signature matrix (LLSR and CIBERSORT)
+-- CIBERSORT: CIBERSORT_heatmap_probes_newnorm_20x20.png
+-- LLSR: LLSR_heatmap_probes_newnorm_20x20.png
+-- Signature matrix: phenotype_classes.separate_cell_lines.bm.heatmap.K999.0.pdf
+
+- (PLOT) Spike in Raji since GSE11103 contains two B-cell lines (LLSR, CIBERSORT and actual amount)
+-- Raji_probes_A.png
+-- Raji_probes_B.png
+-- Raji_probes_C.png
+-- Raji_probes_D.png
+- (PLOT) Spike in T-high (LLSR, CIBERSORT and actual amount)
+-- T-high_probes_new_norm_notumor_A.png
+-- T-high_probes_new_norm_notumor_B.png
+-- T-high_probes_new_norm_notumor_C.png
+-- T-high_probes_new_norm_notumor_D.png
+- (PLOT) Decrease T-high while increasing T-low (LLSR, CIBERSORT and actual amount)
+-- T-high_T-low_probes_new_norm_notumor_A.png
+-- T-high_T-low_probes_new_norm_notumor_B.png
+-- T-high_T-low_probes_new_norm_notumor_C.png
+-- T-high_T-low_probes_new_norm_notumor_D.png
+
+* Skip all plots and heatmaps with HUGO genes, explain that sufficient information was removed in the process.
+
+STEP 14:
+- Should I create a 'config' file instead of changing source code?
