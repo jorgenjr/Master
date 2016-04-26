@@ -1,5 +1,9 @@
 
-import copy, numpy as np, readline, sys, argparse
+import copy
+import numpy as np
+import readline
+import sys
+import argparse
 
 FLAGS = []
 MIXTURES = False

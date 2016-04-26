@@ -42,7 +42,7 @@ In order to run this framework optimally, please note:
 1. The simulation script will ask for which columns in the matrices (mixture files, tumor files, etc.) you want to use, and every file must contain equal set of replicates. E.g.: In file A, you CANNOT use column 1 and 2 for cell X and column 3, 4, 5 and 6 for cell Y. Instead: In fil A, you can use column 1, 2 and 3 for cell X, column 4, 5 and 6 for cell Y etc., meaning that each cell (or mixture) must be equal within a file.
 2. chmod for Rscripts
 
-## CIBERSORT (simulation)
+## Simulation (CIBERSORT)
 
 ### Description
 
@@ -50,11 +50,13 @@ If you want to run the simulation script separately (not from blackbox.py). This
 
 ### Run
 
-Available flags are -t (tumors), -m (mixtures), -c (cell lines) and -r (reference)
+Available flags are -t (tumors), -m (mixtures), -c (cell lines), -r (reference) and -i (iteration).
+
+If you are running -m, it is required that you use -i as well. The syntax is: -i \[start tumor percent\] \[end tumor percent\] \[step tumor percent\] \[start noise percent\] \[end noise percent\] \[step noise percent\] and an example would be: -i 0 100 5 0 100 5
 
 Execute (almost the same as blackbox.py):
 ```
-simulation_CIBERSORT$ python simulation.py -t GSM269529.txt GSM269530.txt -m GSE11103.txt
+simulation_CIBERSORT$ python simulation.py -t GSM269529.txt GSM269530.txt -m GSE11103.txt -i 0 100 5 0 100 5
 ```
 or
 ```
@@ -65,29 +67,21 @@ simulation_CIBERSORT$ python simulation.py -t GSM269529.txt GSM269530.txt -c GSE
 
 ### Description
 
-Running the simulation of tumors based on CIBERSORTs implementation results in gene ids being represented as Affy IDs (HGU133 plus 2.0), instead of HUGO IDs.
+Running the simulation of tumors based on CIBERSORTs implementation results in gene ids being represented as Affy IDs (HGU133 plus 2.0), instead of HUGO IDs. This is a standalone part of the thesis and not a part of the 'Blackbox'. Please read the 'Disclaimer' before converting Affy IDs to HUGO IDs.
 
 ### Run
 
-First run from_gsm_to_geneid.py to take your resulting cell lines from the CIBERSORT simulation to only save the gene IDs.
+First run convert.R to map Affy IDs to HUGO genes.
 
-Execute:
-```
-convert_geneID$ python from_gsm_to_geneid.py
-```
-Open convert.R in Rstudio and run it. To change the input/output file, you need to change it in the code.
+Open convert.R in Rstudio and run it. To change the input/output file, you need to change it in the source code.
 
-If you need to replace Affy IDs with HUGO IDs, run replace.py. It will replace all the Affy IDs from your original cell lines with HUGO IDs. If there are several genes with same ID, they will be added together, then a average score will be calculated.
+replace.py will replace all the Affy IDs from your original cell lines with HUGO IDs. If there are several genes with same ID, they will be added together, then a average score will be calculated.
 
 Execute:
 ```
 convert_geneID$ python replace.py
 ```
-The output will be two files: simulation_hugo and simulation_hugo_unique:
-
-The first one has translated Affy IDs to HUGO, removed unreadable Affy IDs and contains duplicates of genes.
-
-The second one, however, does not contain duplicates and will end up with a number of genes ~20.000.
+To change the input/output file, you need to change it in the source code. The output will be a file which will end up with a number of genes ~20.000.
 
 ### Disclaimer
 

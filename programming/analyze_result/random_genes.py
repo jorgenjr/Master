@@ -1,5 +1,9 @@
 
-import readline, linecache, numpy as np, rpy2.robjects as robjects, time
+import readline
+import linecache
+import numpy as np
+import rpy2.robjects as robjects
+import time
 
 from random import randint
 from rpy2.robjects.packages import importr

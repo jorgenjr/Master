@@ -1,5 +1,7 @@
 
-import matplotlib.pyplot as plt, numpy as np, linecache
+import matplotlib.pyplot as plt
+import numpy as np
+import linecache
 
 
 N = 4

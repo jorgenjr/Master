@@ -14,6 +14,54 @@ Abbas:
 - LLSR_HUGO (lm, ran with simulation/HUGO_tumor)
 
 analyze_result:
+PICTURES:
+- Abbas_heatmap_20x20_new.png (tumor cell in 'combined cells', compare mixture and cell lines, HUGO after?, old Q-norm)
+- Abbas_heatmap_HUGOfirst_20x20.png (tumor cell not in 'combined cells', compare mixture and cell lines, use signature matrix to calculate correlation (~200 genes), HUGO first, old Q-norm)
+- Abbas_heatmap_notumor_20x20_new.png (tumor cell not in 'combined cells', compare mixture and cell lines, HUGO after?, old Q-norm)
+- CIBERSORT_heatmap_20x20_new.png (tumor cell in 'signature matrix', HUGO after?, old Q-norm)
+- CIBERSORT_heatmap_HUGOfirst_20x20_new.png (tumor cell not in 'signature matrix', HUGO first, old Q-norm)
+- CIBERSORT_heatmap_notumor_20x20_new.png (tumor cell not in 'signature matrix', HUGO after?, old Q-norm)
+- CIBERSORT_heatmap_probes_newnorm_20x20.png (probes, new Q-norm, tumor cell not in 'signature matrix')
+- LLSR_heatmap_probes_allgenes_20x20.png (probes, new Q-norm, tumor cell not in 'combined cells', correlation calcuated with combined cells)
+- LLSR_heatmap_probes_newnorm_20x20.png (probes, new Q-norm, tumor cell not in 'combined cells', correlation calculated with signature matrix)
+- LLSR_heatmap_signaturegenes_20x20.png (tumor cell not in 'combined cells', compare estimated mixture genes against signature genes (correlation), HUGO after, old Q-norm)
+- Raji_probes_A.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- Raji_probes_B.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- Raji_probes_C.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- Raji_probes_D.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- T-high_T-low_probes_A.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- T-high_T-low_probes_A_max.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- T-high_T-low_probes_new_norm_notumor_A.png (probes, no tumor, new Q-norm)
+- T-high_T-low_probes_new_norm_notumor_B.png (probes, no tumor, new Q-norm)
+- T-high_T-low_probes_new_norm_notumor_C.png (probes, no tumor, new Q-norm)
+- T-high_T-low_probes_new_norm_notumor_D.png (probes, no tumor, new Q-norm)
+- T-high_T-low_probes_notumor_A.png (probes, no tumor, old Q-norm)
+- T-high_T-low_probes_notumor_B.png (probes, no tumor, old Q-norm)
+- T-high_T-low_probes_notumor_C.png (probes, no tumor, old Q-norm)
+- T-high_T-low_probes_notumor_D.png (probes, no tumor, old Q-norm)
+- T-high_probes_new_norm_notumor_A.png (probes, no tumor, new Q-norm)
+- T-high_probes_new_norm_notumor_B.png (probes, no tumor, new Q-norm)
+- T-high_probes_new_norm_notumor_C.png (probes, no tumor, new Q-norm)
+- T-high_probes_new_norm_notumor_D.png (probes, no tumor, new Q-norm)
+- T-high_probes_notumor_A.png (probes, no tumor, old Q-norm)
+- T-high_probes_notumor_B.png (probes, no tumor, old Q-norm)
+- T-high_probes_notumor_C.png (probes, no tumor, old Q-norm)
+- T-high_probes_notumor_D.png (probes, no tumor, old Q-norm)
+
+- mixA.png (no tumor, old Q-norm?)
+- mixA_notumor.png (probes, no tumor, new Q-norm)
+- mixA_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
+- mixB.png (no tumor, old Q-norm?)
+- mixB_notumor.png (probes, no tumor, new Q-norm)
+- mixB_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
+- mixC.png (no tumor, old Q-norm?)
+- mixC_notumor.png (probes, no tumor, new Q-norm)
+- mixC_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
+- mixD.png (no tumor, old Q-norm?)
+- mixD_notumor.png (probes, no tumor, new Q-norm)
+- mixD_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
+
+
 
 convert:
 - simulation_hugo_unique_tumor (simulation -> HUGO)
@@ -54,11 +102,6 @@ STEP 7: MAYBE
 
 STEP 10:
 - Check normal distribution etc.
-
-STEP 11:
-- LLSR is Abbas/lsfit
--- Read in Newman et al. about how they compared it.
--- See how they compare CIBERSORT to LLSR
 
 STEP 12:
 - Mixtures with 70% tumor content
@@ -102,6 +145,3 @@ STEP 13:
 -- T-high_T-low_probes_new_norm_notumor_D.png
 
 * Skip all plots and heatmaps with HUGO genes, explain that sufficient information was removed in the process.
-
-STEP 14:
-- Should I create a 'config' file instead of changing source code?

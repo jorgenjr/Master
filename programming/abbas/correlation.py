@@ -1,5 +1,6 @@
 
-import numpy as np, sys
+import numpy as np
+import sys
 
 from scipy import stats
 

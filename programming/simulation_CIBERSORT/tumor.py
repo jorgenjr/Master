@@ -1,5 +1,9 @@
 
-import numpy as np, random, file_handler, noise, copy
+import numpy as np
+import random
+import file_handler
+import noise
+import copy
 
 def random_tumor_content(NP_GENE_DICTIONARY):
 

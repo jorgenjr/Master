@@ -1,5 +1,10 @@
 
-import readline, linecache, numpy as np, rpy2.robjects as robjects, time, sys
+import readline
+import linecache
+import numpy as np
+import rpy2.robjects as robjects
+import time
+import sys
 
 from rpy2.robjects.packages import importr
 

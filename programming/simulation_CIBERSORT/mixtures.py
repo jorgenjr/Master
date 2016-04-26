@@ -1,5 +1,8 @@
 
-import numpy as np, linecache
+import numpy as np
+import linecache
+import quantile_normalisation
+import file_handler
 
 
 def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
@@ -24,9 +27,7 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 		
 		line_list = np.array(line.split('\t'))
 
-		# GENES: Column index 0
 		gene_ref = line_list[0].replace("\"", "")#split('"')[1]
-		# print("'" + gene_ref + "'")
 		values = []
 
 		for i in range(INPUT[1], INPUT[2]+1):
@@ -36,7 +37,7 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 			GENE_DICTIONARY[gene_ref] = np.append(GENE_DICTIONARY[gene_ref], values)
 		else:
 			GENE_DICTIONARY[gene_ref] = np.array(values)
-	# print(len(GENE_DICTIONARY))
+	
 	return GENE_DICTIONARY
 
 
@@ -60,7 +61,6 @@ def separate_cell_line(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
 		line_list = np.array(line.split('\t'))
 
-		# GENES: Column index 0
 		gene_ref = line_list[0].split('"')[1]
 		values = []
 
@@ -150,6 +150,112 @@ def separate_for_normalization(separate_values_matrix, cell_lines_matrix, INPUT,
 			cell_lines_matrix[previous_i+i].append(list_of_tumor_lines)
 
 	return cell_lines_matrix
+
+
+def get_relevant_information(NP_GENE_DICTIONARY, TUMOR_PRESENT, FILES, FILES_INPUT, TUMORS, TUMORS_INPUT):
+
+	""" Iterate through all the input files and every relevant information in that file.
+	"""
+
+	for i in range(len(FILES)):
+		NP_GENE_DICTIONARY = all_separate_mixtures(FILES[i], NP_GENE_DICTIONARY, FILES_INPUT[i])
+
+	if TUMOR_PRESENT == True:
+		for i in range(len(TUMORS)):
+			NP_GENE_DICTIONARY = all_separate_mixtures(TUMORS[i], NP_GENE_DICTIONARY, TUMORS_INPUT[i])
+
+	return NP_GENE_DICTIONARY
+
+
+def get_separated_for_normalization(SEPARATE_VALUES_MATRIX, TUMOR_PRESENT, FILES_INPUT, TUMORS_INPUT):
+
+	""" For quantile normalization, each unique mixture/cell line must be normalized separately. Need first to initialize a matrix for each mixture/cell line.
+	"""
+
+	cell_lines_matrix = [];
+	
+	for i in range(len(FILES_INPUT)):
+		for j in range(FILES_INPUT[i][0]):
+			cell_lines_matrix.append([])
+
+	if TUMOR_PRESENT == True:
+		cell_lines_matrix.append([])
+
+	if TUMOR_PRESENT == True:
+		cell_lines_matrix = separate_for_normalization(SEPARATE_VALUES_MATRIX, cell_lines_matrix, FILES_INPUT, TUMOR_PRESENT, TUMORS_INPUT)
+	else:
+		cell_lines_matrix = separate_for_normalization(SEPARATE_VALUES_MATRIX, cell_lines_matrix, FILES_INPUT, TUMOR_PRESENT, None)
+
+	return cell_lines_matrix
+
+
+def combine_separated_normalized_data(CELL_LINES_MATRIX, SEPARATE_VALUES_MATRIX):
+
+	""" Gather all the normalized gene values (from each mixture/cell line) back together to a matrix containing everyone.
+	Each mixture/cell line is combined by calculated the average score.
+
+	Quantile normalize the whole matrix before return.
+	"""
+
+	all_cell_lines_combined = np.zeros(shape=(len(CELL_LINES_MATRIX[0]), len(CELL_LINES_MATRIX)))
+	
+	for i in range(len(SEPARATE_VALUES_MATRIX)):
+
+		for cell_line in range(len(CELL_LINES_MATRIX)):
+
+			avg = 0.0
+
+			for replicate in range(len(CELL_LINES_MATRIX[cell_line][i])):
+
+				avg += CELL_LINES_MATRIX[cell_line][i][replicate]
+
+			all_cell_lines_combined[i][cell_line] = avg / float(len(CELL_LINES_MATRIX[cell_line][i]))
+
+	return quantile_normalisation.algo(all_cell_lines_combined)
+
+
+def gather_separated_normalized_data(SEPARATE_VALUES_MATRIX, CELL_LINES_MATRIX):
+
+	""" Gather all the normalized gene values (from each cell line) back together to a matrix containing everyone.
+	"""
+
+	for i in range(len(SEPARATE_VALUES_MATRIX)):
+
+		all_cell_lines = []
+
+		for cell_line in range(len(CELL_LINES_MATRIX)):
+
+			for replicate in range(len(CELL_LINES_MATRIX[cell_line][i])):
+
+				all_cell_lines.append(CELL_LINES_MATRIX[cell_line][i][replicate])
+
+		SEPARATE_VALUES_MATRIX[i] = all_cell_lines
+
+	return SEPARATE_VALUES_MATRIX
+
+
+def save_separate_matrix(NP_GENE_DICTIONARY, SEPARATE_VALUES_MATRIX, TUMOR_PRESENT, FILENAME, FILENAME_TUMOR, FILES_INPUT, TUMORS_INPUT):
+
+	""" Save the matrix of separated values to file.
+	"""
+	NP_GENE_DICTIONARY = from_matrix_to_dictionary(SEPARATE_VALUES_MATRIX, NP_GENE_DICTIONARY)
+	
+	if TUMOR_PRESENT == False:
+		file_handler.write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME, FILES_INPUT, [])
+	else:
+		file_handler.write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME_TUMOR, FILES_INPUT, TUMORS_INPUT)
+
+
+def save_combined_matrix(NP_GENE_DICTIONARY, COMBINED_VALUES_MATRIX, TUMOR_PRESENT, FILENAME, FILENAME_TUMOR, FILES_INPUT, TUMORS_INPUT):
+
+	""" Save the matrix of combined values to file.
+	"""
+	NP_GENE_DICTIONARY = from_matrix_to_dictionary(COMBINED_VALUES_MATRIX, NP_GENE_DICTIONARY)
+	
+	if TUMOR_PRESENT == False:
+		file_handler.write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME, FILES_INPUT, [])
+	else:
+		file_handler.write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME_TUMOR, FILES_INPUT, TUMORS_INPUT)
 
 
 def from_dictionary_to_matrix(GENE_DICTIONARY):

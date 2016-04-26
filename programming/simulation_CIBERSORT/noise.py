@@ -1,5 +1,6 @@
 
-import numpy as np, random
+import numpy as np
+import random
 
 def add_noise(normalized_matrix):
 

@@ -1,20 +1,12 @@
 
-import readline, os, sys, timeit, argparse, config
-
-#from subprocess import call
+import readline
+import os
+import sys
+import timeit
+import argparse
+import config
 import subprocess
 
-# PATH = "/home/jorgen/Projects/";
-# #PATH = "/usit/abel/u1/jorgenjr/Projects/"
-# START_TUMOR = 0
-# STOP_TUMOR = 100
-# STEP_TUMOR = 5
-# START_NOISE = 0
-# STOP_NOISE = 100
-# STEP_NOISE = 5
-# REFERENCE_FILE = PATH + "Master_files/simulation/separate_cell_lines"
-# PHENOTYPE_CLASSES_FILE = PATH + "Master_files/simulation/phenotype_classes"
-# SIGNATURE_FILE = PATH + "Master_files/external/random_signature_genesQ"
 
 FLAGS = []
 MIXTURES = []
@@ -27,7 +19,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--MIXTURES", help="Mixtures", nargs='*')
 parser.add_argument("-t", "--TUMORS", help="Tumors", nargs='*')
 parser.add_argument("-c", "--CELL_LINES", help="Cell lines", nargs='*')
-#parser.add_argument("-o", "--OUTPUT", help="Output")
 
 args = parser.parse_args()
 
