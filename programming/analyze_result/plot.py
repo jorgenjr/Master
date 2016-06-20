@@ -69,7 +69,7 @@ def plot_result():
 
 
 #plot_result()
-
+#java -Xmx3g -Xms3g -jar CIBERSORT.jar -M ../Master_files/simulation/mixtures_normalized -c ../Master_files/simulation/phenotype_classes -P ../Master_files/simulation/separate_cell_lines_norm > CIBERSORT_referencenorm
 
 def mixture(MIX):
 
@@ -95,38 +95,32 @@ def mixture(MIX):
 		CIB_LINE = 14
 		ABBAS_COLUMN = 4
 
-	line = linecache.getline('../../../Master_files/output/CIBERSORT_notumor', CIB_LINE)
+	line = linecache.getline('../../../Master_files/output/CIBERSORT_referencenorm', CIB_LINE)
 	CIBERSORT_JURKAT = float(line.split('\t')[1])
 	CIBERSORT_IM9 = float(line.split('\t')[2])
 	CIBERSORT_RAJI = float(line.split('\t')[3])
 	CIBERSORT_THP1 = float(line.split('\t')[4])
 
-	line = linecache.getline('../../../Master_files/output/CIBERSORT_referencenorm_0_0', CIB_LINE)
-	ABBAS_JURKAT = float(line.split('\t')[1])
-	ABBAS_IM9 = float(line.split('\t')[2])
-	ABBAS_RAJI = float(line.split('\t')[3])
-	ABBAS_THP1 = float(line.split('\t')[4])
+	line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 3)
+	ABBAS_JURKAT = float(line.split('\t')[ABBAS_COLUMN])
+	line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 4)
+	ABBAS_IM9 = float(line.split('\t')[ABBAS_COLUMN])
+	line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 5)
+	ABBAS_RAJI = float(line.split('\t')[ABBAS_COLUMN])
+	line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 6)
+	ABBAS_THP1 = float(line.split('\t')[ABBAS_COLUMN])
 
-	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 3)
-	# ABBAS_JURKAT = float(line.split('\t')[ABBAS_COLUMN])
-	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 4)
-	# ABBAS_IM9 = float(line.split('\t')[ABBAS_COLUMN])
-	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 5)
-	# ABBAS_RAJI = float(line.split('\t')[ABBAS_COLUMN])
-	# line = linecache.getline('../../../Master_files/abbas/Abbas_notumor', 6)
-	# ABBAS_THP1 = float(line.split('\t')[ABBAS_COLUMN])
+	if ABBAS_JURKAT < 0.0: ABBAS_JURKAT = 0.0
+	if ABBAS_IM9 < 0.0: ABBAS_IM9 = 0.0
+	if ABBAS_RAJI < 0.0: ABBAS_RAJI = 0.0
+	if ABBAS_THP1 < 0.0: ABBAS_THP1 = 0.0
 
-	# if ABBAS_JURKAT < 0.0: ABBAS_JURKAT = 0.0
-	# if ABBAS_IM9 < 0.0: ABBAS_IM9 = 0.0
-	# if ABBAS_RAJI < 0.0: ABBAS_RAJI = 0.0
-	# if ABBAS_THP1 < 0.0: ABBAS_THP1 = 0.0
-
-	# temp_array = [ABBAS_JURKAT, ABBAS_IM9, ABBAS_RAJI, ABBAS_THP1]
-	# norm = [float(i)/sum(temp_array) for i in temp_array]
-	# ABBAS_JURKAT = norm[0]
-	# ABBAS_IM9 = norm[1]
-	# ABBAS_RAJI = norm[2]
-	# ABBAS_THP1 = norm[3]
+	temp_array = [ABBAS_JURKAT, ABBAS_IM9, ABBAS_RAJI, ABBAS_THP1]
+	norm = [float(i)/sum(temp_array) for i in temp_array]
+	ABBAS_JURKAT = norm[0]
+	ABBAS_IM9 = norm[1]
+	ABBAS_RAJI = norm[2]
+	ABBAS_THP1 = norm[3]
 
 	fig, ax = plt.subplots()
 
@@ -134,13 +128,13 @@ def mixture(MIX):
 	rects2 = ax.bar(ind + width, (ABBAS_JURKAT, ABBAS_IM9, ABBAS_RAJI, ABBAS_THP1), width, color='y')
 	rects3 = ax.bar(ind + (2*width), (REAL_JURKAT, REAL_IM9, REAL_RAJI, REAL_THP1), width, color='g')
 
-	ax.set_ylabel('Scores')
+	ax.set_ylabel('Coefficients')
 	ax.set_ylim([0.0, 1.0])
 	ax.set_title('Scores by cell lines for mixture ' + MIX)
 	ax.set_xticks(ind + width)
 	ax.set_xticklabels(('Jurkat', 'IM-9', 'Raji', 'THP-1'))
 
-	ax.legend((rects1[0], rects2[0], rects3[0]), ('CIBERSORT', 'CIBERSORT (new)', 'Actual amount'))
+	ax.legend((rects1[0], rects2[0], rects3[0]), ('CIBERSORT', 'LLSR', 'Actual amount'))
 
 	autolabel(rects1, ax)
 	autolabel(rects2, ax)
@@ -150,10 +144,10 @@ def mixture(MIX):
 	plt.close(fig)
 
 
-mixture('A')
-mixture('B')
-mixture('C')
-mixture('D')
+# mixture('A')
+# mixture('B')
+# mixture('C')
+# mixture('D')
 
 
 def cibersort():
@@ -165,12 +159,16 @@ def cibersort():
 		j = 0
 		while j <= 95:
 			correlation = 0.0
-			for k in range(11, 15):
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_tumor_' + str(i) + '_' + str(j), k)
-				# TUMOR
-				# correlation += float(line.split('\t')[7])
-				# NOT TUMOR
-				correlation += float(line.split('\t')[6])
+			# for k in range(11, 15):
+			# 	line = linecache.getline('../../../Master_files/output/CIBERSORT_hugo_LM22_' + str(i) + '_' + str(j), k)
+			# 	# TUMOR
+			# 	# correlation += float(line.split('\t')[7])
+			# 	# NOT TUMOR
+			# 	correlation += float(line.split('\t')[6])
+			for k in range(8, 12):
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_hugo_LM22_' + str(i) + '_' + str(j), k)
+				correlation += float(line.split('\t')[24])
+
 			liste.append(correlation / 4.0)
 			j += 5
 		result.append(liste)
@@ -194,18 +192,18 @@ def abbas():
 			correlationC = 0.0
 			correlationD = 0.0
 			# TUMOR
-			# for k in range(8, 13):
+			for k in range(9, 14):
 			# NOT TUMOR
-			for k in range(7, 11):
-				line = linecache.getline('../../../Master_files/abbas/Abbas_result_' + str(i) + '_' + str(j), k)
+			# for k in range(7, 11):
+				line = linecache.getline('../../../Master_files/abbas/Abbas_tumor_present_' + str(i) + '_' + str(j), k)
 				correlationA += float(line.split('\t')[1])
 				correlationB += float(line.split('\t')[2])
 				correlationC += float(line.split('\t')[3])
 				correlationD += float(line.split('\t')[4])
 			# TUMOR
-			# divide = 5.0
+			divide = 5.0
 			# NOT TUMOR
-			divide = 4.0
+			# divide = 4.0
 			correlationA = correlationA / divide
 			correlationB = correlationB / divide
 			correlationC = correlationC / divide
@@ -221,7 +219,7 @@ def abbas():
 
 def llsr():
 
-	f = open('../../../Master_files/abbas/correlation_allgenes', 'r')
+	f = open('../../../Master_files/abbas/correlation_signature_hugo', 'r')
 	correlation = []
 	for line in f:
 		splitted_line = line.split('\t')[:-1]
@@ -236,9 +234,9 @@ def llsr():
 
 def heatmap():
 
-	# result = cibersort()
+	result = cibersort()
 	# result = abbas()
-	result = llsr()
+	# result = llsr()
 	#print(result)
 
 
@@ -254,9 +252,9 @@ def heatmap():
 	#pltt.imshow(hist)
 
 	fig, ax = pltt.subplots()
-	# ax.set_title('CIBERSORT')
+	ax.set_title('CIBERSORT')
 	# ax.set_title('Abbas')
-	ax.set_title('LLSR')
+	# ax.set_title('LLSR')
 	ax.set_xlabel('Tumor content (%)')
 	ax.set_ylabel('Added noise (%)')
 
@@ -270,7 +268,7 @@ def heatmap():
 	pltt.show()
 
 
-# heatmap()
+heatmap()
 
 
 def dot_line():
@@ -284,7 +282,8 @@ def dot_line():
 		A = 11; B = 12; C = 13; D = 14;
 		CELL = 3
 
-		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_70_Raji_' + str(spike), B)
+		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_70_raji_' + str(spike), A)
+		print(line)
 		CIBERSORT.append(line.split('\t')[CELL])
 	#print(CIBERSORT)
 	for spike in range(0, 11, 1):
@@ -292,13 +291,13 @@ def dot_line():
 		A = 1; B = 2; C = 3; D = 4;
 		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; Tumor = 7;
 
-		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Jurkat)
-		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), IM9)
-		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Raji)
-		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), THP1)
-		Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_Raji_' + str(spike), Tumor)
+		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_raji_' + str(spike), Jurkat)
+		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_raji_' + str(spike), IM9)
+		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_raji_' + str(spike), Raji)
+		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_raji_' + str(spike), THP1)
+		Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_raji_' + str(spike), Tumor)
 
-		temp_array = [float(Jurkat.split('\t')[B]), float(IM9.split('\t')[B]), float(Raji.split('\t')[B]), float(THP1.split('\t')[B]), float(Tumor.split('\t')[B])]
+		temp_array = [float(Jurkat.split('\t')[A]), float(IM9.split('\t')[A]), float(Raji.split('\t')[A]), float(THP1.split('\t')[A]), float(Tumor.split('\t')[A])]
 		#print(temp_array)
 		norm = [float(i)/sum(temp_array) for i in temp_array]
 		#print(norm)
@@ -311,7 +310,7 @@ def dot_line():
 		# Raji
 		A = 25; B = 47.5; C = 16.5; D = 33.3;
 
-		MIX_content = B * (0.3 - (spike / 100))
+		MIX_content = A * (0.3 - (spike / 100))
 		spike_content = spike * (100/30)
 		#RAJI.append((MIX_content+spike_content) / 100)
 		RAJI.append((MIX_content+spike)/100)
@@ -336,7 +335,7 @@ def dot_line():
 	axes.set_xlim([0, 10])
 	axes.set_ylim([0.0, 0.3])
 	plt.legend()
-	plt.title('Mixture D with Raji spike-in')
+	plt.title('Mixture A with Raji spike-in')
 	plt.xlabel('Spike in (%)')
 	plt.ylabel('Cell line present in mixture')
 	plt.show()
@@ -354,65 +353,78 @@ def dot_line_GSE26495():
 		A = 11; B = 12; C = 13; D = 14;
 		H = 5; L = 6;
 
-		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_0_GSE26495_h' + str(10 - spike), A)
+		line = linecache.getline('../../../Master_files/analyze_result/CIBERSORT_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), A)
 		CIBERSORT_h.append(line.split('\t')[H])
-		#CIBERSORT_l.append(line.split('\t')[L])
-	print(CIBERSORT_h)
-	#print(CIBERSORT_l)
+		CIBERSORT_l.append(line.split('\t')[L])
+
 	for spike in range(0, 11, 1):
 
 		A = 1; B = 2; C = 3; D = 4;
-		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; H = 7;# L = 8;# Tumor = 9; 
+		Jurkat = 3; IM9 = 4; Raji = 5; THP1 = 6; H = 7; L = 8; Tumor = 9; 
 
-		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), Jurkat)
-		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), IM9)
-		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), Raji)
-		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), THP1)
-		TH = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike), H)
-		#TL = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_0_GSE26495_h' + str(10 - spike) + '_l' + str(spike), L)
-		#Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_h' + str(10 - spike) + '_l' + str(spike), Tumor)
-
+		Jurkat = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), Jurkat)
+		IM9 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), IM9)
+		Raji = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), Raji)
+		THP1 = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), THP1)
+		TH = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), H)
+		TL = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), L)
+		Tumor = linecache.getline('../../../Master_files/analyze_result/Abbas_tumor_70_GSE26495_l' + str(10-spike) + '_h' + str(spike), Tumor)
+		
 		Jurkat = float(Jurkat.split('\t')[A])
 		IM9 = float(IM9.split('\t')[A])
 		Raji = float(Raji.split('\t')[A])
 		THP1 = float(THP1.split('\t')[A])
 		TH = float(TH.split('\t')[A])
-		#TL = float(TL.split('\t')[D])
-		#Tumor = float(Tumor.split('\t')[A])
+		TL = float(TL.split('\t')[A])
+		Tumor = float(Tumor.split('\t')[A])
 
 		if Jurkat < 0.0: Jurkat = 0.0
 		if IM9 < 0.0: IM9 = 0.0
 		if Raji < 0.0: Raji = 0.0
 		if THP1 < 0.0: THP1 = 0.0
 		if TH < 0.0: TH = 0.0
-		#if TL < 0.0: TL = 0.0
-		#if Tumor < 0.0: Tumor = 0.0
+		if TL < 0.0: TL = 0.0
+		if Tumor < 0.0: Tumor = 0.0
 
-		temp_array = [Jurkat, IM9, Raji, THP1, TH]#, TL]#, Tumor]
-		#print(temp_array)
+		temp_array = [Jurkat, IM9, Raji, THP1, TH, TL, Tumor]
 		norm = [float(i)/sum(temp_array) for i in temp_array]
-		#print(norm)
 
-		#ABBAS.append(Raji.split('\t')[A])
 		ABBAS_h.append(norm[4])
-		#ABBAS_l.append(norm[5])
-	print(ABBAS_h)
-	#print(ABBAS_l)
+		ABBAS_l.append(norm[5])
+
+	reversed_HIGH = []
+	reversed_LOW = []
+	reversed_CIBERSORT_h = []
+	reversed_CIBERSORT_l = []
+	reversed_ABBAS_h = []
+	reversed_ABBAS_l = []
+	for i in reversed(HIGH):
+		reversed_HIGH.append(i)
+	for i in reversed(LOW):
+		reversed_LOW.append(i)
+	for i in reversed(CIBERSORT_h):
+		reversed_CIBERSORT_h.append(i)
+	for i in reversed(CIBERSORT_l):
+		reversed_CIBERSORT_l.append(i)
+	for i in reversed(ABBAS_h):
+		reversed_ABBAS_h.append(i)
+	for i in reversed(ABBAS_l):
+		reversed_ABBAS_l.append(i)
 
 	plt.figure(1)
 	plt.subplot(221)
-	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_h, marker='o', linestyle='-', color='r', label='CIBERSORT high')
-	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], CIBERSORT_l, marker='o', linestyle='-', color='b', label='CIBERSORT low')
-	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_h, marker='o', linestyle='-', color='g', label='LLSR high')
-	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], ABBAS_l, marker='o', linestyle='-', color='c', label='LLSR low')
-	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], HIGH, marker='o', linestyle='-', color='k', label='T high')
-	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], LOW, marker='o', linestyle='-', color='y', label='T low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_CIBERSORT_h, marker='o', linestyle='-', color='r', label='CIBERSORT high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_CIBERSORT_l, marker='o', linestyle='-', color='b', label='CIBERSORT low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_ABBAS_h, marker='o', linestyle='-', color='g', label='LLSR high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_ABBAS_l, marker='o', linestyle='-', color='c', label='LLSR low')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_HIGH, marker='o', linestyle='-', color='k', label='PD-1 high')
+	plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], reversed_LOW, marker='o', linestyle='-', color='y', label='PD-1 low')
 	#plt.plot([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3], linestyle='-', color='m', label="Total mixture")
 	axes = plt.gca()
 	axes.set_xlim([0, 10])
 	axes.set_ylim([0.0, 0.3])
 	plt.legend()
-	plt.title('Mixture A with T-high spike-in')
+	plt.title('Mixture A with PD-1 high and PD-1 low spike-in (70% tumor)')
 	plt.xlabel('Spike in (%)')
 	plt.ylabel('Cell line present in mixture')
 	plt.show()
@@ -495,6 +507,6 @@ def new_dot_line_GSE26495():
 	plt.show()
 
 
-#dot_line()
-#dot_line_GSE26495()
-#new_dot_line_GSE26495()
+# dot_line()
+# dot_line_GSE26495()
+# new_dot_line_GSE26495()

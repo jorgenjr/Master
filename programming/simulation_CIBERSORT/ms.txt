@@ -1,0 +1,17 @@
+<myapp>.scm.azurewebsites.net
+
+web app -> web job -> ??
+
+web app for API? ELler API management?
+
+Active Directory (AD)
+
+MySQL Azure for ladestasjoner
+
+Storage -> queues (for dårlig for vår lytting av CP?)
+
+ServiceBus bedre? Eller IoT Hub?
+
+Marketplace for MySQL
+
+API management har en del sikkerhet 

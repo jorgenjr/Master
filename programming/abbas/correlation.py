@@ -9,7 +9,7 @@ signature = [];
 
 def signature_genes():
 
-	f3 = open('../../../Master_files/simulation/signature_genes_notumor', 'r')
+	f3 = open('../../../Master_files/simulation/phenotype_classes.separate_cell_lines_norm.bm.K999.0.txt', 'r')
 	header = True
 	for line in f3:
 		if header == True:
@@ -20,8 +20,8 @@ def signature_genes():
 
 def find_signature_genes(TUMOR, NOISE):
 
-	f1 = open('../../../Master_files/abbas/LLSR_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
-	f2 = open('../../../Master_files/simulation/mixtures_normalized_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
+	f1 = open('../../../Master_files/abbas/LLSR_newman_'+str(TUMOR)+'_'+str(NOISE), 'r')
+	f2 = open('../../../Master_files/simulation/mixtures_newman_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
 	global signature
 	estimated = []; original = []; header = True;
 
@@ -43,8 +43,6 @@ def find_signature_genes(TUMOR, NOISE):
 	for i in range(len(signature)):
 		for j in range(len(estimated)):
 			if signature[i][0] == estimated[j][0]:
-				print(signature[i][0])
-				print(estimated[j][0])
 				new_estimated.append(estimated[j])
 			if signature[i][0] == original[j][0]:
 				new_original.append(original[j])
@@ -65,7 +63,7 @@ def find_signature_genes(TUMOR, NOISE):
 
 def all_genes(TUMOR, NOISE):
 
-	f1 = open('../../../Master_files/abbas/LLSR_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
+	f1 = open('../../../Master_files/abbas/LLSR_tumor_present_'+str(TUMOR)+'_'+str(NOISE), 'r')
 	f2 = open('../../../Master_files/simulation/mixtures_normalized_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
 	global signature
 	estimated = []; original = []; cells = []; header = True;
@@ -100,13 +98,13 @@ def all_genes(TUMOR, NOISE):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
-f4 = open('../../../Master_files/abbas/correlation_allgenes', 'w')
-#signature_genes()
+f4 = open('../../../Master_files/abbas/correlation_newman', 'w')
+signature_genes()
 counter = 0
 for i in range(0, 100, 5):
 	for j in range(0, 100, 5):
-		#corr = find_signature_genes(i, j)
-		corr = all_genes(i, j)
+		corr = find_signature_genes(i, j)
+		# corr = all_genes(i, j)
 		f4.write(corr+'\t')
 		counter += 1
 		print("Done with " + str(counter) + " files.")

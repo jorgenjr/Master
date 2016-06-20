@@ -15,51 +15,30 @@ Abbas:
 
 analyze_result:
 PICTURES:
-- Abbas_heatmap_20x20_new.png (tumor cell in 'combined cells', compare mixture and cell lines, HUGO after?, old Q-norm)
-- Abbas_heatmap_HUGOfirst_20x20.png (tumor cell not in 'combined cells', compare mixture and cell lines, use signature matrix to calculate correlation (~200 genes), HUGO first, old Q-norm)
-- Abbas_heatmap_notumor_20x20_new.png (tumor cell not in 'combined cells', compare mixture and cell lines, HUGO after?, old Q-norm)
-- CIBERSORT_heatmap_20x20_new.png (tumor cell in 'signature matrix', HUGO after?, old Q-norm)
-- CIBERSORT_heatmap_HUGOfirst_20x20_new.png (tumor cell not in 'signature matrix', HUGO first, old Q-norm)
-- CIBERSORT_heatmap_notumor_20x20_new.png (tumor cell not in 'signature matrix', HUGO after?, old Q-norm)
 - CIBERSORT_heatmap_probes_newnorm_20x20.png (probes, new Q-norm, tumor cell not in 'signature matrix')
 - LLSR_heatmap_probes_allgenes_20x20.png (probes, new Q-norm, tumor cell not in 'combined cells', correlation calcuated with combined cells)
 - LLSR_heatmap_probes_newnorm_20x20.png (probes, new Q-norm, tumor cell not in 'combined cells', correlation calculated with signature matrix)
-- LLSR_heatmap_signaturegenes_20x20.png (tumor cell not in 'combined cells', compare estimated mixture genes against signature genes (correlation), HUGO after, old Q-norm)
-- Raji_probes_A.png (probes, 70% tumor, tumor cell included, old Q-norm)
-- Raji_probes_B.png (probes, 70% tumor, tumor cell included, old Q-norm)
-- Raji_probes_C.png (probes, 70% tumor, tumor cell included, old Q-norm)
-- Raji_probes_D.png (probes, 70% tumor, tumor cell included, old Q-norm)
-- T-high_T-low_probes_A.png (probes, 70% tumor, tumor cell included, old Q-norm)
-- T-high_T-low_probes_A_max.png (probes, 70% tumor, tumor cell included, old Q-norm)
+- Raji_probes_A.png (probes, 70% tumor, tumor cell included, new Q-norm)
+- Raji_probes_B.png (probes, 70% tumor, tumor cell included, new Q-norm)
+- Raji_probes_C.png (probes, 70% tumor, tumor cell included, new Q-norm)
+- Raji_probes_D.png (probes, 70% tumor, tumor cell included, new Q-norm)
 - T-high_T-low_probes_new_norm_notumor_A.png (probes, no tumor, new Q-norm)
 - T-high_T-low_probes_new_norm_notumor_B.png (probes, no tumor, new Q-norm)
 - T-high_T-low_probes_new_norm_notumor_C.png (probes, no tumor, new Q-norm)
 - T-high_T-low_probes_new_norm_notumor_D.png (probes, no tumor, new Q-norm)
-- T-high_T-low_probes_notumor_A.png (probes, no tumor, old Q-norm)
-- T-high_T-low_probes_notumor_B.png (probes, no tumor, old Q-norm)
-- T-high_T-low_probes_notumor_C.png (probes, no tumor, old Q-norm)
-- T-high_T-low_probes_notumor_D.png (probes, no tumor, old Q-norm)
-- T-high_probes_new_norm_notumor_A.png (probes, no tumor, new Q-norm)
-- T-high_probes_new_norm_notumor_B.png (probes, no tumor, new Q-norm)
-- T-high_probes_new_norm_notumor_C.png (probes, no tumor, new Q-norm)
-- T-high_probes_new_norm_notumor_D.png (probes, no tumor, new Q-norm)
-- T-high_probes_notumor_A.png (probes, no tumor, old Q-norm)
-- T-high_probes_notumor_B.png (probes, no tumor, old Q-norm)
-- T-high_probes_notumor_C.png (probes, no tumor, old Q-norm)
-- T-high_probes_notumor_D.png (probes, no tumor, old Q-norm)
+- T-high_probes_notumor_A.png (probes, no tumor, new Q-norm)
+- T-high_probes_notumor_B.png (probes, no tumor, new Q-norm)
+- T-high_probes_notumor_C.png (probes, no tumor, new Q-norm)
+- T-high_probes_notumor_D.png (probes, no tumor, new Q-norm)
 
-- mixA.png (no tumor, old Q-norm?)
 - mixA_notumor.png (probes, no tumor, new Q-norm)
-- mixA_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
-- mixB.png (no tumor, old Q-norm?)
+- mixA_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm, mixture without Q-norm with tumor)
 - mixB_notumor.png (probes, no tumor, new Q-norm)
-- mixB_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
-- mixC.png (no tumor, old Q-norm?)
+- mixB_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm, mixture without Q-norm with tumor)
 - mixC_notumor.png (probes, no tumor, new Q-norm)
-- mixC_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
-- mixD.png (no tumor, old Q-norm?)
+- mixC_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm, mixture without Q-norm with tumor)
 - mixD_notumor.png (probes, no tumor, new Q-norm)
-- mixD_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm)
+- mixD_referencenorm.png (probes, no tumor, Q-norm reference matrix, new Q-norm, mixture without Q-norm with tumor)
 
 
 
@@ -82,66 +61,41 @@ simulation:
 
 PROGRAMMING
 - Summarize all probe set values before Quantile Normalize -> Abbas
-- Check if differential expression is correctly produced
 - Check normal distribution etc.
 
 TEXT
 - Flow diagram of the whole black box. Detect similar cell subsets
-- Write about the heatmap vs. their tumor file
-- Differential expression (write)
--- Using my cell lines to find out which genes are turned on.
 
 
 STEP 3: *** NEED TO RUN ABBAS
 - Summarize all probe set values before Quantile Normalize -> Abbas
 
 STEP 7: MAYBE
-- Check if differential expression is correctly produced
 - See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
 -- Or is this CELL LINES?
 
 STEP 10:
 - Check normal distribution etc.
 
-STEP 12:
-- Mixtures with 70% tumor content
--- Spike in 0% -> 10% cell line (IM-9 or Raji, since they're closely related)
--- Spike inn 0% -> 10% with two cell lines (IM-9 and Raji, discuss with Trevor)
-- Calculate the differential expression for IM-9 and Raji, and e.g. Raji and Jurkat
--- Show that IM-9 and Raji are closely related!
-- Try to randomly select 221 genes not present in the signature matrix and run LLSR and CIBERSORT
--- Repeat 10 times and produce average Pearson correlation
-- Produce plots:
--- lsfit, lm, CIBERSORT and actual proportions for no noise or tumor content.
+STEP 14:
+- Run CIBERSORT and LLSR with a signature matrix with random genes
+-- Generate heatmap
+- Write about how to run the blackbox
 
-STEP 13:
-'Results':
-- (PLOT) Proportions of cell lines present in mixtures (LLSR, CIBERSORT and actual amount)
--- mixA_notumor.png
--- mixB_notumor.png
--- mixC_notumor.png
--- mixD_notumor.png
-- Address which cell lines that are closely related by using diff. exp.
 
-- (HEATMAP) Pearson correlation when tumor cell line is not present in signature matrix (LLSR and CIBERSORT)
--- CIBERSORT: CIBERSORT_heatmap_probes_newnorm_20x20.png
--- LLSR: LLSR_heatmap_probes_newnorm_20x20.png
--- Signature matrix: phenotype_classes.separate_cell_lines.bm.heatmap.K999.0.pdf
 
-- (PLOT) Spike in Raji since GSE11103 contains two B-cell lines (LLSR, CIBERSORT and actual amount)
--- Raji_probes_A.png
--- Raji_probes_B.png
--- Raji_probes_C.png
--- Raji_probes_D.png
-- (PLOT) Spike in T-high (LLSR, CIBERSORT and actual amount)
--- T-high_probes_new_norm_notumor_A.png
--- T-high_probes_new_norm_notumor_B.png
--- T-high_probes_new_norm_notumor_C.png
--- T-high_probes_new_norm_notumor_D.png
-- (PLOT) Decrease T-high while increasing T-low (LLSR, CIBERSORT and actual amount)
--- T-high_T-low_probes_new_norm_notumor_A.png
--- T-high_T-low_probes_new_norm_notumor_B.png
--- T-high_T-low_probes_new_norm_notumor_C.png
--- T-high_T-low_probes_new_norm_notumor_D.png
+1. voting script (black box)
+2. noise function
+3. implementing a real life data sets
+4. what's going on with cibersort (lm22, osv..)
+-- need some kind of benchmarking parameter for deciding what's the correct value.
 
-* Skip all plots and heatmaps with HUGO genes, explain that sufficient information was removed in the process.
+java -Xmx3g -Xms3g -jar CIBERSORT.jar -M ../Master_files/external/GSE22153_HUGO.txt -B ../Master_files/external/LM22.txt > ../Master_files/output/CIBERSORT_GSE22153_LM22
+
+python3 /home/jorgen/Projects/Master/programming/simulation_CIBERSORT/simulation.py -c /home/jorgen/Projects/Master_files/external/GSE26495.txt -r
+
+java -Xmx3g -Xms3g -jar CIBERSORT.jar -M ../Master_files/external/GSE22153_HUGO.txt -P ../Master_files/convert/reference_PD-1_HUGO -c ../Master_files/simulation/phenotype_classes_PD-1 > ../Master_files/output/CIBERSORT_PD-1_melanoma
+java -Xmx3g -Xms3g -jar CIBERSORT.jar -M ../Master_files/convert/mixtures_hugo_tumor_0_0 -c ../Master_files/simulation/phenotype_classes_PD-1 -P ../Master_files/convert/reference_PD-1_HUGO > ../Master_files/output/CIBERSORT_PD-1_melanoma
+java -Xmx3g -Xms3g -jar CIBERSORT.jar -M ../Master_files/external/GSE22153_HUGO.txt -c ../Master_files/simulation/phenotype_classes_PD-1 -P ../Master_files/external/GSE26495_HUGO.txt > ../Master_files/output/CIBERSORT_PD-1_melanoma
+
+Rscript abbas.r ../../../Master_files/external/GSE26495_HUGO_quantile.txt ../../../Master_files/external/GSE22153_HUGO.txt ../../../Master_files/abbas/Abbas_GSE22153_HUGO_quantile

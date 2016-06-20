@@ -24,7 +24,8 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 			header += "\tCELL_"+str(cell_no)
 			cell_no += 1
 
-	header += "\tTUMOR"
+	if TUMORS_INPUT != []:
+		header += "\tTUMOR"
 
 	f.write(header+"\n")
 
@@ -41,44 +42,6 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 		f.write(line+"\n")
 
 	f.close()
-
-
-# def write_combined_cell_lines_tumor(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TUMORS_INPUT):
-
-# 	""" Write the gene dictionary with only data from cell lines combined to file. IN USE!
-# 	"""
-
-# 	f = open(config.PATH_SIMULATION + FILENAME, 'w')
-
-# 	""" Name the header. Each mixtures is called: "MIX_<number_of_mixtures>".
-# 	"""
-# 	header = "Genes"
-# 	cell_no = 1
-
-# 	for cell_file in range(len(CELL_LINES_INPUT)):
-
-# 		for mix_line in range(CELL_LINES_INPUT[cell_file][0]):
-
-# 			header += "\tCELL_"+str(cell_no)
-# 			cell_no += 1
-
-# 	header += "\tTUMOR"
-
-# 	f.write(header+"\n")
-
-# 	""" Add every gene expression from cell lines together
-# 	"""
-# 	for key, value in sorted(NP_GENE_DICTIONARY.items()):
-
-# 		line = str(key)
-
-# 		for i in range(len(value)):
-
-# 			line += "\t"+str(value[i])
-
-# 		f.write(line+"\n")
-
-# 	f.close()
 
 
 def write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TUMORS_INPUT):

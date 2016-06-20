@@ -1,6 +1,7 @@
 
 import numpy as np
 import random
+import math
 
 def add_noise(normalized_matrix):
 
@@ -34,3 +35,39 @@ def add_noise_controlled(normalized_matrix, interval):
 		append_noise_to_values.append(normalized_matrix[j] + noise)
 
 	return np.array(append_noise_to_values);
+
+
+def new_noise():
+
+	f = open('../../../Master_files/simulation/mixtures_normalized_tumor_0_0', 'r')
+
+	A = []; B = []; C = []; D = [];
+	header = True
+
+	for line in f:
+		if header == True:
+			header = False
+			continue
+		splitted_line = line.split('\t')
+		A.append(float(splitted_line[1])); B.append(float(splitted_line[2])); C.append(float(splitted_line[3])); D.append(float(splitted_line[4]));
+
+	np_A = np.mean(A); np_B = np.mean(B); np_C = np.mean(C); np_D = np.mean(D);
+	mean = (np_A+np_B+np_C+np_D)/4.0
+	print(mean)
+	np_A = np.std(A); np_B = np.std(B); np_C = np.std(C); np_D = np.std(D);
+	std = (np_A+np_B+np_C+np_D)/4.0
+	print(std)
+
+	z = 500
+
+	noise = (1/(std*(math.sqrt(2*math.pi))))*math.exp(-(((z-mean)**2)/(2*mean**2)))
+	print(noise)
+	dist = np.random.normal(mean, std, 1000)
+	#print(dist)
+	print(dist[0]*0.01)
+	log = np.random.lognormal(mean, np.log2(std), 10)
+	print(log)
+	print(np.log2(std))
+
+
+# new_noise()

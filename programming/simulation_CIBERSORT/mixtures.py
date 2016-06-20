@@ -238,6 +238,7 @@ def save_separate_matrix(NP_GENE_DICTIONARY, SEPARATE_VALUES_MATRIX, TUMOR_PRESE
 
 	""" Save the matrix of separated values to file.
 	"""
+
 	NP_GENE_DICTIONARY = from_matrix_to_dictionary(SEPARATE_VALUES_MATRIX, NP_GENE_DICTIONARY)
 	
 	if TUMOR_PRESENT == False:
@@ -250,6 +251,7 @@ def save_combined_matrix(NP_GENE_DICTIONARY, COMBINED_VALUES_MATRIX, TUMOR_PRESE
 
 	""" Save the matrix of combined values to file.
 	"""
+	
 	NP_GENE_DICTIONARY = from_matrix_to_dictionary(COMBINED_VALUES_MATRIX, NP_GENE_DICTIONARY)
 	
 	if TUMOR_PRESENT == False:
