@@ -4,13 +4,18 @@ options(warn=-1)
 
 args = commandArgs()
 
-CELL_LINES <- read.table(args[6], sep="\t", header=T)
-MIX <- read.table(args[7], sep="\t", header=T)
+# CELL_LINES <- read.table("/home/jorgen/Projects/Master_files/external/GSE26495_HUGO_quantile_overlap.txt", sep="\t", header=T)
+# MIX <- read.table("/home/jorgen/Projects/Master_files/external/GSE22153_HUGO_overlap.txt", sep="\t", header=T)
 
-n_CELL = c(CELL_LINES[2], CELL_LINES[3], CELL_LINES[4], CELL_LINES[5])
-names(n_CELL) = c("A", "B", "C", "D")
-n_MIX = c(MIX[2], MIX[3], MIX[4], MIX[5])
-names(n_MIX) = c("A", "B", "C", "D")
+n_CELL = c(CELL_LINES[2:ncol(CELL_LINES)])
+
+length_c = ncol(CELL_LINES) - 1
+names(n_CELL) = c(paste(letters[1:length_c]))
+
+n_MIX = c(MIX[2:ncol(MIX)])
+
+length_m = ncol(MIX) - 1
+names(n_MIX) = c(paste(letters[1:length_m]))
 
 A = lm(n_MIX$A ~ n_CELL$A + n_CELL$B + n_CELL$C + n_CELL$D)
 B = lm(n_MIX$B ~ n_CELL$A + n_CELL$B + n_CELL$C + n_CELL$D)
@@ -26,4 +31,11 @@ mat = matrix(c(fitA, fitB, fitC, fitD), nrow=length(fitA), ncol=4)
 mat_c = matrix(CELL_LINES$Genes, nrow=nrow(CELL_LINES[1]), ncol=1)
 mat_w = matrix(c(mat_c, fitA, fitB, fitC, fitD), nrow=length(fitA), ncol=5)
 
-write.table(mat_w, file=args[8], sep="\t")
+# write.table(mat_w, file="/home/jorgen/Projects/Master_files/abbas/TEST", sep="\t")
+
+
+
+
+
+
+

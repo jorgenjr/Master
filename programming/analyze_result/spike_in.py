@@ -2,11 +2,8 @@
 import readline
 import linecache
 import numpy as np
-import rpy2.robjects as robjects
 import time
 import sys
-
-from rpy2.robjects.packages import importr
 
 
 def spike_in():
@@ -76,6 +73,7 @@ def new_spike_in():
 
 	# READ DATA
 	genes, mixA, mixB, mixC, mixD, t_high, t_low = read_mixture_GSE26495()
+	# genes, mixA, mixB, mixC, mixD, raji = read_mixture()
 	tumor = read_tumor()
 	
 	# Q-NORM
@@ -83,14 +81,16 @@ def new_spike_in():
 	mixB_norm = quantile_normalization(mixB)
 	mixC_norm = quantile_normalization(mixC)
 	mixD_norm = quantile_normalization(mixD)
+	# raji_norm = quantile_normalization(raji)
 	tumor_norm = quantile_normalization(tumor)
-	#t_high_norm = quantile_normalize(t_high)
-	#t_low_norm = quantile_normalize(t_low)
+	t_high_norm = quantile_normalization(t_high)
+	t_low_norm = quantile_normalization(t_low)
 	
 	np_a = np.zeros((len(mixA_norm), 1))
 	np_b = np.zeros((len(mixB_norm), 1))
 	np_c = np.zeros((len(mixC_norm), 1))
 	np_d = np.zeros((len(mixD_norm), 1))
+	# np_r = np.zeros((len(raji_norm), 1))
 	np_t = np.zeros((len(tumor_norm), 1))
 	np_h = np.zeros((len(t_high), 1))
 	np_l = np.zeros((len(t_low), 1))
@@ -100,14 +100,23 @@ def new_spike_in():
 		np_b[i] = (mixB_norm[i][0] + mixB_norm[i][1] + mixB_norm[i][2]) / 3.0
 		np_c[i] = (mixC_norm[i][0] + mixC_norm[i][1] + mixC_norm[i][2]) / 3.0
 		np_d[i] = (mixD_norm[i][0] + mixD_norm[i][1] + mixD_norm[i][2]) / 3.0
+		# np_r[i] = (raji_norm[i][0] + raji_norm[i][1] + raji_norm[i][2]) / 3.0
 		np_t[i] = (tumor_norm[i][0] + tumor_norm[i][1]) / 2.0
 		np_h[i] = (t_high[i][0] + t_high[i][1] + t_high[i][2] + t_high[i][3] + t_high[i][4] + t_high[i][5]) / 6.0
 		np_l[i] = (t_low[i][0] + t_low[i][1] + t_low[i][2] + t_low[i][3] + t_low[i][4] + t_low[i][5]) / 6.0
 
-	A_norm = np.concatenate((np_a, np_t, np_h, np_l), axis=1)
-	B_norm = np.concatenate((np_b, np_t, np_h, np_l), axis=1)
-	C_norm = np.concatenate((np_c, np_t, np_h, np_l), axis=1)
-	D_norm = np.concatenate((np_d, np_t, np_h, np_l), axis=1)
+	# A_norm = np.concatenate((np_a, np_t, np_r), axis=1)
+	# B_norm = np.concatenate((np_b, np_t, np_r), axis=1)
+	# C_norm = np.concatenate((np_c, np_t, np_r), axis=1)
+	# D_norm = np.concatenate((np_d, np_t, np_r), axis=1)
+	# A_norm = np.concatenate((np_a, np_t, np_l), axis=1)
+	# B_norm = np.concatenate((np_b, np_t, np_l), axis=1)
+	# C_norm = np.concatenate((np_c, np_t, np_l), axis=1)
+	# D_norm = np.concatenate((np_d, np_t, np_l), axis=1)
+	A_norm = np.concatenate((np_a, np_t, np_l, np_h), axis=1)
+	B_norm = np.concatenate((np_b, np_t, np_l, np_h), axis=1)
+	C_norm = np.concatenate((np_c, np_t, np_l, np_h), axis=1)
+	D_norm = np.concatenate((np_d, np_t, np_l, np_h), axis=1)
 
 	A_norm = quantile_normalization(A_norm)
 	B_norm = quantile_normalization(B_norm)
@@ -119,30 +128,38 @@ def new_spike_in():
 
 	for spike in range(0, 11, 1):
 
-		fA = open('../../../Master_files/analyze_result/new_norm_mixtureA_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
-		fB = open('../../../Master_files/analyze_result/new_norm_mixtureB_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
-		fC = open('../../../Master_files/analyze_result/new_norm_mixtureC_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
-		fD = open('../../../Master_files/analyze_result/new_norm_mixtureD_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
+		# fA = open('../../../Master_files/analyze_result/new_norm_mixtureA_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
+		# fB = open('../../../Master_files/analyze_result/new_norm_mixtureB_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
+		# fC = open('../../../Master_files/analyze_result/new_norm_mixtureC_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
+		# fD = open('../../../Master_files/analyze_result/new_norm_mixtureD_tumor_0_GSE26495_h' + str(10-spike) + '_l' + str(spike), 'w')
+		f = open('../../../Master_files/analyze_result/mixture_tumor_70_GSE26495_l' + str(spike) + '_h' + str(10-spike), 'w')
 		
-		fA.write("Genes\tMIX A\n")
-		fB.write("Genes\tMIX B\n")
-		fC.write("Genes\tMIX C\n")
-		fD.write("Genes\tMIX D\n")
+		f.write("Genes\tMIX A\tMIX B\tMIX C\tMIX D\n")
 
 		for i in range(len(tumor_norm)):
 
-			a = (A_norm[i][0] * 0.9 + (A_norm[i][2] * ((10 - spike) / 100)) + (A_norm[i][2] * (spike / 100)))
-			b = (B_norm[i][0] * 0.9 + (B_norm[i][2] * ((10 - spike) / 100)) + (B_norm[i][2] * (spike / 100)))
-			c = (C_norm[i][0] * 0.9 + (C_norm[i][2] * ((10 - spike) / 100)) + (C_norm[i][2] * (spike / 100)))
-			d = (D_norm[i][0] * 0.9 + (D_norm[i][2] * ((10 - spike) / 100)) + (D_norm[i][2] * (spike / 100)))
+			# a = (A_norm[i][0] * (0.3 - (spike / 100)) + (A_norm[i][1] * 0.7) + (A_norm[i][2] * (spike / 100)))
+			# b = (B_norm[i][0] * (0.3 - (spike / 100)) + (B_norm[i][1] * 0.7) + (B_norm[i][2] * (spike / 100)))
+			# c = (C_norm[i][0] * (0.3 - (spike / 100)) + (C_norm[i][1] * 0.7) + (C_norm[i][2] * (spike / 100)))
+			# d = (D_norm[i][0] * (0.3 - (spike / 100)) + (D_norm[i][1] * 0.7) + (D_norm[i][2] * (spike / 100)))
+			# a = (A_norm[i][0] * (1 - (spike / 100)) + (A_norm[i][1] * 0) + (A_norm[i][2] * (spike / 100)))
+			# b = (B_norm[i][0] * (1 - (spike / 100)) + (B_norm[i][1] * 0) + (B_norm[i][2] * (spike / 100)))
+			# c = (C_norm[i][0] * (1 - (spike / 100)) + (C_norm[i][1] * 0) + (C_norm[i][2] * (spike / 100)))
+			# d = (D_norm[i][0] * (1 - (spike / 100)) + (D_norm[i][1] * 0) + (D_norm[i][2] * (spike / 100)))
+			a = (A_norm[i][0] * 0.2 + A_norm[i][1] * 0.7 + A_norm[i][2] * (spike / 100) + A_norm[i][3] * ((10 - spike) / 100))
+			b = (B_norm[i][0] * 0.2 + B_norm[i][1] * 0.7 + B_norm[i][2] * (spike / 100) + B_norm[i][3] * ((10 - spike) / 100))
+			c = (C_norm[i][0] * 0.2 + C_norm[i][1] * 0.7 + C_norm[i][2] * (spike / 100) + C_norm[i][3] * ((10 - spike) / 100))
+			d = (D_norm[i][0] * 0.2 + D_norm[i][1] * 0.7 + D_norm[i][2] * (spike / 100) + D_norm[i][3] * ((10 - spike) / 100))
 
 
-			fA.write(genes[i]+'\t'+str(a)+'\n')
-			fB.write(genes[i]+'\t'+str(b)+'\n')
-			fC.write(genes[i]+'\t'+str(c)+'\n')
-			fD.write(genes[i]+'\t'+str(d)+'\n')
+			f.write(genes[i]+'\t'+str(a)+'\t'+str(b)+'\t'+str(c)+'\t'+str(d)+'\n')
+			# fA.write(genes[i]+'\t'+str(a)+'\n')
+			# fB.write(genes[i]+'\t'+str(b)+'\n')
+			# fC.write(genes[i]+'\t'+str(c)+'\n')
+			# fD.write(genes[i]+'\t'+str(d)+'\n')
 
-		fA.close(); fB.close(); fC.close(); fD.close();
+		f.close()
+		# fA.close(); fB.close(); fC.close(); fD.close();
 
 
 def read_mixture():
@@ -175,7 +192,21 @@ def read_mixture():
 		mixD.append([float(splitted_line[MD1]), float(splitted_line[MD2]), float(splitted_line[MD3])])
 		cell_line.append([float(splitted_line[Raji1]), float(splitted_line[Raji2]), float(splitted_line[Raji3])])
 
-	return genes, mixA, mixB, mixC, mixD, cell_line
+	np_a = np.zeros((len(mixA), 3))
+	np_b = np.zeros((len(mixB), 3))
+	np_c = np.zeros((len(mixC), 3))
+	np_d = np.zeros((len(mixD), 3))
+	np_r = np.zeros((len(cell_line), 3))
+
+	for i in range(len(mixA)):
+
+		np_a[i] = mixA[i]
+		np_b[i] = mixB[i]
+		np_c[i] = mixC[i]
+		np_d[i] = mixD[i]
+		np_r[i] = cell_line[i]
+
+	return genes, np_a, np_b, np_c, np_d, np_r
 
 
 def read_mixture_GSE26495():
@@ -233,8 +264,16 @@ def read_mixture_GSE26495():
 		high.append([float(splitted_line[H1]), float(splitted_line[H2]), float(splitted_line[H3]), float(splitted_line[H4]), float(splitted_line[H5]), float(splitted_line[H6])])
 		low.append([float(splitted_line[L1]), float(splitted_line[L2]), float(splitted_line[L3]), float(splitted_line[L4]), float(splitted_line[L5]), float(splitted_line[L6])])
 
+	np_h = np.zeros((len(high), 6))
+	np_l = np.zeros((len(low), 6))
+
+	for i in range(len(high)):
+
+		np_h[i] = high[i]
+		np_l[i] = low[i]
+
 	#return genes, mixA, mixB, mixC, mixD, high, low
-	return genes, np_a, np_b, np_c, np_d, high, low
+	return genes, np_a, np_b, np_c, np_d, np_h, np_l
 
 
 def read_tumor():

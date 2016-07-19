@@ -4,10 +4,10 @@
 ##############
 
 OUTPUT = "../../../Master_files/simulation/"
-REFERENCE = "TEST_separate_cell_lines"
-REFERENCE_TUMOR = "TEST_separate_cell_lines_tumor"
-COMBINED_CELLS = "TEST_combined_cell_lines"
-COMBINED_CELLS_TUMOR = "TEST_combined_cell_lines_tumor"
-MIXTURE = "TEST_mixtures_normalized"
-MIXTURES = "TEST_mixtures_normalized_tumor_"
+REFERENCE = "separate_cell_lines_norm"
+REFERENCE_TUMOR = "separate_cell_lines_tumor_norm"
+COMBINED_CELLS = "combined_cell_lines"
+COMBINED_CELLS_TUMOR = "combined_cell_lines_tumor"
+MIXTURE = "mixtures_normalized"
+MIXTURES = "mixtures_log_tumor_"
 PATH_SIMULATION = "../../../Master_files/simulation/"

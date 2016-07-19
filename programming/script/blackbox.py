@@ -12,7 +12,6 @@ FLAGS = []
 MIXTURES = []
 TUMORS = []
 CELL_LINES = []
-OUTPUT = ""
 
 
 parser = argparse.ArgumentParser()
@@ -53,51 +52,47 @@ def execute_args():
 	start_total = timeit.default_timer()
 
 	# print("Executing simulation script ... ")
-	# cmd = "python3 " + config.PATH + "Master/programming/simulation_CIBERSORT/simulation.py " + arguments() + " -o " + args.OUTPUT
+	# cmd = "python3 " + config.PATH + "Master/programming/simulation_CIBERSORT/simulation.py " + arguments()
 	# start = timeit.default_timer()
 	# os.system(cmd)
 	# stop = timeit.default_timer()
 	# print("Time spent: %.2f seconds" % (stop - start)) 
 
-
 	# print("Simulation completed! Converting Affy to HUGO ... ")
-	# cmd = "python3 " + config.PATH + "Master/programming/convert_geneID/replace.py -t -i " + str(config.START_TUMOR) + " " + str(config.STOP_TUMOR) + " " + str(config.STEP_TUMOR) + " " + str(config.START_NOISE) + " " + str(config.STOP_NOISE) + " " + str(config.STEP_NOISE) + " -o " + args.OUTPUT;
+	# cmd = "python3 " + config.PATH + "Master/programming/convert_geneID/replace.py -t true -i " + str(config.START_TUMOR) + " " + str(config.STOP_TUMOR) + " " + str(config.STEP_TUMOR) + " " + str(config.START_NOISE) + " " + str(config.STOP_NOISE) + " " + str(config.STEP_NOISE)
 	# start = timeit.default_timer()
 	# os.system(cmd)
 	# stop = timeit.default_timer()
 	# print("Time spent: %.2f seconds" % (stop - start))
 
-	print("Conversion completed! Executing CIBERSORT ... ")
-	files_done = 0
-	start = timeit.default_timer()
-	for tumor_content in range(config.START_TUMOR, config.STOP_TUMOR, config.STEP_TUMOR):
-		for noise_content in range(config.START_NOISE, config.STOP_NOISE, config.STEP_NOISE):
-			cmd = "java -Xmx3g -Xms3g -jar " + config.PATH_CIBERSORT + " -M " + config.CIBERSORT_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " -c " + config.PHENOTYPE_CLASSES_FILE + " -P " + config.REFERENCE_FILE + " > " + config.CIBERSORT_OUTPUT + str(tumor_content) + "_" + str(noise_content)
-			os.system(cmd)
-			files_done += 1
-			print("--- CIBERSORT is done with " + str(files_done) + " files.")
-	stop = timeit.default_timer()
-	print("Time spent: %.2f seconds" % (stop - start))
-
-	# print("CIBERSORT completed! Exexuting Abbas ... ")
+	# print("Conversion completed! Executing CIBERSORT ... ")
 	# files_done = 0
 	# start = timeit.default_timer()
 	# for tumor_content in range(config.START_TUMOR, config.STOP_TUMOR, config.STEP_TUMOR):
 	# 	for noise_content in range(config.START_NOISE, config.STOP_NOISE, config.STEP_NOISE):
-	# 		cmd = "Rscript " + config.PATH_LLSR + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.LLSR_OUTPUT + str(tumor_content) + "_" + str(noise_content)
-	# 		# cmd = "Rscript " + PATH + "Master/programming/abbas/llsr.r " + PATH + "Master_files/simulation/combined_cell_lines " + PATH + "Master_files/simulation/mixtures_normalized_tumor_" + str(tumor_content) + "_" + str(noise_content) + " " + PATH + "Master_files/abbas/LLSR_tumor_" + str(tumor_content) + "_" + str(noise_content)
+	# 		cmd = "java -Xmx3g -Xms3g -jar " + config.PATH_CIBERSORT + " -M " + config.CIBERSORT_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " -c " + config.PHENOTYPE_CLASSES_FILE + " -P " + config.REFERENCE_FILE + " > " + config.CIBERSORT_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+	#  		# cmd = "java -Xmx3g -Xms3g -jar " + config.PATH_CIBERSORT + " -M " + config.CIBERSORT_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " -B " + config.SIGNATURE_FILE + " > " + config.CIBERSORT_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+	# 		# cmd = "Rscript /home/jorgen/Projects/CIBERSORT/run_CIBERSORT.R /home/jorgen/Projects/Master_files/external/GSE11103_matrix_classes.GSE11103-GSE10650.AbbasPure.mas5.bm.K999.0.txt /home/jorgen/Projects/Master_files/simulation/mixtures_newman_replication_tumor_" + str(tumor_content) + "_" + str(noise_content) + " /home/jorgen/Projects/Master_files/output/CIBERSORT_R_" + str(tumor_content) + "_" + str(noise_content)
 	# 		os.system(cmd)
 	# 		files_done += 1
-	# 		print("--- Abbas is done with " + str(files_done) + " files.")
+	# 		print("--- CIBERSORT is done with " + str(files_done) + " files.")
 	# stop = timeit.default_timer()
 	# print("Time spent: %.2f seconds" % (stop - start))
 
-	# print("Abbas completed! Plotting results ... ")
-	# cmd = "python " + PATH + "Master/programming/analyze_result/plot.py"
-	# start = timeit.default_timer()
-	# os.system(cmd)
-	# stop = timeit.default_timer()
-	# print("Time spent: %.2f seconds" % (stop - start))
+	print("CIBERSORT completed! Exexuting LLSR ... ")
+	files_done = 0
+	start = timeit.default_timer()
+	for tumor_content in range(config.START_TUMOR, config.STOP_TUMOR, config.STEP_TUMOR):
+		for noise_content in range(config.START_NOISE, config.STOP_NOISE, config.STEP_NOISE):
+			cmd = "Rscript " + config.PATH_ABBAS + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.ABBAS_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+			cmd = "Rscript " + config.PATH_LLSR + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.LLSR_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+			os.system(cmd)
+			files_done += 1
+			print("--- Abbas is done with " + str(files_done) + " files.")
+	stop = timeit.default_timer()
+	print("Time spent: %.2f seconds" % (stop - start))
+
+	print("LLSR completed!")
 
 	stop_total = timeit.default_timer()
 	print("Total time spent: %.2f seconds" % (stop_total - start_total))
