@@ -4,7 +4,11 @@
 ##############
 
 PATH = "/home/jorgen/Projects/";
+<<<<<<< HEAD
 START_TUMOR = 70
+=======
+START_TUMOR = 0
+>>>>>>> db37cf100cf530204ffc834b57dfcf30acbd913c
 STOP_TUMOR = 100
 STEP_TUMOR = 5
 START_NOISE = 0

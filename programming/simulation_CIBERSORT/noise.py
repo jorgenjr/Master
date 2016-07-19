@@ -78,7 +78,6 @@ def new_noise():
 	np_A = np.std(A); np_B = np.std(B); np_C = np.std(C); np_D = np.std(D);
 	std = (np_A+np_B+np_C+np_D)/4.0
 	print("STD: ", std)
-
 	z = 500
 
 	noise = (1/(std*(math.sqrt(2*math.pi))))*math.exp(-(((z-mean)**2)/(2*mean**2)))

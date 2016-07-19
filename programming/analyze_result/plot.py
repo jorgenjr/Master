@@ -193,7 +193,6 @@ def cibersort_r():
 			for k in range(2, 6):
 				line = linecache.getline('../../../Master_files/output/CIBERSORT_R_' + str(i) + '_' + str(j), k)
 				correlation += float(line.split('\t')[6])
-
 			liste.append(correlation / 4.0)
 			j += 5
 		result.append(liste)
@@ -226,9 +225,9 @@ def abbas():
 				correlationC += float(line.split('\t')[3])
 				correlationD += float(line.split('\t')[4])
 			# TUMOR
-			# divide = 5.0
+			divide = 5.0
 			# NOT TUMOR
-			divide = 4.0
+			# divide = 4.0
 			correlationA = correlationA / divide
 			correlationB = correlationB / divide
 			correlationC = correlationC / divide
@@ -245,6 +244,7 @@ def abbas():
 def llsr():
 
 	f = open('../../../Master_files/abbas/correlation_newman', 'r')
+
 	correlation = []
 	for line in f:
 		splitted_line = line.split('\t')[:-1]
@@ -333,7 +333,9 @@ def heatmap():
 	# result = cibersort_r()
 	# result = new_cibersort()
 	# result = abbas()
-	result  = new_abbas()
+	# result = new_abbas()
+	result = cibersort()
+	# result = abbas()
 	# result = llsr()
 	#print(result)
 
@@ -350,9 +352,9 @@ def heatmap():
 	#pltt.imshow(hist)
 
 	fig, ax = pltt.subplots()
-	# ax.set_title('CIBERSORT')
+	ax.set_title('CIBERSORT')
 	# ax.set_title('Abbas')
-	ax.set_title('LLSR')
+	# ax.set_title('LLSR')
 	ax.set_xlabel('Tumor content (%)')
 	ax.set_ylabel('Added noise (%)')
 

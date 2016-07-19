@@ -103,10 +103,8 @@ def execute():
 			pure_cells()
 
 	if args.MIXTURES != None and len(args.MIXTURES) > 0:
-		mixes()
-		# test()
-	
-	# test2()
+		# mixes()
+		test()
 
 def reference():
 
@@ -213,8 +211,7 @@ def mixes():
 						temp_list.append((all_cell_lines_combined[i][k] * (1-(tumor_content/100))) + all_cell_lines_combined[i][len(all_cell_lines_combined[i])-1] * (tumor_content/100))
 
 					if noise_amount > 0:
-						# temp_list = noise.add_noise_controlled(temp_list, noise_amount)
-						temp_list = noise.add_log_noise_controlled(temp_list, noise_amount)
+						temp_list = noise.add_noise_controlled(temp_list, noise_amount)
 
 					fixed_tumor_matrix.append(temp_list)
 
@@ -296,87 +293,6 @@ def test():
 				file_handler.write_combined_mixtures_tumor(np_gene_dictionary, config.MIXTURES, tumor_content, noise_amount, MIXTURES_INPUT)
 
 			print("--- Generated simulation file with " + str(tumor_content) + "% tumor content. " + str(int((stop_tumor - tumor_content) / step_tumor)) + " files remaining.")
-
-
-def test2():
-
-	mix = open('../../../Master_files/external/GSE11103-GSE10650.Abbasmixtures_HCT116.mas5.txt', 'r')
-	genes = []; normalize = []
-	
-	MA1 = 1; MA2 = 2; MA3 = 3
-	MB1 = 4; MB2 = 5; MB3 = 6
-	MC1 = 7; MC2 = 8; MC3 = 9
-	MD1 = 10; MD2 = 11; MD3 = 12
-	T = 13
-
-	header = True
-
-	for line in mix:
-
-		if header == True:
-			header = False
-			continue
-
-		splitted_line = line.split('\t')
-		genes.append(splitted_line[0].replace("\"", ""))
-		normalize.append([float(splitted_line[MA1]), float(splitted_line[MA2]), float(splitted_line[MA3]), float(splitted_line[MB1]), float(splitted_line[MB2]), float(splitted_line[MB3]), float(splitted_line[MC1]), float(splitted_line[MC2]), float(splitted_line[MC3]), float(splitted_line[MD1]), float(splitted_line[MD2]), float(splitted_line[MD3]), float(splitted_line[T])])
-
-	np_n = np.zeros((len(normalize), 13))
-
-	for i in range(len(normalize)):
-
-		np_n[i] = normalize[i]
-
-	np_normalized = quantile_normalisation.algo(np_n)
-
-	normalized_list = []
-
-	for i in range(len(np_normalized)):
-
-		normalized_list.append([(np_normalized[i][0] + np_normalized[i][1] + np_normalized[i][2]) / 3.0, (np_normalized[i][3] + np_normalized[i][4] + np_normalized[i][5]) / 3.0, (np_normalized[i][6] + np_normalized[i][7] + np_normalized[i][8]) / 3.0, (np_normalized[i][9] + np_normalized[i][10] + np_normalized[i][11]) / 3.0, np_normalized[i][12]])
-	# print(normalized_list[0])
-	for tumor_content in range(0, 100, 5):
-
-		for noise_amount in range(0, 100, 5):
-
-			noise_array = []
-
-			for i in range(len(normalized_list)):
-
-				temp_array = []
-
-				if noise_amount > 0:
-					temp_array = noise.add_noise_controlled(normalized_list[i], noise_amount)
-				else:
-					temp_array = normalized_list[i]
-
-				noise_array.append(temp_array)
-
-			fixed_tumor_matrix = []
-
-			for i in range(len(noise_array)):
-
-				temp_list = []
-
-				for k in range(len(noise_array[i]) - 1): 
-
-					temp_list.append((noise_array[i][k] * (1-(tumor_content/100))) + (noise_array[i][4] * (tumor_content/100)))
-
-				fixed_tumor_matrix.append(temp_list)
-			# print(fixed_tumor_matrix[0])
-			# sys.exit(1)
-
-			mixes = open('../../../Master_files/simulation/mixtures_newman_replication_tumor_' + str(tumor_content) + '_' + str(noise_amount), 'w')
-
-			mixes.write("Probes\tMIX_A\tMIX_B\tMIX_C\tMIX_D\n")
-
-			for line in range(len(fixed_tumor_matrix)):
-
-				mixes.write(genes[line] + '\t' + str(fixed_tumor_matrix[line][0]) + '\t' + str(fixed_tumor_matrix[line][1]) + '\t' + str(fixed_tumor_matrix[line][2]) + '\t' + str(fixed_tumor_matrix[line][3]) + '\n')
-
-			mixes.close()
-
-			print("--- Generated simulation file with " + str(tumor_content) + "% tumor content.")
 
 
 read_stdin()
