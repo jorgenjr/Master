@@ -161,8 +161,8 @@ def cibersort():
 		j = 0
 		while j <= 95:
 			correlation = 0.0
-			for k in range(8, 12):
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_newman_replication_' + str(i) + '_' + str(j), k)
+			for k in range(11, 15):
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_log_' + str(i) + '_' + str(j), k)
 			# 	# TUMOR
 			# 	# correlation += float(line.split('\t')[7])
 			# 	# NOT TUMOR
@@ -243,7 +243,7 @@ def abbas():
 
 def llsr():
 
-	f = open('../../../Master_files/abbas/correlation_newman', 'r')
+	f = open('../../../Master_files/abbas/correlation_log', 'r')
 
 	correlation = []
 	for line in f:
@@ -272,7 +272,7 @@ def new_cibersort():
 		while j <= 95:
 			cells = []
 			for k in range(2, 6):
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_R_' + str(i) + '_' + str(j), k)
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_R_log_' + str(i) + '_' + str(j), k)
 				cells.append([float(line.split('\t')[1]), float(line.split('\t')[2]), float(line.split('\t')[3]), float(line.split('\t')[4])])
 
 			corrA = stats.pearsonr(cells[0], [jurkatA, im9A, rajiA, thp1A])
@@ -305,7 +305,7 @@ def new_abbas():
 		while j <= 95:
 			cells = []
 			for k in range(3, 7):
-				line = linecache.getline('../../../Master_files/abbas/Abbas_newman_replication_' + str(i) + '_' + str(j), k)
+				line = linecache.getline('../../../Master_files/abbas/Abbas_log_' + str(i) + '_' + str(j), k)
 				cells.append([float(line.split('\t')[1]), float(line.split('\t')[2]), float(line.split('\t')[3]), float(line.split('\t')[4])])
 			
 			cells = [list(x) for x in zip(*cells)]
@@ -332,9 +332,7 @@ def heatmap():
 	# result = cibersort()
 	# result = cibersort_r()
 	# result = new_cibersort()
-	# result = abbas()
-	# result = new_abbas()
-	result = cibersort()
+	result = new_abbas()
 	# result = abbas()
 	# result = llsr()
 	#print(result)
@@ -352,9 +350,8 @@ def heatmap():
 	#pltt.imshow(hist)
 
 	fig, ax = pltt.subplots()
-	ax.set_title('CIBERSORT')
-	# ax.set_title('Abbas')
-	# ax.set_title('LLSR')
+	# ax.set_title('CIBERSORT')
+	ax.set_title('LLSR')
 	ax.set_xlabel('Tumor content (%)')
 	ax.set_ylabel('Added noise (%)')
 

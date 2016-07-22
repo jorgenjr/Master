@@ -239,9 +239,9 @@ elif args.TUMORS != None and len(args.TUMORS) > 0:
 
 else:
 	
-	f_simulation_hugo_unique = open(OUTPUT_PATH + '/external/GSE26495_HUGO_quantile.txt', 'w')
+	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/GSE26495_HUGO_combined.txt', 'w')
 
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/external/GSE26495_quantile.txt')
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/simulation/combined_gse26495')
 	unique_hugo_genes_average = calc_average(unique_hugo_genes)
 	write_unique_hugo_genes(unique_hugo_genes_average)
 

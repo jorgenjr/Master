@@ -4,11 +4,7 @@
 ##############
 
 PATH = "/home/jorgen/Projects/";
-<<<<<<< HEAD
-START_TUMOR = 70
-=======
 START_TUMOR = 0
->>>>>>> db37cf100cf530204ffc834b57dfcf30acbd913c
 STOP_TUMOR = 100
 STEP_TUMOR = 5
 START_NOISE = 0
@@ -20,13 +16,10 @@ STEP_NOISE = 5
 #############
 
 PATH_CIBERSORT = PATH + "CIBERSORT/CIBERSORT.jar"
-#CIBERSORT_MIXTURES = PATH + "Master_files/simulation/mixtures_normalized_tumor_"
 CIBERSORT_MIXTURES = PATH + "Master_files/simulation/mixtures_log_tumor_"
 PHENOTYPE_CLASSES_FILE = PATH + "Master_files/simulation/phenotype_classes"
-#REFERENCE_FILE = PATH + "Master_files/simulation/separate_cell_lines_tumor"
 REFERENCE_FILE = PATH + "Master_files/simulation/separate_cell_lines_norm"
 SIGNATURE_FILE = PATH + "Master_files/external/GSE11103_matrix_classes.GSE11103-GSE10650.AbbasPure.mas5.bm.K999.0.txt"
-# CIBERSORT_OUTPUT = PATH + "Master_files/output/CIBERSORT_tumor_present_"
 CIBERSORT_OUTPUT = PATH + "Master_files/output/CIBERSORT_log_"
 
 ########
@@ -35,9 +28,7 @@ CIBERSORT_OUTPUT = PATH + "Master_files/output/CIBERSORT_log_"
 
 PATH_ABBAS = PATH + "Master/programming/abbas/abbas.r"
 PATH_LLSR = PATH + "Master/programming/abbas/llsr.r"
-# COMBINED_CELLS = PATH + "Master_files/simulation/combined_cell_lines_tumor"
 COMBINED_CELLS = PATH + "Master_files/simulation/combined_cell_lines"
-# LLSR_MIXTURES = PATH + "Master_files/simulation/mixtures_normalized_tumor_"
 LLSR_MIXTURES = PATH + "Master_files/simulation/mixtures_log_tumor_"
 ABBAS_OUTPUT = PATH + "Master_files/abbas/Abbas_log_"
 LLSR_OUTPUT = PATH + "Master_files/abbas/LLSR_log_"

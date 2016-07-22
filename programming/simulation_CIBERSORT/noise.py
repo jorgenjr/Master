@@ -24,6 +24,10 @@ def add_noise(normalized_matrix):
 
 def add_noise_controlled(normalized_matrix, interval):
 
+	""" Adding controlled amount to a normalized matrix.
+	Formula for noise is defined by the authors of the CIBERSORT paper.
+	"""
+
 	append_noise_to_values = []
 
 	for j in range(len(normalized_matrix)):
@@ -39,6 +43,11 @@ def add_noise_controlled(normalized_matrix, interval):
 
 def add_log_noise_controlled(normalized_matrix, interval):
 
+	""" Adding controlled amount to a normalized matrix.
+	Formula for noise is defined by the authors of the CIBERSORT paper,
+	this function uses log-normal distribution instead of normal distribution.
+	"""
+
 	append_noise_to_values = []
 
 	for j in range(len(normalized_matrix)):
@@ -48,7 +57,7 @@ def add_log_noise_controlled(normalized_matrix, interval):
 			try:
 				f = interval / 100.0
 				q = 11.6
-				N = np.random.normal(0, f*q)
+				N = np.random.lognormal(0, f*q)
 				noise = 2 ** N
 				append_noise_to_values.append(normalized_matrix[j] + noise)
 				break

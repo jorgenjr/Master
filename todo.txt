@@ -58,40 +58,15 @@ simulation:
 - mixtures_with_tumor (simulation with probes)
 
 
-
-PROGRAMMING
-- Summarize all probe set values before Quantile Normalize -> Abbas
-- Check normal distribution etc.
-
-TEXT
-- Flow diagram of the whole black box. Detect similar cell subsets
-
-
-STEP 3: *** NEED TO RUN ABBAS
-- Summarize all probe set values before Quantile Normalize -> Abbas
-
-STEP 7: MAYBE
-- See if CIBERSORT can generate own gene expression signature matrix with differential expression file (4 cell lines, no tumor content, no noise)
--- Or is this CELL LINES?
-
-STEP 10:
-- Check normal distribution etc.
-
-STEP 14:
-- Run CIBERSORT and LLSR with a signature matrix with random genes
--- Generate heatmap
-- Write about how to run the blackbox
-
-
-
-1. voting script (black box)
-2. noise function
-3. implementing a real life data sets
-4. what's going on with cibersort (lm22, osv..)
--- need some kind of benchmarking parameter for deciding what's the correct value.
-
-
 - Why does CIBERSORT outperform LLSR in finding coefficients, but is identical in estimating a mixture?
+
+
+TEXT:
+List of abbreviations
+If time -> more text to Appendix
+
+
+Rscript /home/jorgen/Projects/Master/programming/abbas/abbas.r /home/jorgen/Projects/Master_files/convert/GSE26495_HUGO_combined_LLSR_overlap.txt /home/jorgen/Projects/Master_files/external/GSE22153_HUGO_LLSR_overlap.txt /home/jorgen/Projects/Master_files/abbas/Abbas_melanoma
 
 
 
@@ -153,3 +128,65 @@ MM88: 	0	786	IV	0.0561692741	0.7501515607	0.1936791652	0.23	0.1852080597
 MM93: 	1	244	IV	0	0.5207362621	0.4792637379	0.16	0.2290440437
 MM94: 	1	78	IV	0	0.3458252885	0.6541747115	0.29	0.1155512709
 MM95: 	1	29	IV	0	0	1	0.52	-0.0118130521
+
+
+
+
+MELANOMA	(0=alive, 1=dead)	overall survival (days)	stage	Naive	PD1high	PD1low	P-value	Pearson correlation:
+MM01:	1	373	IV	0.0	1.0	0.0
+MM02:	1	181	IV	0.0	1.0	0.0
+MM03: 	1	436	IV	0.0	1.0	0.0
+MM04: 	1	82	IV	0.0	1.0	0.0
+MM06: 	1	646	IV	0.0	1.0	0.0
+MM08: 	1	114	IV	0.0	1.0	0.0
+MM09: 	1	322	IV	0.0	1.0	0.0
+MM10: 	1	46	IV	0.0	1.0	0.0
+MM11: 	0	3509	IV	0.0	1.0	0.0
+MM12: 	1	65	IV	0.0	1.0	0.0
+MM13: 	1	14	IV	0.0	1.0	0.0
+MM14: 	1	27	IV	0.0	1.0	0.0
+MM16: 	-	-	III	0.0	1.0	0.0
+MM17: 	1	45	IV	0.0	1.0	0.0
+MM18: 	1	10	IV	0.0	1.0	0.0
+MM19: 	0	2711	IV	0.0	1.0	0.0
+MM20: 	1	32	IV	0.0	1.0	0.0
+MM21: 	1	55	IV	0.0	1.0	0.0
+MM22: 	1	91	IV	0.0	1.0	0.0
+MM24: 	1	804	IV	0.19652230327324627	0.8034776967267537	0.0
+MM25: 	1	316	IV	0.0	1.0	0.0
+MM27: 	1	25	IV	0.0	1.0	0.0
+MM30: 	1	316	IV	0.0	1.0	0.0
+MM31: 	1	50	IV	0.0	1.0	0.0
+MM34: 	1	156	IV	0.0	1.0	0.0
+MM37: 	1	219	IV	0.0	1.0	0.0
+MM38: 	1	266	IV	0.0	1.0	0.0
+MM40: 	1	1075	IV	0.0	1.0	0.0
+MM41: 	1	201	IV	0.0	1.0	0.0
+MM42: 	1	247	IV	0.0	1.0	0.0
+MM43: 	1	414	IV	0.0	1.0	0.0
+MM44: 	1	108	IV	0.0	1.0	0.0
+MM45: 	-	-	III	0.0	1.0	0.0
+MM47: 	1	281	IV	0.0	1.0	0.0
+MM50: 	1	221	IV	0.0	1.0	0.0
+MM51: 	1	102	IV	0.0	1.0	0.0
+MM52: 	1	301	IV	0.0	1.0	0.0
+MM53: 	1	64	IV	0.0	1.0	0.0
+MM55: 	1	375	IV	0.0	1.0	0.0
+MM57: 	1	218	IV	0.0	1.0	0.0
+MM58: 	1	1478	IV	0.0	1.0	0.0
+MM60: 	1	13	IV	0.0	1.0	0.0
+MM61: 	1	254	IV	0.0	1.0	0.0
+MM64: 	1	16	IV	0.0	1.0	0.0
+MM68: 	1	430	IV	0.0	1.0	0.0
+MM71: 	1	63	IV	0.0	1.0	0.0
+MM73: 	0	1198	IV	0.0	1.0	0.0
+MM78: 	-	-	III	0.0	1.0	0.0
+MM80: 	0	927	IV	0.0	1.0	0.0
+MM81: 	1	325	IV	0.0	1.0	0.0
+MM82: 	1	44	IV	0.0	1.0	0.0
+MM83: 	0	895	IV	0.0	1.0	0.0
+MM86: 	0	836	IV	0.0	1.0	0.0
+MM88: 	0	786	IV	0.0	1.0	0.0
+MM93: 	1	244	IV	0.0	1.0	0.0
+MM94: 	1	78	IV	0.0	1.0	0.0
+MM95: 	1	29	IV	0.0	1.0	0.0

@@ -5,9 +5,9 @@
 def find_overlap():
 
 	f_1 = open('../../../Master_files/external/GSE22153_HUGO.txt', 'r')
-	f_2 = open('../../../Master_files/external/GSE26495_HUGO_quantile.txt', 'r')
-	f_3 = open('../../../Master_files/external/GSE22153_HUGO_overlap.txt', 'w')
-	f_4 = open('../../../Master_files/external/GSE26495_HUGO_quantile_overlap.txt', 'w')
+	f_2 = open('../../../Master_files/convert/GSE26495_HUGO_combined.txt', 'r')
+	f_3 = open('../../../Master_files/external/GSE22153_HUGO_LLSR_overlap.txt', 'w')
+	f_4 = open('../../../Master_files/convert/GSE26495_HUGO_combined_LLSR_overlap.txt', 'w')
 
 	GSE22153 = []
 	GSE26495 = []

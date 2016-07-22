@@ -20,8 +20,8 @@ def signature_genes():
 
 def find_signature_genes(TUMOR, NOISE):
 
-	f1 = open('../../../Master_files/abbas/LLSR_newman_'+str(TUMOR)+'_'+str(NOISE), 'r')
-	f2 = open('../../../Master_files/simulation/mixtures_newman_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
+	f1 = open('../../../Master_files/abbas/LLSR_log_'+str(TUMOR)+'_'+str(NOISE), 'r')
+	f2 = open('../../../Master_files/simulation/mixtures_log_tumor_'+str(TUMOR)+'_'+str(NOISE), 'r')
 	global signature
 	estimated = []; original = []; header = True;
 
@@ -98,7 +98,7 @@ def all_genes(TUMOR, NOISE):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
-f4 = open('../../../Master_files/abbas/correlation_newman', 'w')
+f4 = open('../../../Master_files/abbas/correlation_log', 'w')
 signature_genes()
 counter = 0
 for i in range(0, 100, 5):

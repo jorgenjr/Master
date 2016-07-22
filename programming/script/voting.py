@@ -2,6 +2,16 @@
 import config
 import linecache
 import numpy
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-i", "--ITERATION", help="Iteration", nargs='*')
+
+args = parser.parse_args()
+
+start_tumor = int(args.ITERATION[0]); 
+stop_tumor = int(args.ITERATION[1]);
 
 
 def rules_coef(ACTUAL, ESTIMATED):
@@ -25,16 +35,50 @@ def rules_pvalue(ESTIMATED):
 	return 0
 
 
+def write_to_file(RESULTS):
+
+	f = open(config.PATH + 'Master_files/output/voting_' + args.ITERATION[0] + '_' + args.ITERATION[1], 'w')
+	f.write(RESULTS)
+	f.close()
+
+
 def vote_separate(CIBERSORT_result, LLSR_result):
 
-	print("")
-	print("*** CIBERSORT ***")
+	string_result = "\n"
+	string_result += "*** VOTING PARAMETERS ***\n"
+	string_result += "Option: " + config.VOTE_OPTIONS[config.VOTE] + "\n"
+	string_result += "Variable: " + config.VOTE_VARIABLE[config.VOTE_V] + "\n"
+	
+	if config.VOTE_VARIABLE[config.VOTE_V] == "coef":
+		string_result += "Threshold: " + str(config.THRESHOLD_COEF) + "\n"
+	elif config.VOTE_VARIABLE[config.VOTE_V] == "p-value":
+		string_result += "Threshold: " + str(config.THRESHOLD_PVALUE) + "\n"
+	elif config.VOTE_VARIABLE[config.VOTE_V] == "pearson":
+		string_result += "Threshold: " + str(config.THRESHOLD_PEARSON) + "\n"
+	
+	string_result += "\n"
+	string_result += "*** CIBERSORT ***\n"
+
 	for i in range(len(CIBERSORT_result)):
-		print("Mix " + str(i+1) + ": ", CIBERSORT_result[i])
-	print("")
-	print("*** LLSR ***")
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(CIBERSORT_result[i])):
+			if (j+1) == len(CIBERSORT_result[i]):
+				string_result += str(CIBERSORT_result[i][j])
+			else:
+				string_result += str(CIBERSORT_result[i][j]) + ", " 
+		string_result += " ]\n"
+	
+	string_result += "\n"
+	string_result += "*** LLSR ***\n"
+	
 	for i in range(len(LLSR_result)):
-		print("Mix " + str(i+1) + ": ", LLSR_result[i])
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(LLSR_result[i])):
+			if (j+1) == len(LLSR_result[i]):
+				string_result += str(LLSR_result[i][j])
+			else:
+				string_result += str(LLSR_result[i][j]) + ", "
+		string_result += " ]\n"
 
 	result = []
 
@@ -52,22 +96,58 @@ def vote_separate(CIBERSORT_result, LLSR_result):
 
 		result.append(mix_result)
 
-	print("")
-	print("*** UNION ***")
+	string_result += "\n"
+	string_result += "*** UNION ***\n"
+
 	for i in range(len(result)):
-		print("Mix " + str(i+1) + ": ", result[i])
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(result[i])):
+			if (j+1) == len(result[i]):
+				string_result += str(result[i][j])
+			else:
+				string_result += str(result[i][j]) + ", "
+		string_result += " ]\n"
+
+	write_to_file(string_result)
 
 
 def vote_combined(CIBERSORT_result, LLSR_result):
 
-	print("")
-	print("*** CIBERSORT ***")
+	string_result = "\n"
+	string_result += "*** VOTING PARAMETERS ***\n"
+	string_result += "Option: " + config.VOTE_OPTIONS[config.VOTE] + "\n"
+	string_result += "Variable: " + config.VOTE_VARIABLE[config.VOTE_V] + "\n"
+	
+	if config.VOTE_VARIABLE[config.VOTE_V] == "coef":
+		string_result += "Threshold: " + str(config.THRESHOLD_COEF) + "\n"
+	elif config.VOTE_VARIABLE[config.VOTE_V] == "p-value":
+		string_result += "Threshold: " + str(config.THRESHOLD_PVALUE) + "\n"
+	elif config.VOTE_VARIABLE[config.VOTE_V] == "pearson":
+		string_result += "Threshold: " + str(config.THRESHOLD_PEARSON) + "\n"
+	
+	string_result += "\n"
+	string_result += "*** CIBERSORT ***\n"
+
 	for i in range(len(CIBERSORT_result)):
-		print("Mix " + str(i+1) + ": ", CIBERSORT_result[i])
-	print("")
-	print("*** LLSR ***")
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(CIBERSORT_result[i])):
+			if (j+1) == len(CIBERSORT_result[i]):
+				string_result += str(CIBERSORT_result[i][j])
+			else:
+				string_result += str(CIBERSORT_result[i][j]) + ", " 
+		string_result += " ]\n"
+	
+	string_result += "\n"
+	string_result += "*** LLSR ***\n"
+	
 	for i in range(len(LLSR_result)):
-		print("Mix " + str(i+1) + ": ", LLSR_result[i])
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(LLSR_result[i])):
+			if (j+1) == len(LLSR_result[i]):
+				string_result += str(LLSR_result[i][j])
+			else:
+				string_result += str(LLSR_result[i][j]) + ", "
+		string_result += " ]\n"
 
 	result = []
 
@@ -83,10 +163,19 @@ def vote_combined(CIBERSORT_result, LLSR_result):
 
 		result.append(mix_result)
 
-	print("")
-	print("*** UNANIMOUS ***")
+	string_result += "\n"
+	string_result += "*** UNANIMOUS ***\n"
+
 	for i in range(len(result)):
-		print("Mix " + str(i+1) + ": ", result[i])
+		string_result += "Mix " + str(i+1) + ": [ "
+		for j in range(len(result[i])):
+			if (j+1) == len(result[i]):
+				string_result += str(result[i][j])
+			else:
+				string_result += str(result[i][j]) + ", "
+		string_result += " ]\n"
+
+	write_to_file(string_result)
 
 
 def prepare_vote(CIBERSORT_mixes, LLSR_mixes):
@@ -119,8 +208,8 @@ def get_coef():
 	LLSR_mixes = []
 
 	for i in range(config.CIBERSORT_FIRST_MIX, config.CIBERSORT_LAST_MIX + 1):
-		#line = linecache.getline(config.CIBERSORT_OUTPUT + '0_0', i)
-		line = linecache.getline(config.PATH + 'Master_files/output/CIBERSORT_R_0_0', i)
+		
+		line = linecache.getline(config.CIBERSORT_OUTPUT + args.ITERATION[0] + '_' + args.ITERATION[1], i)
 		splitted_line = line.split('\t')
 		line_to_append = []
 
@@ -130,7 +219,8 @@ def get_coef():
 		CIBERSORT_mixes.append(line_to_append)
 
 	for i in range(config.ABBAS_FIRST_CELL, config.ABBAS_LAST_CELL + 1):
-		line = linecache.getline(config.PATH + 'Master_files/abbas/Abbas_newman_replication_0_0', i)
+
+		line = linecache.getline(config.ABBAS_OUTPUT + args.ITERATION[0] + '_' + args.ITERATION[1], i)
 		splitted_line = line.split('\t')
 		line_to_append = []
 
@@ -148,7 +238,10 @@ def get_coef():
 			if LLSR_temp[j][k] < 0.0:
 				LLSR_temp[j][k] = 0.0
 
-		LLSR_mixes[j] = [float(i)/sum(LLSR_temp[j]) for i in LLSR_temp[j]]
+		try:
+			LLSR_mixes[j] = [float(i)/sum(LLSR_temp[j]) for i in LLSR_temp[j]]
+		except ZeroDivisionError as e:
+			print(e)
 
 	prepare_vote(CIBERSORT_mixes, LLSR_mixes)
 
@@ -159,8 +252,7 @@ def get_pearson():
 
 	for i in range(config.CIBERSORT_FIRST_MIX, config.CIBERSORT_LAST_MIX + 1):
 		
-		# line = linecache.getline(config.PATH + 'Master_files/output/CIBERSORT_PD-1_melanoma', i)
-		line = linecache.getline(config.PATH + 'Master_files/output/CIBERSORT_GSE22153_LM22', i)
+		line = linecache.getline(config.PATH + config.CIBERSORT_OUTPUT, i)
 		splitted_line = line.split('\t')
 
 		CIBERSORT_mixes.append(rules_pearson(float(splitted_line[config.CIBERSORT_PEARSON])))
@@ -176,8 +268,7 @@ def get_pvalue():
 
 	for i in range(config.CIBERSORT_FIRST_MIX, config.CIBERSORT_LAST_MIX + 1):
 		
-		# line = linecache.getline(config.PATH + 'Master_files/output/CIBERSORT_PD-1_melanoma', i)
-		line = linecache.getline(config.PATH + 'Master_files/output/CIBERSORT_GSE22153_LM22', i)
+		line = linecache.getline(config.PATH + config.CIBERSORT_OUTPUT, i)
 		splitted_line = line.split('\t')
 
 		CIBERSORT_mixes.append(rules_pvalue(float(splitted_line[config.CIBERSORT_PVALUE])))

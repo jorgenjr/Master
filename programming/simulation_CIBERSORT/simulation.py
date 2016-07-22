@@ -211,7 +211,7 @@ def mixes():
 						temp_list.append((all_cell_lines_combined[i][k] * (1-(tumor_content/100))) + all_cell_lines_combined[i][len(all_cell_lines_combined[i])-1] * (tumor_content/100))
 
 					if noise_amount > 0:
-						temp_list = noise.add_noise_controlled(temp_list, noise_amount)
+						temp_list = noise.add_log_noise_controlled(temp_list, noise_amount)
 
 					fixed_tumor_matrix.append(temp_list)
 
