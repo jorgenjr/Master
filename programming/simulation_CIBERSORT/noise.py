@@ -59,60 +59,15 @@ def add_log_noise_controlled(normalized_matrix, interval):
 				q = 11.6
 				N = np.random.lognormal(0, f*q)
 				noise = 2 ** N
-				append_noise_to_values.append(normalized_matrix[j] + noise)
-				break
+
+				if noise < 99999999.0:
+					append_noise_to_values.append(normalized_matrix[j] + noise)
+					break
+				else:
+					append_noise_to_values.append(normalized_matrix[j] + 99999999.0)
+					break
+
 			except OverflowError as e:
-				print(e)
+				continue
 
 	return np.array(append_noise_to_values);
-
-
-def new_noise():
-
-	f = open('../../../Master_files/simulation/mixtures_newman_replication_tumor_0_0', 'r')
-
-	A = []; B = []; C = []; D = [];
-	header = True
-
-	for line in f:
-		if header == True:
-			header = False
-			continue
-		splitted_line = line.split('\t')
-		A.append(float(splitted_line[1])); B.append(float(splitted_line[2])); C.append(float(splitted_line[3])); D.append(float(splitted_line[4]));
-
-	np_A = np.mean(A); np_B = np.mean(B); np_C = np.mean(C); np_D = np.mean(D);
-	mean = (np_A+np_B+np_C+np_D)/4.0
-	print("MEAN: ", mean)
-	np_A = np.std(A); np_B = np.std(B); np_C = np.std(C); np_D = np.std(D);
-	std = (np_A+np_B+np_C+np_D)/4.0
-	print("STD: ", std)
-	z = 500
-
-	noise = (1/(std*(math.sqrt(2*math.pi))))*math.exp(-(((z-mean)**2)/(2*mean**2)))
-	print("NOISE: ", noise)
-	dist = np.random.normal(mean, std, 1000)
-	#print(dist)
-	print("DIST NORMAL: ", dist[0]*0.01)
-	log = np.random.lognormal(mean, np.log2(std), 10)
-	print("LOG: ", log)
-	print("LOG2 STD: ", np.log2(std))
-
-	print(A[0])
-	f = 100 / 100.0
-	q = 11.6
-	N = np.random.normal(0, f*q)
-	noise = 2 ** N
-	print(noise)
-
-	for i in range(0,10):
-		while (True):
-			try:
-				NN = np.random.lognormal(0, f*q)
-				nnoise = 2 ** NN
-				print(nnoise)
-				break
-			except OverflowError as e:
-				print(e)
-
-# new_noise()

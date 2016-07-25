@@ -10,9 +10,6 @@ parser.add_argument("-i", "--ITERATION", help="Iteration", nargs='*')
 
 args = parser.parse_args()
 
-start_tumor = int(args.ITERATION[0]); 
-stop_tumor = int(args.ITERATION[1]);
-
 
 def rules_coef(ACTUAL, ESTIMATED):
 	
@@ -60,29 +57,38 @@ def vote_separate(CIBERSORT_result, LLSR_result):
 	string_result += "*** CIBERSORT ***\n"
 
 	for i in range(len(CIBERSORT_result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(CIBERSORT_result[i])):
+
 			if (j+1) == len(CIBERSORT_result[i]):
 				string_result += str(CIBERSORT_result[i][j])
 			else:
 				string_result += str(CIBERSORT_result[i][j]) + ", " 
+
 		string_result += " ]\n"
 	
 	string_result += "\n"
 	string_result += "*** LLSR ***\n"
 	
 	for i in range(len(LLSR_result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(LLSR_result[i])):
+
 			if (j+1) == len(LLSR_result[i]):
 				string_result += str(LLSR_result[i][j])
 			else:
 				string_result += str(LLSR_result[i][j]) + ", "
+
 		string_result += " ]\n"
 
 	result = []
 
 	for i in range(len(CIBERSORT_result)):
+
 		mix_result = []
 
 		for j in range(len(CIBERSORT_result[i])):
@@ -100,12 +106,16 @@ def vote_separate(CIBERSORT_result, LLSR_result):
 	string_result += "*** UNION ***\n"
 
 	for i in range(len(result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(result[i])):
+
 			if (j+1) == len(result[i]):
 				string_result += str(result[i][j])
 			else:
 				string_result += str(result[i][j]) + ", "
+
 		string_result += " ]\n"
 
 	write_to_file(string_result)
@@ -129,29 +139,38 @@ def vote_combined(CIBERSORT_result, LLSR_result):
 	string_result += "*** CIBERSORT ***\n"
 
 	for i in range(len(CIBERSORT_result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(CIBERSORT_result[i])):
+
 			if (j+1) == len(CIBERSORT_result[i]):
 				string_result += str(CIBERSORT_result[i][j])
 			else:
-				string_result += str(CIBERSORT_result[i][j]) + ", " 
+				string_result += str(CIBERSORT_result[i][j]) + ", "
+
 		string_result += " ]\n"
 	
 	string_result += "\n"
 	string_result += "*** LLSR ***\n"
 	
 	for i in range(len(LLSR_result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(LLSR_result[i])):
+
 			if (j+1) == len(LLSR_result[i]):
 				string_result += str(LLSR_result[i][j])
 			else:
 				string_result += str(LLSR_result[i][j]) + ", "
+
 		string_result += " ]\n"
 
 	result = []
 
 	for i in range(len(CIBERSORT_result)):
+
 		mix_result = []
 
 		for j in range(len(CIBERSORT_result[i])):
@@ -167,12 +186,16 @@ def vote_combined(CIBERSORT_result, LLSR_result):
 	string_result += "*** UNANIMOUS ***\n"
 
 	for i in range(len(result)):
+
 		string_result += "Mix " + str(i+1) + ": [ "
+
 		for j in range(len(result[i])):
+
 			if (j+1) == len(result[i]):
 				string_result += str(result[i][j])
 			else:
 				string_result += str(result[i][j]) + ", "
+
 		string_result += " ]\n"
 
 	write_to_file(string_result)
@@ -184,10 +207,12 @@ def prepare_vote(CIBERSORT_mixes, LLSR_mixes):
 	LLSR_result = []
 
 	for i in range(len(config.ACTUAL_AMOUNT)):
+
 		c_mix = []
 		l_mix = []
 
 		for j in range(len(config.ACTUAL_AMOUNT[i])):
+
 			c_mix.append(rules_coef(config.ACTUAL_AMOUNT[i][j], CIBERSORT_mixes[i][j]))
 			l_mix.append(rules_coef(config.ACTUAL_AMOUNT[i][j], LLSR_mixes[i][j]))
 

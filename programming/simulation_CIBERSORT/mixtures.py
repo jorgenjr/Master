@@ -7,12 +7,7 @@ import file_handler
 
 def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
-	""" Reads the GSE11103_series_matrix.txt and gathers the mixtures: IN USE!
-	- Mix A
-	- Mix B
-	- Mix C
-	- Mix D
-
+	""" Reads a mixture file and gathers the mixtures.
 	It then calculates the average of each cell and stores it in a dictionary
 	"""
 
@@ -27,7 +22,7 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 		
 		line_list = np.array(line.split('\t'))
 
-		gene_ref = line_list[0].replace("\"", "")#split('"')[1]
+		gene_ref = line_list[0].replace("\"", "")
 		values = []
 
 		for i in range(INPUT[1], INPUT[2]+1):
@@ -43,11 +38,7 @@ def all_separate_mixtures(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
 def separate_cell_line(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
-	""" Reads the GSE11103_series_matrix.txt and gathers the cell lines containing:
-	- Jurkat
-	- IM-9
-	- Raji
-	- THP-1
+	""" Reads a cell line file and gathers the cell lines.
 	"""
 
 	header = True
@@ -77,9 +68,9 @@ def separate_cell_line(INPUT_FILE, GENE_DICTIONARY, INPUT):
 
 def separate_tumor(INPUT_FILE, TUMOR_DICTIONARY, INPUT):
 
-	""" Reads the GSE10650 files (GSM269529.txt and GSM269530.txt) and gathers tumors cells.
+	""" Reads a tumor file and gathers tumors cells.
 	It then calculates the average and appends the gene values to the gene dictionary containing
-	gene values for the cell lines (Jurkat, IM-9, Raji, THP-1).
+	gene values for the mixtures.
 	"""
 
 	header = True
@@ -105,7 +96,7 @@ def separate_tumor(INPUT_FILE, TUMOR_DICTIONARY, INPUT):
 	return TUMOR_DICTIONARY
 
 
-def separate_for_normalization(separate_values_matrix, cell_lines_matrix, INPUT, tumor_present, TUMOR_INPUT):
+def separate_for_normalization(SEPARATE_VALUES_MATRIX, CELL_LINES_MATRIX, INPUT, TUMOR_PRESENT, TUMOR_INPUT):
 
 	""" Add each cell line (and its replicates) to a separately matrix.
 	1. Loop 1: Iterate through every gene.
@@ -114,7 +105,7 @@ def separate_for_normalization(separate_values_matrix, cell_lines_matrix, INPUT,
 	4. If tumor is present, then it will all be added to one matrix.
 	"""
 	
-	for line in range(len(separate_values_matrix)):
+	for line in range(len(SEPARATE_VALUES_MATRIX)):
 		
 		cell_line = 0
 		previous_i = 0
@@ -127,14 +118,14 @@ def separate_for_normalization(separate_values_matrix, cell_lines_matrix, INPUT,
 				
 				for j in range(INPUT[cell_file][3]):
 					
-					list_of_one_cell_line.append(separate_values_matrix[line][cell_line])
+					list_of_one_cell_line.append(SEPARATE_VALUES_MATRIX[line][cell_line])
 					cell_line += 1
 
-				cell_lines_matrix[previous_i+i].append(list_of_one_cell_line)
+				CELL_LINES_MATRIX[previous_i+i].append(list_of_one_cell_line)
 
 			previous_i += INPUT[cell_file][0]
 
-		if tumor_present == True:
+		if TUMOR_PRESENT == True:
 
 			list_of_tumor_lines = []
 
@@ -144,12 +135,12 @@ def separate_for_normalization(separate_values_matrix, cell_lines_matrix, INPUT,
 
 					for j in range(TUMOR_INPUT[cell_file][3]):
 
-						list_of_tumor_lines.append(separate_values_matrix[line][cell_line])
+						list_of_tumor_lines.append(SEPARATE_VALUES_MATRIX[line][cell_line])
 						cell_line += 1
 
-			cell_lines_matrix[previous_i+i].append(list_of_tumor_lines)
+			CELL_LINES_MATRIX[previous_i+i].append(list_of_tumor_lines)
 
-	return cell_lines_matrix
+	return CELL_LINES_MATRIX
 
 
 def get_relevant_information(NP_GENE_DICTIONARY, TUMOR_PRESENT, FILES, FILES_INPUT, TUMORS, TUMORS_INPUT):

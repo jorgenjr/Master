@@ -63,7 +63,6 @@ simulation:
 
 TEXT:
 List of abbreviations
-If time -> more text to Appendix
 
 
 Rscript /home/jorgen/Projects/Master/programming/abbas/abbas.r /home/jorgen/Projects/Master_files/convert/GSE26495_HUGO_combined_LLSR_overlap.txt /home/jorgen/Projects/Master_files/external/GSE22153_HUGO_LLSR_overlap.txt /home/jorgen/Projects/Master_files/abbas/Abbas_melanoma

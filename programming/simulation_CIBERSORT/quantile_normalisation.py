@@ -1,11 +1,5 @@
 
-import readline
-import linecache
 import numpy as np
-import rpy2.robjects as robjects
-import time
-
-from rpy2.robjects.packages import importr
 
 
 def algo(GENE_VALUES_MATRIX):
