@@ -162,7 +162,7 @@ def cibersort():
 		while j <= 95:
 			correlation = 0.0
 			for k in range(11, 15):
-				line = linecache.getline('../../../Master_files/output/CIBERSORT_log_' + str(i) + '_' + str(j), k)
+				line = linecache.getline('../../../Master_files/output/CIBERSORT_R_log_' + str(i) + '_' + str(j), k)
 			# 	# TUMOR
 			# 	# correlation += float(line.split('\t')[7])
 			# 	# NOT TUMOR
@@ -332,9 +332,9 @@ def heatmap():
 	# result = cibersort()
 	# result = cibersort_r()
 	# result = new_cibersort()
-	result = new_abbas()
+	# result = new_abbas()
 	# result = abbas()
-	# result = llsr()
+	result = llsr()
 	#print(result)
 
 

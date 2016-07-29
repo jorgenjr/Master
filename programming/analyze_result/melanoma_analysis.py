@@ -16,12 +16,20 @@ def cibersort():
 			continue
 
 		splitted_line = line.split('\t')
-		
-		if splitted_line[2] == '-':
-			continue
 
-		if int(splitted_line[2]) >= 100:
-			print(line[:-1])
+		a = "%.3f" % float(splitted_line[4])
+		b = "%.3f" % float(splitted_line[5])
+		c = "%.3f" % float(splitted_line[6])
+		d = "%.3f" % float(splitted_line[8][:-1])
+
+		print(splitted_line[0] + " & " + splitted_line[1] + " & " + splitted_line[2] + " & " + splitted_line[3] + " & " + a + " & " + b + " & " + c + " & " + splitted_line[7] + " & " + d + " \\\\")
+		print("\hline")
+		
+		# if splitted_line[2] == '-':
+		# 	continue
+
+		# if int(splitted_line[2]) >= 100:
+		# 	print(line[:-1])
 
 
 def llsr():
@@ -64,12 +72,19 @@ def new_llsr():
 			continue
 
 		splitted_line = line.split('\t')
-		
-		if splitted_line[2] == '-':
-			continue
 
-		if int(splitted_line[2]) >= 100:
-			print(line[:-1])
+		a = "%.3f" % float(splitted_line[4])
+		b = "%.3f" % float(splitted_line[5])
+		c = "%.3f" % float(splitted_line[6])
+
+		print(splitted_line[0] + " & " + splitted_line[1] + " & " + splitted_line[2] + " & " + splitted_line[3] + " & " + a + " & " + b + " & " + c + " \\\\")
+		print("\hline")
+		
+		# if splitted_line[2] == '-':
+		# 	continue
+
+		# if int(splitted_line[2]) >= 100:
+		# 	print(line[:-1])
 
 
 # cibersort()

@@ -183,7 +183,7 @@ def vote_combined(CIBERSORT_result, LLSR_result):
 		result.append(mix_result)
 
 	string_result += "\n"
-	string_result += "*** UNANIMOUS ***\n"
+	string_result += "*** INTERSECT ***\n"
 
 	for i in range(len(result)):
 
@@ -221,7 +221,7 @@ def prepare_vote(CIBERSORT_mixes, LLSR_mixes):
 
 	if (config.VOTE_OPTIONS[config.VOTE] == 'union'):
 		vote_separate(CIBERSORT_result, LLSR_result)
-	elif (config.VOTE_OPTIONS[config.VOTE] == 'unanimous'):
+	elif (config.VOTE_OPTIONS[config.VOTE] == 'intersect'):
 		vote_combined(CIBERSORT_result, LLSR_result)
 	else:
 		print("[ ERROR ] - Wrong variable value for either 'VOTE_OPTIONS' or 'VOTE' in config.py\n")
@@ -234,7 +234,7 @@ def get_coef():
 
 	for i in range(config.CIBERSORT_FIRST_MIX, config.CIBERSORT_LAST_MIX + 1):
 		
-		line = linecache.getline(config.CIBERSORT_OUTPUT + args.ITERATION[0] + '_' + args.ITERATION[1], i)
+		line = linecache.getline(config.CIBERSORT_R_OUTPUT + args.ITERATION[0] + '_' + args.ITERATION[1], i)
 		splitted_line = line.split('\t')
 		line_to_append = []
 

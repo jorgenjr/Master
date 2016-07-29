@@ -16,11 +16,13 @@ STEP_NOISE = 5
 #############
 
 PATH_CIBERSORT = PATH + "CIBERSORT/CIBERSORT.jar"
+PATH_CIBERSORT_R = PATH + "CIBERSORT/run_CIBERSORT.R"
 CIBERSORT_MIXTURES = PATH + "Master_files/simulation/mixtures_log_tumor_"
 PHENOTYPE_CLASSES_FILE = PATH + "Master_files/simulation/phenotype_classes"
 REFERENCE_FILE = PATH + "Master_files/simulation/separate_cell_lines_norm"
 SIGNATURE_FILE = PATH + "Master_files/external/GSE11103_matrix_classes.GSE11103-GSE10650.AbbasPure.mas5.bm.K999.0.txt"
 CIBERSORT_OUTPUT = PATH + "Master_files/output/CIBERSORT_R_log_"
+CIBERSORT_R_OUTPUT = PATH + "Master_files/output/CIBERSORT_R_real_log_"
 
 ########
 # LLSR #
@@ -51,7 +53,7 @@ ACTUAL_AMOUNT = [[0.250, 0.125, 0.250, 0.375],
 				 [0.050, 0.317, 0.475, 0.158],
 				 [0.010, 0.495, 0.165, 0.330],
 				 [0.002, 0.333, 0.333, 0.333]]
-VOTE_OPTIONS = ['union', 'unanimous']
+VOTE_OPTIONS = ['union', 'intersect']
 VOTE = 0
 VOTE_VARIABLE = ['p-value', 'pearson', 'coef']
 VOTE_V = 2

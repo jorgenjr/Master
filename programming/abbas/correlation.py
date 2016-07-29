@@ -98,7 +98,7 @@ def all_genes(TUMOR, NOISE):
 def column(matrix, i):
     return [row[i] for row in matrix]
 
-f4 = open('../../../Master_files/abbas/correlation_lognormal', 'w')
+f4 = open('../../../Master_files/abbas/correlation_newlognormal', 'w')
 signature_genes()
 counter = 0
 for i in range(0, 100, 5):
