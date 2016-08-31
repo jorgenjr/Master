@@ -42,6 +42,10 @@ def read_stdin():
 			start = int(input("From which column does the first mixture begin (0 is first column)? "))
 			stop = int(input("To which column does the last mixture end? "))
 			replicates = int(input("Number of replicates per mixture (type 1 if only one mixture)? "))
+
+			if ((stop + 1) - start != no_mixtures * replicates):
+				print("\n[ ERROR ] - The number of mixtures and replicates does not match with the number of indexes you wrote.\n")
+				sys.exit(1)
 			
 			MIXTURES_INPUT.append([no_mixtures, start, stop, replicates])
 
@@ -57,6 +61,10 @@ def read_stdin():
 			start = int(input("From which column does the first tumor cell line begin (0 is first column)? "))
 			stop = int(input("To which column does the last tumor cell line end? "))
 			replicates = int(input("Number of replicates per tumor cell line (type 1 if only one cell line)? "))
+
+			if ((stop + 1) - start != no_tumors * replicates):
+				print("\n[ ERROR ] - The number of tumor cell lines and replicates does not match with the number of indexes you wrote.\n")
+				sys.exit(1)
 			
 			TUMORS_INPUT.append([no_tumors, start, stop, replicates])
 
@@ -73,6 +81,10 @@ def read_stdin():
 			stop = int(input("To which column does the last cell line end? "))
 			replicates = int(input("Number of replicates per cell line (type 1 if only one cell line)? "))
 			
+			if ((stop + 1) - start != no_cell_lines * replicates):
+				print("\n[ ERROR ] - The number of cell lines and replicates does not match with the number of indexes you wrote.\n")
+				sys.exit(1)
+
 			CELL_LINES_INPUT.append([no_cell_lines, start, stop, replicates])
 
 	print("")
@@ -187,6 +199,10 @@ def mixes():
 		file_handler.write_combined_mixtures(np_gene_dictionary, config.MIXTURE, MIXTURES_INPUT)
 	else :
 
+		if len(args.ITERATION) != 6:
+			print("\n[ ERROR ] - You have not given 6 iteration numbers for tumor and noise, e.g.: -i 0 100 5 0 100 5\n")
+			sys.exit(1)
+
 		start_tumor = int(args.ITERATION[0]); stop_tumor = int(args.ITERATION[1]); step_tumor = int(args.ITERATION[2])
 		start_noise = int(args.ITERATION[3]); stop_noise = int(args.ITERATION[4]); step_noise = int(args.ITERATION[5])
 
@@ -204,7 +220,7 @@ def mixes():
 						temp_list.append((all_cell_lines_combined[i][k] * (1-(tumor_content/100))) + all_cell_lines_combined[i][len(all_cell_lines_combined[i])-1] * (tumor_content/100))
 
 					if noise_amount > 0:
-						temp_list = noise.add_log_noise_controlled(temp_list, noise_amount)
+						temp_list = noise.add_noise_controlled(temp_list, noise_amount)
 
 					fixed_tumor_matrix.append(temp_list)
 
