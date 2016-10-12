@@ -51,12 +51,12 @@ def execute_args():
 	stop = timeit.default_timer()
 	print("Time spent: %.2f seconds" % (stop - start)) 
 
-	print("Simulation completed! Converting Affy to HUGO ... ")
-	cmd = "python3 " + config.PATH + "Master/programming/convert_geneID/replace.py -t true -i " + str(config.START_TUMOR) + " " + str(config.STOP_TUMOR) + " " + str(config.STEP_TUMOR) + " " + str(config.START_NOISE) + " " + str(config.STOP_NOISE) + " " + str(config.STEP_NOISE)
-	start = timeit.default_timer()
-	os.system(cmd)
-	stop = timeit.default_timer()
-	print("Time spent: %.2f seconds" % (stop - start))
+	# print("Simulation completed! Converting Affy to HUGO ... ")
+	# cmd = "python3 " + config.PATH + "Master/programming/convert_geneID/replace.py -t true -i " + str(config.START_TUMOR) + " " + str(config.STOP_TUMOR) + " " + str(config.STEP_TUMOR) + " " + str(config.START_NOISE) + " " + str(config.STOP_NOISE) + " " + str(config.STEP_NOISE)
+	# start = timeit.default_timer()
+	# os.system(cmd)
+	# stop = timeit.default_timer()
+	# print("Time spent: %.2f seconds" % (stop - start))
 
 	print("Conversion completed! Executing CIBERSORT ... ")
 	files_done = 0
@@ -76,8 +76,8 @@ def execute_args():
 	start = timeit.default_timer()
 	for tumor_content in range(config.START_TUMOR, config.STOP_TUMOR, config.STEP_TUMOR):
 		for noise_content in range(config.START_NOISE, config.STOP_NOISE, config.STEP_NOISE):
-			# cmd = "Rscript " + config.PATH_ABBAS + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.ABBAS_OUTPUT + str(tumor_content) + "_" + str(noise_content)
-			cmd = "Rscript " + config.PATH_LLSR + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.LLSR_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+			cmd = "Rscript " + config.PATH_ABBAS + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.ABBAS_OUTPUT + str(tumor_content) + "_" + str(noise_content)
+			# cmd = "Rscript " + config.PATH_LLSR + " " + config.COMBINED_CELLS + " " + config.LLSR_MIXTURES + str(tumor_content) + "_" + str(noise_content) + " " + config.LLSR_OUTPUT + str(tumor_content) + "_" + str(noise_content)
 			os.system(cmd)
 			files_done += 1
 			print("--- LLSR is done with " + str(files_done) + " files.")

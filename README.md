@@ -12,7 +12,7 @@ You have the opportunity to run with three different flags: -m (mixtures), -c (c
 
 In the config file there are several variables that need to be given values before running:
 
-1. PATH: Path to the project, e.g.: "/home/<user>/Projects/";
+1. PATH: Path to the project, e.g.: "/home/user/Projects/";
 2. START_TUMOR: At what percentage of tumor content you want to start at, e.g.: 0
 3. STOP_TUMOR: At what percentage of tumor content you want to be maximum (if 100, have it just above, e.g. 101. Depends on on the value of STEP_TUMOR), e.g.: 101
 4. STEP_TUMOR: The amount of percentage which is increased for each dataset, e.g.: 5
