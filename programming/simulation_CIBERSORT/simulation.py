@@ -49,7 +49,7 @@ def read_stdin():
 			
 			MIXTURES_INPUT.append([no_mixtures, start, stop, replicates])
 
-	print("")
+		print("")
 
 	if args.TUMORS != None and len(args.TUMORS) > 0:
 
@@ -68,7 +68,7 @@ def read_stdin():
 			
 			TUMORS_INPUT.append([no_tumors, start, stop, replicates])
 
-	print("")
+		print("")
 
 	if args.CELL_LINES != None and len(args.CELL_LINES) > 0:
 
@@ -87,7 +87,7 @@ def read_stdin():
 
 			CELL_LINES_INPUT.append([no_cell_lines, start, stop, replicates])
 
-	print("")
+		print("")
 
 
 def execute():
