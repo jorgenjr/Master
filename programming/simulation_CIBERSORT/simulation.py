@@ -1,4 +1,3 @@
-
 import readline
 import sys
 import numpy as np
@@ -11,10 +10,6 @@ import argparse
 import config
 import linecache
 
-MIXTURES_INPUT = []
-TUMORS_INPUT = []
-CELL_LINES_INPUT = []
-
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--MIXTURES", help="Mixtures", nargs='*')
 parser.add_argument("-t", "--TUMORS", help="Tumors", nargs='*')
@@ -24,6 +19,43 @@ parser.add_argument("-i", "--ITERATION", help="Iteration", nargs='*')
 
 
 class Simulation:
+	def __init__(self):
+
+		self.MIXTURES_INPUT = []
+		self.TUMORS_INPUT = []
+		self.CELL_LINES_INPUT = []
+
+
+	def stdin_all(self, str_type, arg_var):
+
+		no_cell_lines = int(input("How many " + str_type + " in " + arg_var + "? "))
+		cells = linecache.getline(config.PATH_EXTERNAL + arg_var, 1).split('\t')
+		cell_line_list = []
+		cell_no = 1
+		j = 0
+
+		while True:
+
+			if j == no_cell_lines:
+				break
+
+			replicates = input("How many replicates are there of " + cells[cell_no] + "? ")
+			splitted_rep = replicates.split(' ')
+
+			if splitted_rep[0].lower() == 'skip':
+
+				if len(splitted_rep) > 1:
+					cell_no += int(splitted_rep[1])
+				else:
+					cell_no += 1
+
+				continue
+
+			j += 1
+			cell_line_list.append([cells[cell_no], cell_no, int(replicates)])
+			cell_no += int(replicates)
+
+		return cell_line_list
 
 
 	def stdin_mixtures(self):
@@ -35,17 +67,8 @@ class Simulation:
 		print("*** MIXTURES ***")
 
 		for i in range(len(args.MIXTURES)):
-
-			no_mixtures = int(input("How many distinct mixtures in " + args.MIXTURES[i] + "? "))
-			start = int(input("From which column does the first mixture begin (0 is first column)? "))
-			stop = int(input("To which column does the last mixture end? "))
-			replicates = int(input("Number of replicates per mixture (type 1 if only one mixture)? "))
-
-			if ((stop + 1) - start != no_mixtures * replicates):
-				print("\n[ ERROR ] - The number of mixtures and replicates does not match with the number of indexes you wrote.\n")
-				sys.exit(1)
-			
-			MIXTURES_INPUT.append([no_mixtures, start, stop, replicates])
+			self.MIXTURES_INPUT.append(self.stdin_all("distinct mixtures", args.MIXTURES[i]))
+			print("")
 
 
 	def stdin_tumors(self):
@@ -57,18 +80,8 @@ class Simulation:
 		print("*** TUMORS ***")
 
 		for i in range(len(args.TUMORS)):
-
-			no_tumors = int(input("How many tumor cell lines in " + args.TUMORS[i] + "? "))
-			start = int(input("From which column does the first tumor cell line begin (0 is first column)? "))
-			stop = int(input("To which column does the last tumor cell line end? "))
-			replicates = int(input("Number of replicates per tumor cell line (type 1 if only one cell line)? "))
-
-			if ((stop + 1) - start != no_tumors * replicates):
-				print("\n[ ERROR ] - The number of tumor cell lines and replicates does not match with the number of indexes you wrote.\n")
-				sys.exit(1)
-			
-			TUMORS_INPUT.append([no_tumors, start, stop, replicates])
-
+			self.TUMORS_INPUT.append(self.stdin_all("tumor cell lines", args.TUMORS[i]))
+			print("")
 
 	def stdin_cell_lines(self):
 
@@ -79,25 +92,8 @@ class Simulation:
 		print("*** CELL LINES ***")
 
 		for i in range(len(args.CELL_LINES)):
-
-			no_cell_lines = int(input("How many cell lines in " + args.CELL_LINES[i] + "? "))
-			header = linecache.getline('../../../Master_files/external/' + args.CELL_LINES[i], 1)
-			cells = header.split('\t')
-			cell_no = 1
-			cell_line_list = []
-			
-			for j in range(no_cell_lines):
-
-				replicates = int(input("How many replicates are there of " + cells[cell_no] + "? "))
-				cell_line_list.append([cells[cell_no], cell_no, replicates])
-				cell_no += replicates
-				
-			print(cell_line_list)
-
-			CELL_LINES_INPUT.append(cell_line_list)
-
-			sys.exit(1)
-
+			self.CELL_LINES_INPUT.append(self.stdin_all("cell lines", args.CELL_LINES[i]))
+			print("")
 
 	def read_stdin(self):
 
@@ -119,7 +115,6 @@ class Simulation:
 
 		print("")
 
-
 	def print_input_req(self):
 
 		print("")
@@ -128,7 +123,6 @@ class Simulation:
 		print("python simulation.py [-m mixture.file ... ] [-t tumor.file ... ] [-c cell_lines.file] [-r true] [-i start_tumor stop_tumor interval_tumor start_noise stop_noise intveral noise]")
 		print("")
 		sys.exit(1)
-
 
 	def execute(self):
 
@@ -144,12 +138,12 @@ class Simulation:
 
 		if args.CELL_LINES != None and len(args.CELL_LINES) > 0:
 			if args.REFERENCE != None and len(args.REFERENCE) > 0:
-				reference()
+				self.reference()
 			else:
-				pure_cells()
+				self.pure_cells()
 
 		if args.MIXTURES != None and len(args.MIXTURES) > 0:
-			mixes()
+			self.mixes()
 
 	def reference(self):
 
@@ -163,11 +157,13 @@ class Simulation:
 		if args.TUMORS != None and len(args.TUMORS) > 0:
 			tumor_present = True
 
-		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.CELL_LINES, CELL_LINES_INPUT, args.TUMORS, TUMORS_INPUT)
+		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.CELL_LINES,
+															   self.CELL_LINES_INPUT, args.TUMORS, self.TUMORS_INPUT)
 
 		separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
 
-		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present, CELL_LINES_INPUT, TUMORS_INPUT)
+		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present,
+																	 self.CELL_LINES_INPUT, self.TUMORS_INPUT)
 
 		cell_lines_matrix = quantile_normalisation.quantile_normalize_separately(cell_lines_matrix)
 
@@ -175,8 +171,8 @@ class Simulation:
 
 		separate_values_matrix = quantile_normalisation.algo(separate_values_matrix)
 
-		mixtures.save_separate_matrix(np_gene_dictionary, separate_values_matrix, tumor_present, config.REFERENCE, config.REFERENCE_TUMOR, CELL_LINES_INPUT, TUMORS_INPUT)
-
+		mixtures.save_separate_matrix(np_gene_dictionary, separate_values_matrix, tumor_present, config.REFERENCE,
+									  config.REFERENCE_TUMOR, self.CELL_LINES_INPUT, self.TUMORS_INPUT)
 
 	def pure_cells(self):
 
@@ -189,18 +185,20 @@ class Simulation:
 		if args.TUMORS != None and len(args.TUMORS) > 0:
 			tumor_present = True
 
-		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.CELL_LINES, CELL_LINES_INPUT, args.TUMORS, TUMORS_INPUT)
+		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.CELL_LINES,
+															   self.CELL_LINES_INPUT, args.TUMORS, self.TUMORS_INPUT)
 
 		separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
 
-		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present, CELL_LINES_INPUT, TUMORS_INPUT)
+		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present,
+																	 self.CELL_LINES_INPUT, self.TUMORS_INPUT)
 
 		cell_lines_matrix = quantile_normalisation.quantile_normalize_separately(cell_lines_matrix)
 
 		all_cell_lines_combined = mixtures.combine_separated_normalized_data(cell_lines_matrix, separate_values_matrix)
 
-		mixtures.save_combined_matrix(np_gene_dictionary, all_cell_lines_combined, tumor_present, config.COMBINED_CELLS, config.COMBINED_CELLS_TUMOR, CELL_LINES_INPUT, TUMORS_INPUT)
-
+		mixtures.save_combined_matrix(np_gene_dictionary, all_cell_lines_combined, tumor_present, config.COMBINED_CELLS,
+									  config.COMBINED_CELLS_TUMOR, self.CELL_LINES_INPUT, self.TUMORS_INPUT)
 
 	def mixes(self):
 
@@ -214,61 +212,61 @@ class Simulation:
 		if args.TUMORS != None and len(args.TUMORS) > 0:
 			tumor_present = True
 
-		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.MIXTURES, MIXTURES_INPUT, args.TUMORS, TUMORS_INPUT)
-		
+		np_gene_dictionary = mixtures.get_relevant_information(np_gene_dictionary, tumor_present, args.MIXTURES,
+															   self.MIXTURES_INPUT, args.TUMORS, self.TUMORS_INPUT)
+
 		separate_values_matrix = mixtures.from_dictionary_to_matrix(np_gene_dictionary)
 
-		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present, MIXTURES_INPUT, TUMORS_INPUT)
-		
-		""" Calculating the total mRNA in each mixture. Used later in Abbas algorithm.
-		"""
-
-		#file_handler.write_probe_values([MIXA, MIXB, MIXC, MIXD], ["MIX A", "MIX B", "MIX C", "MIX D"], "probe_values_mixtures")
+		cell_lines_matrix = mixtures.get_separated_for_normalization(separate_values_matrix, tumor_present,
+																	 self.MIXTURES_INPUT, self.TUMORS_INPUT)
 
 		cell_lines_matrix = quantile_normalisation.quantile_normalize_separately(cell_lines_matrix)
 
 		all_cell_lines_combined = mixtures.combine_separated_normalized_data(cell_lines_matrix, separate_values_matrix)
 
 		np_gene_dictionary = mixtures.from_matrix_to_dictionary(all_cell_lines_combined, np_gene_dictionary)
-		
+
 		""" The data is then iterated over 0 to 100 percent tumor content with intervals
 			of 5 percent. Each iteration is written to file.
 		"""
 		if tumor_present == False:
+			file_handler.write_combined_mixtures(np_gene_dictionary, config.MIXTURE, self.MIXTURES_INPUT)
+		else:
 
-			file_handler.write_combined_mixtures(np_gene_dictionary, config.MIXTURE, MIXTURES_INPUT)
-		else :
-
-			if len(args.ITERATION) != 6:
+			if args.ITERATION == None or len(args.ITERATION) != 6:
 				print("\n[ ERROR ] - You have not given 6 iteration numbers for tumor and noise, e.g.: -i 0 100 5 0 100 5\n")
 				sys.exit(1)
 
-			start_tumor = int(args.ITERATION[0]); stop_tumor = int(args.ITERATION[1]); step_tumor = int(args.ITERATION[2])
-			start_noise = int(args.ITERATION[3]); stop_noise = int(args.ITERATION[4]); step_noise = int(args.ITERATION[5])
+			for tumor_content in range(int(args.ITERATION[0]), int(args.ITERATION[1]), int(args.ITERATION[2])):
+				for noise_amount in range(int(args.ITERATION[3]), int(args.ITERATION[4]), int(args.ITERATION[5])):
+					self.mixes_iteration(all_cell_lines_combined, tumor_content, noise_amount, np_gene_dictionary)
 
-			for tumor_content in range(start_tumor, stop_tumor, step_tumor):
+				print("--- Generated simulation file with " + str(tumor_content) + "% tumor content. " + str(
+					int((int(args.ITERATION[1]) - tumor_content) / int(args.ITERATION[2]))) + " files remaining.")
 
-				for noise_amount in range(start_noise, stop_noise, step_noise):
 
-					fixed_tumor_matrix = []
+	def mixes_iteration(self, all_cell_lines_combined, tumor_content, noise_amount, np_gene_dictionary):
 
-					for i in range(len(all_cell_lines_combined)):
+		fixed_tumor_matrix = []
 
-						temp_list = []
+		for i in range(len(all_cell_lines_combined)):
 
-						for k in range(len(all_cell_lines_combined[i]) - 1):
-							temp_list.append((all_cell_lines_combined[i][k] * (1-(tumor_content/100))) + all_cell_lines_combined[i][len(all_cell_lines_combined[i])-1] * (tumor_content/100))
+			temp_list = []
 
-						if noise_amount > 0:
-							temp_list = noise.add_noise_controlled(temp_list, noise_amount)
+			for k in range(len(all_cell_lines_combined[i]) - 1):
+				temp_list.append((all_cell_lines_combined[i][k] * (1 - (tumor_content / 100))) +
+								 all_cell_lines_combined[i][len(all_cell_lines_combined[i]) - 1] * (
+									 tumor_content / 100))
 
-						fixed_tumor_matrix.append(temp_list)
+			if noise_amount > 0:
+				temp_list = noise.add_noise_controlled(temp_list, noise_amount)
 
-					np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary)
+			fixed_tumor_matrix.append(temp_list)
 
-					file_handler.write_combined_mixtures_tumor(np_gene_dictionary, config.MIXTURES, tumor_content, noise_amount, MIXTURES_INPUT)
+		np_gene_dictionary = mixtures.from_matrix_to_dictionary(fixed_tumor_matrix, np_gene_dictionary)
 
-				print("--- Generated simulation file with " + str(tumor_content) + "% tumor content. " + str(int((stop_tumor - tumor_content) / step_tumor)) + " files remaining.")
+		file_handler.write_combined_mixtures_tumor(np_gene_dictionary, config.MIXTURES, tumor_content,
+												   noise_amount, self.MIXTURES_INPUT)
 
 
 args = parser.parse_args()

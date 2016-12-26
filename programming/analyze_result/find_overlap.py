@@ -233,5 +233,112 @@ def find_overlap_custom_LM():
 	f_8.close()
 
 
+def find_overlap_custom_LM2():
+
+	f_1 = open('../../../Master_files/external/GSE24759.txt', 'r')
+	f_2 = open('../../../Master_files/external/GSE24759_overlap.txt', 'w')
+	f_3 = open('../../../Master_files/external/GSE26495_PD1lowhigh.txt', 'r')
+	f_4 = open('../../../Master_files/external/GSE26495_PD1lowhigh_38_overlap.txt', 'w')	
+
+	GSE24759 = []
+	GSE26495 = []
+	header = True
+
+	for line in f_1:
+
+		if header == True:
+			f_2.write(line)
+			header = False
+			continue
+
+		temp_array = []
+		splitted_line = line.split('\t')
+		splitted_line[0] = splitted_line[0].split("\"")[1]
+
+		for i in range(len(splitted_line)):
+			temp_array.append(splitted_line[i])
+
+		GSE24759.append(temp_array)
+
+	header = True
+
+	for line in f_3:
+
+		if header == True:
+			f_4.write(line)
+			header = False
+			continue
+
+		temp_array = []
+		splitted_line = line.split('\t')
+
+		for i in range(len(splitted_line)):
+			temp_array.append(splitted_line[i])
+
+		GSE26495.append(temp_array)
+
+	print("*** GSE24759 ***")
+	index = 0
+
+	for i in range(len(GSE24759)):
+		
+		found1 = []
+
+		for j in range(len(GSE26495)):
+			if GSE24759[i][0] == GSE26495[j][0]:
+				found1 = GSE26495[j]
+				break
+
+		if len(found1) == 0:
+			index += 1
+		else:
+			for k in range(len(GSE24759[i])):
+				f_2.write(GSE24759[i][k])
+				if k != len(GSE24759[i]) - 1:
+					f_2.write('\t')
+			for k in range(len(found1)):
+				f_4.write(found1[k])
+				if k != len(found1) - 1:
+					f_4.write('\t')
+
+	print(index)
+	
+	f_1.close()
+	f_2.close()
+	f_3.close()
+	f_4.close()
+
+
+def compare_length():
+
+	f_1 = open('../../../Master_files/simulation/phenotype_classes_LM40', 'r')
+	f_2 = open('../../../Master_files/simulation/separate_custom_LM', 'r')
+
+	for line in f_1:
+
+		splitted_line = line.split('\t')
+		if len(splitted_line) != 224:
+			print(len(splitted_line))
+
+	for line in f_2:
+
+		splitted_line = line.split('\t')
+		if len(splitted_line) != 224:
+			print(len(splitted_line))
+
+
+def print_length():
+
+	f = open('../../../Master_files/external/output_2016-11-01/processeddata/normdata.txt', 'r')
+
+	for line in f:
+
+		splitted_line = line.split('\t')
+		print(splitted_line[3])
+
+
 # find_overlap()
-find_overlap_custom_LM()
+# find_overlap_custom_LM()
+# find_overlap_custom_LM2()
+# compare_length()
+print_length()

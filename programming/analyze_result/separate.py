@@ -339,6 +339,25 @@ def get_relevant_cells():
 	fw.close()
 
 
+def get_only_probes():
+
+	fr = open('../../../Master_files/external/output_2016-11-01/processeddata/normdata.txt', 'r')
+	fw = open('../../../Master_files/external/normdata.txt', 'w')
+
+	for line in fr:
+
+		splitted_line = line.split('\t')
+		fw.write(splitted_line[0])
+
+		for i in range(3, len(splitted_line)):
+
+			fw.write('\t' + splitted_line[i])
+
+	fr.close()
+	fw.close()
+
+
 #read_files()
 #separate_mixtures()
-get_relevant_cells()
+#get_relevant_cells()
+get_only_probes()

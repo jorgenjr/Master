@@ -19,9 +19,9 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 
 	for cell_file in range(len(CELL_LINES_INPUT)):
 
-		for mix_line in range(CELL_LINES_INPUT[cell_file][0]):
+		for mix_line in range(len(CELL_LINES_INPUT[cell_file])):
 
-			header += "\tCELL_"+str(cell_no)
+			header += "\tCELL_" + str(cell_no)
 			cell_no += 1
 
 	if TUMORS_INPUT != []:
@@ -36,10 +36,9 @@ def write_combined_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 		line = str(key)
 
 		for i in range(len(value)):
+			line += "\t" + str(value[i])
 
-			line += "\t"+str(value[i])
-
-		f.write(line+"\n")
+		f.write(line + "\n")
 
 	f.close()
 
@@ -57,14 +56,14 @@ def write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 	cell_no = 1
 
 	for cell_file in range(len(CELL_LINES_INPUT)):
-
-		for cell_line in range(CELL_LINES_INPUT[cell_file][0]):
-
+		
+		for cell_line in range(len(CELL_LINES_INPUT[cell_file])):
+			
 			rep = 1
 
-			for replicate in range(CELL_LINES_INPUT[cell_file][3]):
+			for replicate in range(CELL_LINES_INPUT[cell_file][cell_line][2]):
 
-				header += "\tCELL_"+str(cell_no)+"_"+str(rep)
+				header += "\tCELL_" + str(cell_no)+"_"+str(rep)
 				rep += 1
 
 			cell_no += 1
@@ -73,18 +72,18 @@ def write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 
 	for tumor_file in range(len(TUMORS_INPUT)):
 
-		for tumor_line in range(TUMORS_INPUT[tumor_file][0]):
+		for tumor_line in range(len(TUMORS_INPUT[tumor_file])):
 
 			rep = 1
 
-			for replicate in range(TUMORS_INPUT[tumor_file][3]):
+			for replicate in range(TUMORS_INPUT[tumor_file][tumor_line][2]):
 
-				header += "\tTUMOR_"+str(tumor_no)+"_"+str(rep)
+				header += "\tTUMOR_" + str(tumor_no) + "_" + str(rep)
 				rep += 1
 
 			tumor_no += 1
 
-	f.write(header+"\n")
+	f.write(header + "\n")
 
 	""" Add every gene expression from cell lines together
 	"""
@@ -93,10 +92,9 @@ def write_separate_cell_lines(NP_GENE_DICTIONARY, FILENAME, CELL_LINES_INPUT, TU
 		line = str(key)
 
 		for i in range(len(value)):
+			line += "\t" + str(value[i])
 
-			line += "\t"+str(value[i])
-
-		f.write(line+"\n")
+		f.write(line + "\n")
 
 	f.close()
 
@@ -113,22 +111,21 @@ def write_combined_mixtures(NP_GENE_DICTIONARY, FILENAME, MIXTURES_INPUT):
 
 	for cell_file in range(len(MIXTURES_INPUT)):
 
-		for cell_line in range(MIXTURES_INPUT[cell_file][0]):
+		for cell_line in range(len(MIXTURES_INPUT[cell_file])):
 
-			header += "\tMIX_"+str(mix_no)
+			header += "\tMIX_" + str(mix_no)
 			mix_no += 1
 
-	f.write(header+"\n")
+	f.write(header + "\n")
 
 	for key, value in sorted(NP_GENE_DICTIONARY.items()):
 
 		line = str(key)
 
 		for i in range(len(value)):
+			line += "\t" + str(value[i])
 
-			line += "\t"+str(value[i])
-
-		f.write(line+"\n")
+		f.write(line + "\n")
 
 	f.close()
 
@@ -147,12 +144,12 @@ def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT, N
 
 	for cell_file in range(len(MIXTURES_INPUT)):
 
-		for mix_line in range(MIXTURES_INPUT[cell_file][0]):
+		for mix_line in range(len(MIXTURES_INPUT[cell_file])):
 
-			header += "\tMIX_"+str(mix_no)+" ("+str(TUMOR_CONTENT)+"% TUMOR)"
+			header += "\tMIX_" + str(mix_no) + " (" + str(TUMOR_CONTENT) + "% TUMOR)"
 			mix_no += 1
 
-	f.write(header+"\n")
+	f.write(header + "\n")
 
 	""" Add every gene expression from cell lines together
 	"""
@@ -161,52 +158,8 @@ def write_combined_mixtures_tumor(NP_GENE_DICTIONARY, FILENAME, TUMOR_CONTENT, N
 		line = str(key)
 
 		for i in range(len(value)):
+			line += "\t" + str(value[i])
 
-			line += "\t"+str(value[i])
-
-		f.write(line+"\n")
-
-	f.close()
-
-
-def write_probe_values(PROBES, HEADER, FILENAME):
-
-	if len(PROBES) != len(HEADER) and len(HEADER) > 0:
-
-		print()
-		sys.exit('\n[ERROR] The lists HEADER and PROBES had not the same length!\n')
-
-	f = open(config.PATH_SIMULATION + FILENAME, 'w')
-
-	write_header = HEADER[0];
-
-	for i in range(1, len(HEADER)):
-		write_header += "\t" + HEADER[i];
-
-	f.write(write_header + "\n")
-
-	sum_probes = []
-
-	for i in range(len(PROBES)):
-
-		temp_probes = 0.0
-
-		for j in range(len(PROBES[i])):
-
-			avg_probe = 0.0
-
-			for k in range(len(PROBES[i][j])):
-				avg_probe += PROBES[i][j][k]
-
-			temp_probes += (avg_probe / float(len(PROBES[i][j])))
-			
-		sum_probes.append(temp_probes)
-
-	write_values = str(sum_probes[0])
-
-	for i in range(1, len(sum_probes)):
-		write_values += "\t" + str(sum_probes[i])
-
-	f.write(write_values + "\n")
+		f.write(line + "\n")
 
 	f.close()

@@ -22,7 +22,8 @@ def read_hugo():
 	""" Reads hugo, and adds Affy ID and HUGO ID to dictionary
 	"""
 
-	f_hugo = open(OUTPUT_PATH + '/simulation/affy_to_hugo', 'r')
+	# f_hugo = open(OUTPUT_PATH + '/simulation/affy_to_hugo', 'r')
+	f_hugo = open(OUTPUT_PATH + '/simulation/illumina_to_affy', 'r')
 	header = True
 	affy_to_hugo = {}
 	empty = 0
@@ -183,42 +184,7 @@ def write_unique_hugo_genes(unique_hugo_genes_average):
 
 affy_to_hugo = read_hugo()
 
-if args.CELL_LINES != None and len(args.CELL_LINES) > 0:
-
-	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/combined_cell_lines_hugo', 'w')
-
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "/simulation/combined_cell_lines")
-	unique_hugo_genes_average = calc_average(unique_hugo_genes)
-	write_unique_hugo_genes(unique_hugo_genes_average)
-
-	f_simulation_hugo_unique.close()
-
-elif args.MIXTURES != None and len(args.MIXTURES) > 0:
-
-	mixes = ["A", "B", "C", "D"]
-
-	for i in range(len(mixes)):
-
-		f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/mixtures_normalized_tumor_HUGO_' + mixes[i], 'w')
-		# f_simulation_hugo_unique = open('../../../Master_files/convert/reference_hugo_unique', 'w')
-
-		unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, "/simulation/combined_mixtures_" + mixes[i])
-		unique_hugo_genes_average = calc_average(unique_hugo_genes)
-		write_unique_hugo_genes(unique_hugo_genes_average)
-
-		f_simulation_hugo_unique.close()
-
-elif args.REFERENCE != None and len(args.REFERENCE) > 0:
-
-	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/separate_cell_lines_norm_hugo', 'w')
-	
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/simulation/separate_cell_lines_norm')
-	unique_hugo_genes_average = calc_average(unique_hugo_genes)
-	write_unique_hugo_genes(unique_hugo_genes_average)
-
-	f_simulation_hugo_unique.close()
-
-elif args.TUMORS != None and len(args.TUMORS) > 0:
+if args.TUMORS != None and len(args.TUMORS) > 0:
 
 	start_tumor = int(args.ITERATION_LIST[0]); stop_tumor = int(args.ITERATION_LIST[1]); step_tumor = int(args.ITERATION_LIST[2])
 	start_noise = int(args.ITERATION_LIST[3]); stop_noise = int(args.ITERATION_LIST[4]); step_noise = int(args.ITERATION_LIST[5])
@@ -239,9 +205,9 @@ elif args.TUMORS != None and len(args.TUMORS) > 0:
 
 else:
 	
-	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/GSE26495_HUGO_combined.txt', 'w')
+	f_simulation_hugo_unique = open(OUTPUT_PATH + '/convert/GSE22153_affy.txt', 'w')
 
-	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/simulation/combined_gse26495')
+	unique_hugo_genes = replace_affy_with_hugo(affy_to_hugo, '/external/GSE22153.txt')
 	unique_hugo_genes_average = calc_average(unique_hugo_genes)
 	write_unique_hugo_genes(unique_hugo_genes_average)
 
